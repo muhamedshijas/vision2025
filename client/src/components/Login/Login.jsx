@@ -1,8 +1,20 @@
-import React from "react";
-import login from '../../assets/images/login.jpg'
+import React, { useState } from "react";
+import login from "../../assets/images/login.jpg";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const result = await axios.post("/auth/login", {
+      email,
+      password,
+    });
+    console.log(result);
+  }
+
   return (
     <div style={{ height: "100vh" }}>
       <Box
@@ -89,9 +101,11 @@ function Login() {
                   fontSize: "14px",
                   fontWeight: "bold",
                 }}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <input
-                type="text"
+                type="password"
                 placeholder="Enter your password here"
                 style={{
                   height: "60px",
@@ -102,6 +116,10 @@ function Login() {
                   paddingLeft: "10px",
                   fontSize: "14px",
                   fontWeight: "bold",
+                }}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
                 }}
               />
               <Button
@@ -115,6 +133,7 @@ function Login() {
                   backgroundColor: "#7392B7",
                   boxShadow: "none",
                 }}
+                onClick={handleSubmit}
               >
                 Login
               </Button>

@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import signup from "../../assets/images/signup.jpg";
 import { Box, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
 function SignUp() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const result = await axios.post("auth/signup", {
+      email,
+      name,
+      password,
+      phoneNumber,
+    });
+    console.log(result);
+  }
   return (
     <div style={{ height: "100vh" }}>
       <Box
@@ -14,7 +30,7 @@ function SignUp() {
       >
         <Box
           height="607px"
-          width="1200px" 
+          width="1200px"
           bgcolor="#B3C5D7"
           borderRadius="10px"
           display="flex"
@@ -39,7 +55,7 @@ function SignUp() {
                 width: "100%",
               }}
             >
-             Hi Welcome,
+              Hi Welcome,
             </Typography>
 
             <form
@@ -63,6 +79,10 @@ function SignUp() {
                   fontSize: "14px",
                   fontWeight: "bold",
                 }}
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
               />
               <input
                 type="text"
@@ -76,6 +96,10 @@ function SignUp() {
                   paddingLeft: "10px",
                   fontSize: "14px",
                   fontWeight: "bold",
+                }}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
                 }}
               />
               <input
@@ -91,6 +115,10 @@ function SignUp() {
                   fontSize: "14px",
                   fontWeight: "bold",
                 }}
+                value={phoneNumber}
+                onChange={(e) => {
+                  setPhoneNumber(e.target.value);
+                }}
               />
               <input
                 type="password"
@@ -105,6 +133,10 @@ function SignUp() {
                   fontSize: "14px",
                   fontWeight: "bold",
                 }}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
               <Button
                 variant="contained"
@@ -117,6 +149,7 @@ function SignUp() {
                   backgroundColor: "#7392B7",
                   boxShadow: "none",
                 }}
+                onClick={handleSubmit}
               >
                 Login
               </Button>
