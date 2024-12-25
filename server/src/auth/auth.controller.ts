@@ -53,11 +53,28 @@ export class AuthController {
 
             const result = await this.authService.checkUserLoggedIn(token);
             console.log(result);
-            
+
             return res.json(result);
         } catch (err) {
             console.error(err);
             return res.json({ loggedIn: false, error: err });
         }
     }
+    @Get('logout')
+    async adminLogout(@Res() res: Response) {
+        try {
+            res
+                .cookie('userToken', '', {
+                    httpOnly: true,
+                    expires: new Date(0), // Expire the cookie immediately
+                    secure: true, // Use secure cookies (set true in production with HTTPS)
+                    sameSite: 'none', // Allows cross-site cookie sharing
+                })
+                .json({ message: 'Logged out successfully', error: false });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Logout failed', error: true });
+        }
+    }
 }
+ 

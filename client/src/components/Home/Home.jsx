@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import axios from "axios";
 import React from "react";
 import { PiClockFill } from "react-icons/pi";
 import {
@@ -6,9 +7,29 @@ import {
   RiFlagFill,
   RiUserHeartFill,
 } from "react-icons/ri";
+import { useDispatch } from "react-redux";
+
+
 function Home() {
+  const dispatch = useDispatch();
+  async function handleLogout(e) {
+    e.preventDefault();
+    await axios.get("/auth/logout");
+    dispatch({ type: "refresh" });
+  }
   return (
     <div style={{ height: "100vh" }}>
+      <Box
+        width="90%"
+        display="flex"
+        justifyContent="flex-end"
+        alignItems="flex-end"
+        marginTop="10px"
+      >
+        <Button variant="contained" onClick={handleLogout}>
+          Logout
+        </Button>
+      </Box>
       <Box
         width="100%"
         height="100%"

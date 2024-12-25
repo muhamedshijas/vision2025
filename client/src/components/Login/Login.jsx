@@ -3,7 +3,9 @@ import login from "../../assets/images/login.jpg";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 function Login() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   async function handleSubmit(e) {
@@ -12,7 +14,9 @@ function Login() {
       email,
       password,
     });
-    console.log(result);
+    if (result.data) {
+      dispatch({ type: "refresh" });
+    }
   }
 
   return (

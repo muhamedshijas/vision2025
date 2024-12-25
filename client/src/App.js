@@ -16,6 +16,9 @@ function App() {
   axios.defaults.withCredentials = true;
   axios.defaults.baseURL = "http://localhost:5000/";
 
+  const { user,  refresh} = useSelector((state) => {
+    return state;
+  });
   // Destructure login and user details from the Redux store
   const { login, detials } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -29,7 +32,7 @@ function App() {
         payload: { login: data.loggedIn, detials: data.user },
       });
     })();
-  }, [dispatch]);
+  }, [refresh]);
 
   // Logging to check if login is successful
   console.log(login);
