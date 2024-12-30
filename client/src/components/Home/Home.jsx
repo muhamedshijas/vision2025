@@ -8,7 +8,7 @@ import {
   RiUserHeartFill,
 } from "react-icons/ri";
 import { useDispatch } from "react-redux";
-
+import { Link } from "react-router-dom";
 
 function Home() {
   const dispatch = useDispatch();
@@ -97,22 +97,24 @@ function Home() {
             Annual Task
           </Box>
           {/* Box 4 */}
-          <Box
-            height="230px"
-            width="230px"
-            borderRadius="22px"
-            bgcolor="#759EB8"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-around"
-            alignItems="center"
-            color="white"
-            fontWeight="bold"
-            fontSize="22px"
-          >
-            <RiUserHeartFill fontSize="180px" />
-            Personal Data
-          </Box>
+          <Link to="/profile" style={{ textDecoration: "none" }}>
+            <Box
+              height="230px"
+              width="230px"
+              borderRadius="22px"
+              bgcolor="#759EB8"
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-around"
+              alignItems="center"
+              color="white"
+              fontWeight="bold"
+              fontSize="22px"
+            >
+              <RiUserHeartFill fontSize="180px" textDecoration="none" />
+              Personal Data
+            </Box>
+          </Link>
         </Box>
       </Box>
     </div>

@@ -30,15 +30,19 @@ export class AuthService {
 
     async LoginUser(loginDto: LoginUserDto): Promise<LoginResponse> {
         const { email, password } = loginDto;
-
+      
         // Explicitly annotate the type of the `user` variable
         const user = await this.userModel.findOne({ email }).lean() as User | null;
         if (!user) {
+         console.log("nouseser");
+          
             return { message: "User not found" };
         }
         // Compare the password
         const isPasswordValid: boolean = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
+          console.log("invalid ");
+          
             return { message: "Invalid password" };
         }
         // Create the token
