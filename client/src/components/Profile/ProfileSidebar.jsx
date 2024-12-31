@@ -1,4 +1,4 @@
-import { Box, List, ListItem, ListItemText } from "@mui/material";
+import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 import React from "react";
 
 function ProfileSidebar({ activeSection, setActiveSection }) {
@@ -18,7 +18,7 @@ function ProfileSidebar({ activeSection, setActiveSection }) {
         borderRadius="180px"
         bgcolor="white"
       ></Box>
-
+    <Typography style={{fontWeight:700, marginTop:"10px", color:"white"}}>Muhamed Shijas</Typography>
       <List
         style={{
           marginTop: "30px",

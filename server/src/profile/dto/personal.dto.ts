@@ -9,9 +9,6 @@ export class personal {
     @Type(() => Date)
     date: Date
 
-    @IsNumber()
-    age: number
-
     @IsString()
     place: string
 

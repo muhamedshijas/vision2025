@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
 import React, { useState } from "react";
 import ProfileSidebar from "./ProfileSidebar";
+import Personal from "./Personal";
+import Passwords from "./Passwords";
 
 function ProfileHome() {
   // State to track the active section
@@ -10,9 +12,9 @@ function ProfileHome() {
   const renderContent = () => {
     switch (activeSection) {
       case "Personal":
-        return <div>Personal Section Content</div>;
+        return <Personal />;
       case "Passwords":
-        return <div>Passwords Section Content</div>;
+        return <Passwords />;
       case "Jobs":
         return <div>Jobs Section Content</div>;
       case "Dates":

@@ -1,0 +1,25 @@
+table {
+  text-align: left;
+  width: 90%;
+  border-collapse: separate; /* Use separate border model */
+  border-spacing: 00px; /* Remove any default spacing between cells */
+}
+
+table th,
+table td {
+  font-weight: 600;
+
+}
+
+table th {
+    border-top: 20px solid white;
+    margin-top: 20px !important;
+  font-size: 12px;
+}
+
+table td {
+  font-size: 20px;
+}
+table tr{
+    border-spacing: 10px;
+}
