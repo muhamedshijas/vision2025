@@ -18,14 +18,14 @@ export class User extends Document {
     @Prop({ type: Object, default: null }) // Default is null
     personal: Record<string, any>;
 
-    @Prop({ type: Object, default: null }) // Default is null
-    job: Record<string, any>;
+    @Prop({ type: Array, default: [] }) // Change to array of objects for job
+    job: { field: string; value: string }[];
 
-    @Prop({ type: Object, default: null }) // Default is null
-    passwords: Record<string, any>;
+    @Prop({ type: Array, default: [] }) // Change to array of objects for passwords
+    passwords: { field: string; value: string }[];
 
-    @Prop({ type: Object, default: null }) // Default is null
-    dates: Record<string, any>;
+    @Prop({ type: Array, default: [] }) // Change to array of objects for dates
+    dates: { field: string; value: string }[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

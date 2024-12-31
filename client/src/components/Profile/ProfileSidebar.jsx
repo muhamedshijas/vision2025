@@ -1,7 +1,11 @@
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
 
 function ProfileSidebar({ activeSection, setActiveSection }) {
+  const user = useSelector((state) => {
+    return state.user.detials
+  })
   return (
     <Box
       width="300px"
@@ -18,12 +22,12 @@ function ProfileSidebar({ activeSection, setActiveSection }) {
         borderRadius="180px"
         bgcolor="white"
       ></Box>
-    <Typography style={{fontWeight:700, marginTop:"10px", color:"white"}}>Muhamed Shijas</Typography>
+    <Typography style={{fontWeight:700, marginTop:"5px", color:"white"}}>{user?.name}</Typography>
+    <Typography style={{fontWeight:700, color:"white"}}>{user?.email}</Typography>
       <List
         style={{
-          marginTop: "30px",
+          marginTop: "10px",
           width: "100%",
-          padding: "20px",
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-end",

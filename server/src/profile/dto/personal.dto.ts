@@ -1,9 +1,9 @@
 import { Type } from "class-transformer";
 import { IsDate, IsNumber, IsString } from "class-validator";
 
-export class personal {
+export class PersonalDto {
     @IsString()
-    address: string
+    houseName: string
 
     @IsDate()
     @Type(() => Date)
@@ -25,6 +25,7 @@ export class personal {
     pincode: string
 
     @IsString()
-    blood_Group: string
-
+    bloodGroup: string
+    @IsString()
+    userId:string
 }

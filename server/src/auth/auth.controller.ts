@@ -10,11 +10,7 @@ import { Response } from 'express';
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
-
-    @Get('test')
-    async test() {
-        return { message: "hello" };
-    }
+    
     @Post('signup')
     @ApiBody({ type: RegisterUserDto })
     async register(@Body() registerUserDto: RegisterUserDto) {

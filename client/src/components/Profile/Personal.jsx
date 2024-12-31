@@ -3,8 +3,34 @@ import ProfileSidebar from "./ProfileSidebar";
 import { Box, Button } from "@mui/material";
 import "./styles/personal.css";
 import ProfileEditModal from "../../modals/ProfileEditModal";
+import { useSelector } from "react-redux";
 function Personal() {
   const [showModal, setShowModal] = useState(false);
+
+  const user = useSelector((state) => {
+    return state.user.detials
+  })
+  const id=user._id
+  const {personal}=user
+  console.log(personal);
+  const calculateAge = (dob) => {
+    if (!dob) return "N/A";
+    const birthDate = new Date(dob);
+    
+    const today = new Date();
+    console.log(today);
+    
+    console.log(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    // Adjust age if current month/day is before the birth month/day
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+  
   const handleModal = () => {
     setShowModal(true);
   };
@@ -17,8 +43,8 @@ function Personal() {
             <th>House Name</th>
           </tr>
           <tr>
-            <td>Muhamed Shijas</td>
-            <td>Moorkath</td>
+            <td>{user.name}</td>
+            <td>{personal.houseName}</td>
           </tr>
           <tr>
             <th>Place</th>
@@ -26,17 +52,17 @@ function Personal() {
             <th>Pin</th>
           </tr>
           <tr>
-            <td>Jarahtingal</td>
-            <td>Kadampuzha</td>
-            <td>676553</td>
+            <td>{personal.place}</td>
+            <td>{personal.post}</td>
+            <td>{personal.pincode}</td>
           </tr>
           <tr>
             <th>District</th>
             <th>State</th>
           </tr>
           <tr>
-            <td>Malappuram</td>
-            <td>Kerala</td>
+            <td>{personal.district}</td>
+            <td>{personal.state}</td>
           </tr>
           <tr>
             <th>Age</th>
@@ -44,29 +70,29 @@ function Personal() {
             <th>Blood Group</th>
           </tr>
           <tr>
-            <td>23</td>
-            <td>28-07-2001</td>
-            <td>B+ve</td>
+            <td>{calculateAge(personal?.date)}</td>
+            <td>{personal.date}</td>
+            <td>{personal.bloodGroup}</td>
           </tr>
           <tr>
             <th>Mobile No</th>
             <th>Email</th>
           </tr>
           <tr>
-            <td>8086665118</td>
-            <td>shijushijas157@gmail.com</td>
+            <td>{user.phoneNumber}</td>
+            <td>{user.email}</td>
           </tr>
         </table>
 
         <Button
           variant="contained"
-          sx={{ marginTop: "20px", bgcolor: "black" }}
+          sx={{ marginTop: "20px", bgcolor: "black"}}
           onClick={handleModal}
         >
           Edit or ADD
         </Button>
         {showModal && (
-          <ProfileEditModal showModal={showModal} setShowModal={setShowModal} />
+          <ProfileEditModal showModal={showModal} setShowModal={setShowModal} userId={id}/>
         )}
       </Box>
     </div>

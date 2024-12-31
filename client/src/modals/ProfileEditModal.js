@@ -1,38 +1,40 @@
 import React, { useState } from "react";
 import { Box, Button, Typography, TextField, Grid } from "@mui/material";
 import axios from "axios";
-function ProfileEditModal({ showModal, setShowModal }) {
-  const [formData, setFormData] = useState({
-    houseName: "",
-    date: "",
-    place: "",
-    post: "",
-    district: "",
-    state: "",
-    pincode: "",
-    blood_Group: "",
-  });
+
+function ProfileEditModal({ showModal, setShowModal, userId }) {
+  console.log(userId);
+
+  const [houseName, setHouseName] = useState("");
+  const [date, setDate] = useState("");
+  const [place, setPlace] = useState("");
+  const [post, setPost] = useState("");
+  const [district, setDistrict] = useState("");
+  const [state, setState] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [bloodGroup, setBloodGroup] = useState("");
 
   const handleClose = () => {
     setShowModal(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("Submitted Data:", formData);
-    const response = await axios.post("/profile/edit", { formData });
+
+    const response = await axios.post("/profile/edit", {
+      houseName,
+      place,
+      post,
+      district,
+      pincode,
+      date,
+      bloodGroup,
+      userId,
+    });
     if (response.error) {
-      console.log();
+      console.log("Error occurred during submission");
     } else {
-      console.log("Successss");
+      console.log("Profile updated successfully");
       handleClose();
     }
   }
@@ -61,16 +63,15 @@ function ProfileEditModal({ showModal, setShowModal }) {
           <Typography variant="h6" mb={2}>
             Add/Edit Profile
           </Typography>
-          <form onSubmit={handleSubmit} style={{ zIndex: 1300 }}>
+          <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               {/* Row 1: Address and Date */}
               <Grid item xs={6}>
                 <TextField
                   fullWidth
                   label="House Name"
-                  name="houseName"
-                  value={formData.houseName}
-                  onChange={handleChange}
+                  value={houseName}
+                  onChange={(e) => setHouseName(e.target.value)}
                   required
                 />
               </Grid>
@@ -80,9 +81,8 @@ function ProfileEditModal({ showModal, setShowModal }) {
                 <TextField
                   fullWidth
                   label="Place"
-                  name="place"
-                  value={formData.place}
-                  onChange={handleChange}
+                  value={place}
+                  onChange={(e) => setPlace(e.target.value)}
                   required
                 />
               </Grid>
@@ -90,9 +90,8 @@ function ProfileEditModal({ showModal, setShowModal }) {
                 <TextField
                   fullWidth
                   label="Post"
-                  name="post"
-                  value={formData.post}
-                  onChange={handleChange}
+                  value={post}
+                  onChange={(e) => setPost(e.target.value)}
                   required
                 />
               </Grid>
@@ -102,9 +101,8 @@ function ProfileEditModal({ showModal, setShowModal }) {
                 <TextField
                   fullWidth
                   label="District"
-                  name="district"
-                  value={formData.district}
-                  onChange={handleChange}
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
                   required
                 />
               </Grid>
@@ -112,9 +110,8 @@ function ProfileEditModal({ showModal, setShowModal }) {
                 <TextField
                   fullWidth
                   label="State"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
                   required
                 />
               </Grid>
@@ -124,9 +121,8 @@ function ProfileEditModal({ showModal, setShowModal }) {
                 <TextField
                   fullWidth
                   label="Pincode"
-                  name="pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
                   required
                 />
               </Grid>
@@ -134,11 +130,10 @@ function ProfileEditModal({ showModal, setShowModal }) {
                 <TextField
                   fullWidth
                   label="Date"
-                  name="date"
                   type="date"
                   InputLabelProps={{ shrink: true }}
-                  value={formData.date}
-                  onChange={handleChange}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                   required
                 />
               </Grid>
@@ -146,9 +141,8 @@ function ProfileEditModal({ showModal, setShowModal }) {
                 <TextField
                   fullWidth
                   label="Blood Group"
-                  name="blood_Group"
-                  value={formData.blood_Group}
-                  onChange={handleChange}
+                  value={bloodGroup}
+                  onChange={(e) => setBloodGroup(e.target.value)}
                   required
                 />
               </Grid>
