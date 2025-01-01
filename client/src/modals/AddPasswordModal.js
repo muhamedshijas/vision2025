@@ -1,25 +1,41 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 
 function AddPasswordModal({ show, setShow, userId }) {
   const handleClose = () => {
     setShow(false);
   };
+
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [account, setAccount] = useState("");
+
   async function handleSubmit(e) {
     e.preventDefault();
     console.log(password, account);
-    const result = await axios.post("/profile/addpassword", {
-      userId,
-      account,
-      password,
-    });
-    if (!result.err) {
-      handleClose();
+
+    try {
+      const result = await axios.post("/profile/addpassword", {
+        userId,
+        account,
+        password,
+      });
+
+      if (result && result.data && !result.data.err) {
+        // Success: Navigate to profile page
+        navigate('/profile');
+        handleClose();
+      } else {
+        // Handle error response from server
+        console.error('Error adding password:', result.data?.err || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error during submission:', error);
     }
   }
+
   return (
     <div>
       <Box
@@ -46,7 +62,7 @@ function AddPasswordModal({ show, setShow, userId }) {
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
-              {/* Row 1: Address and Date */}
+              {/* Row 1: Account Name */}
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -57,7 +73,7 @@ function AddPasswordModal({ show, setShow, userId }) {
                 />
               </Grid>
 
-              {/* Row 2: Place and Post */}
+              {/* Row 2: Password */}
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -68,6 +84,7 @@ function AddPasswordModal({ show, setShow, userId }) {
                 />
               </Grid>
             </Grid>
+
             <Box mt={3} display="flex" justifyContent="space-between">
               <Button
                 variant="contained"

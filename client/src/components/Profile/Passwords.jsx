@@ -1,31 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { RiFileCopyFill } from "react-icons/ri";
 import AddPasswordModal from "../../modals/AddPasswordModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios"; // You can use axios or fetch for API calls
 
 function Passwords() {
-  const [passwords, setPasswords] = useState([
-    { id: 1, account: "Instagram", password: "abcd1234" },
-    { id: 2, account: "Facebook", password: "efgh5678" },
-    { id: 4, account: "Twitter", password: "ijkl9012" },
-    { id: 5, account: "Twitter", password: "ijkl9012" },
-    { id: 6, account: "Twitter", password: "ijkl9012" },
-    { id: 7, account: "Twitter", password: "ijkl9012" },
-    { id: 8, account: "Twitter", password: "ijkl9012" },
-    { id: 9, account: "Twitter", password: "ijkl9012" },
-    { id: 10, account: "Twitter", password: "ijkl9012" },
-    { id: 11, account: "Twitter", password: "ijkl9012" },
-  ]);
+  const dispatch = useDispatch();
+  const [passwords, setPasswords] = useState([]);
+  const [show, setShow] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const user = useSelector((state) => {
     return state.user.detials;
   });
+  console.log(user);
+
   const userId = user._id;
-  const [show, setShow] = useState(false);
+
+  // Fetch passwords when the component is mounted or when the userId changes
+  useEffect(() => {
+    const fetchPasswords = async () => {
+      try {
+        const response = await axios.get(`/profile/getpasswords/${userId}`);
+        setPasswords(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching passwords:", error);
+      }
+    };
+
+    if (userId) {
+      fetchPasswords();
+    }
+  }, [userId, refresh]);
   const handleModal = () => {
     setShow(true);
   };
+
   const handleCopy = (password) => {
     navigator.clipboard.writeText(password);
     alert(`Password copied: ${password}`);
@@ -44,72 +56,74 @@ function Passwords() {
 
       <Box>
         <table style={{ textAlign: "center" }}>
-          <tr>
-            <th>Account</th>
-            <th>Password</th>
-            <th colSpan={2}>Action</th>
-          </tr>
-          {passwords.map((item) => (
+          <thead>
             <tr>
-              <td>
-                <div
-                  className=""
-                  style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    borderRadius: "5px 0px 0px 5px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {item.account}
-                </div>
-              </td>
-              <td>
-                {" "}
-                <div
-                  className=""
-                  style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {item.password}
-                </div>
-              </td>
-              <td>
-                {" "}
-                <div
-                  className=""
-                  style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    borderRadius: "0px 0px 0px 0px",
-                    fontSize: "14px",
-                  }}
-                >
-                  <RiFileCopyFill />
-                </div>
-              </td>
-              <td>
-                {" "}
-                <div
-                  className=""
-                  style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    borderRadius: "0px 5px 5px 0px",
-                    fontSize: "14px",
-                    color: "red",
-                  }}
-                >
-                  <RiDeleteBin4Fill />
-                </div>
-              </td>
+              <th>Account</th>
+              <th>Password</th>
+              <th colSpan={2}>Action</th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {passwords.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <div
+                    className="password-item"
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      borderRadius: "5px 0px 0px 5px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.account}
+                  </div>
+                </td>
+                <td>
+                  <div
+                    className="password-item"
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.password}
+                  </div>
+                </td>
+                <td>
+                  <div
+                    className="password-item"
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      borderRadius: "0px 0px 0px 0px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    <RiFileCopyFill onClick={() => handleCopy(item.password)} />
+                  </div>
+                </td>
+                <td>
+                  <div
+                    className="password-item"
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      borderRadius: "0px 5px 5px 0px",
+                      fontSize: "14px",
+                      color: "red",
+                    }}
+                  >
+                    <RiDeleteBin4Fill onClick={() => handleDelete(item.id)} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </Box>
+
       <Box
         marginTop="10px"
         width="100%"

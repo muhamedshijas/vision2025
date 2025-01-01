@@ -22,7 +22,7 @@ export class User extends Document {
     job: { field: string; value: string }[];
 
     @Prop({ type: Array, default: [] }) // Array of account-password objects
-    passwords: { account: string; password: string }[];
+    passwords: { account: string; encrypted: string; iv:string }[];
 
     @Prop({ type: Array, default: [] }) // Change to array of objects for dates
     dates: { field: string; value: string }[];

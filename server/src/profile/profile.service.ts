@@ -4,16 +4,21 @@ import { Model } from 'mongoose';
 import { User } from 'src/schma/user.schema';
 import { PersonalDto } from './dto/personal.dto';
 import { PasswordDto } from './dto/passwords.dto';
-import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class ProfileService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
+  private readonly encryptionAlgorithm = 'aes-256-ctr';
+  private readonly secretKey = crypto.createHash('sha256')
+    .update(process.env.SECRET_KEY || 'your-default-secret-key')
+    .digest(); // Ensure the key is exactly 32 bytes
+  private readonly ivLength = 16;
+
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async editProfile(editDto: PersonalDto) {
     const { houseName, post, place, date, district, bloodGroup, pincode, userId } = editDto;
 
-    // Update the `personal` field
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
       {
@@ -21,7 +26,7 @@ export class ProfileService {
           personal: { houseName, post, place, date, district, bloodGroup, pincode },
         },
       },
-      { new: true } // Returns the updated document
+      { new: true }
     );
 
     if (!updatedUser) {
@@ -33,45 +38,60 @@ export class ProfileService {
 
   async addPassword(passwordDto: PasswordDto) {
     const { userId, account, password } = passwordDto;
-
-    // Find the user by userId
+  
+    // Find the user by ID
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    // Ensure the passwords field is initialized if it is null or undefined
-    if (!user.passwords || user.passwords === null || user.passwords === undefined) {
-      user.passwords = []; // Initialize passwords array if it's null or undefined
-    }
-
-    // Hash the password using Argon2
-    const hashedPassword = await this.hashPassword(password);
-
-    // Add the hashed password to the passwords array
+  
+    // Encrypt the password
+    const { encrypted, iv } = this.encryptPassword(password);
+  
+    // Use `findByIdAndUpdate` with the `$push` operator to add the new password
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
       {
-        $push: { // Push the new password into the passwords array
-          passwords: { account, password: await this.hashPassword(password) }
+        $push: {
+          passwords: { account, encrypted, iv } // Push the encrypted password into the array
         },
       },
-      { new: true } // This ensures the updated user is returned
+      { new: true } // Return the updated document
     );
+  
+    return updatedUser;
+  }
+  async getPasswords(userId: string) {
+    const user = await this.userModel.findById(userId).lean();
+    if (!user || !user.passwords) {
+      throw new NotFoundException('User or passwords not found');
+    }
 
-    // Save the updated user document
-    await user.save();
+    const decryptedPasswords = user.passwords.map((passwordObj: { account: string; encrypted: string; iv: string }) => {
+      return {
+        account: passwordObj.account,
+        password: this.decryptPassword(passwordObj.encrypted, passwordObj.iv),
+      };
+    });
 
-    // Return the updated user
-    return user;
+    return decryptedPasswords;
   }
 
+  private encryptPassword(password: string): { encrypted: string; iv: string } {
+    const iv = crypto.randomBytes(this.ivLength);
+    const cipher = crypto.createCipheriv(this.encryptionAlgorithm, this.secretKey, iv);
+    const encrypted = Buffer.concat([cipher.update(password), cipher.final()]);
 
-  // Hash a password using Argon2
-  private async hashPassword(password: string): Promise<string> {
-    return argon2.hash(password);
+    return {
+      encrypted: encrypted.toString('hex'),
+      iv: iv.toString('hex'),
+    };
   }
 
+  private decryptPassword(encrypted: string, iv: string): string {
+    const decipher = crypto.createDecipheriv(this.encryptionAlgorithm, this.secretKey, Buffer.from(iv, 'hex'));
+    const decrypted = Buffer.concat([decipher.update(Buffer.from(encrypted, 'hex')), decipher.final()]);
 
-
-
+    return decrypted.toString();
+  }
 }
