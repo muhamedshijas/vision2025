@@ -21,8 +21,8 @@ export class User extends Document {
     @Prop({ type: Array, default: [] }) // Change to array of objects for job
     job: { field: string; value: string }[];
 
-    @Prop({ type: Array, default: [] }) // Change to array of objects for passwords
-    passwords: { field: string; value: string }[];
+    @Prop({ type: Array, default: [] }) // Array of account-password objects
+    passwords: { account: string; password: string }[];
 
     @Prop({ type: Array, default: [] }) // Change to array of objects for dates
     dates: { field: string; value: string }[];

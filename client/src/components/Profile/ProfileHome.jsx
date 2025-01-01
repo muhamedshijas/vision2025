@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ProfileSidebar from "./ProfileSidebar";
 import Personal from "./Personal";
 import Passwords from "./Passwords";
+import Dates from "./Dates";
 
 function ProfileHome() {
   // State to track the active section
@@ -18,7 +19,7 @@ function ProfileHome() {
       case "Jobs":
         return <div>Jobs Section Content</div>;
       case "Dates":
-        return <div>Dates Section Content</div>;
+        return <Dates/>
       case "Vision Board":
         return <div>Vision Board Section Content</div>;
       default:

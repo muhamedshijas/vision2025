@@ -48,7 +48,6 @@ export class AuthController {
             const token = req.cookies['userToken']; // Extracting the token from cookies
 
             const result = await this.authService.checkUserLoggedIn(token);
-            console.log(result);
 
             return res.json(result);
         } catch (err) {

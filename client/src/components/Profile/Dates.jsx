@@ -1,55 +1,36 @@
 import React, { useState } from "react";
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import { RiDeleteBin4Fill } from "react-icons/ri";
+import { Box, Button, Typography } from "@mui/material";
+import { RiDeleteBin4Fill, RiEdit2Fill } from "react-icons/ri";
 import { RiFileCopyFill } from "react-icons/ri";
-import AddPasswordModal from "../../modals/AddPasswordModal";
-import { useSelector } from "react-redux";
-
-function Passwords() {
-  const [passwords, setPasswords] = useState([
-    { id: 1, account: "Instagram", password: "abcd1234" },
-    { id: 2, account: "Facebook", password: "efgh5678" },
-    { id: 4, account: "Twitter", password: "ijkl9012" },
-    { id: 5, account: "Twitter", password: "ijkl9012" },
-    { id: 6, account: "Twitter", password: "ijkl9012" },
-    { id: 7, account: "Twitter", password: "ijkl9012" },
-    { id: 8, account: "Twitter", password: "ijkl9012" },
-    { id: 9, account: "Twitter", password: "ijkl9012" },
-    { id: 10, account: "Twitter", password: "ijkl9012" },
-    { id: 11, account: "Twitter", password: "ijkl9012" },
+function Dates() {
+  const [dates, setDates] = useState([
+    { id: 1, date: "28/07/2001", description: "Birthday" },
+    { id: 2, date: "28/07/2001", description: "Birthday" },
+    { id: 3, date: "28/07/2001", description: "Birthday" },
+    { id: 4, date: "28/07/2001", description: "Birthday" },
+    { id: 5, date: "28/07/2001", description: "Birthday" },
+    { id: 6, date: "28/07/2001", description: "Birthday" },
+    { id: 7, date: "28/07/2001", description: "Birthday" },
+    { id: 8, date: "28/07/2001", description: "Birthday" },
+    { id: 9, date: "28/07/2001", description: "Birthday" },
+    { id: 10, date: "28/07/2001", description: "Birthday" },
+    { id: 11, date: "28/07/2001", description: "Birthday" },
   ]);
-  const user = useSelector((state) => {
-    return state.user.detials;
-  });
-  const userId = user._id;
-  const [show, setShow] = useState(false);
-  const handleModal = () => {
-    setShow(true);
-  };
-  const handleCopy = (password) => {
-    navigator.clipboard.writeText(password);
-    alert(`Password copied: ${password}`);
-  };
-
-  const handleDelete = (id) => {
-    const updatedPasswords = passwords.filter((item) => item.id !== id);
-    setPasswords(updatedPasswords);
-  };
 
   return (
     <Box p={4}>
       <Typography variant="h5" mb={2} textAlign="center" fontWeight={600}>
-        Password Manager
+        Important Dates
       </Typography>
 
       <Box>
         <table style={{ textAlign: "center" }}>
           <tr>
-            <th>Account</th>
-            <th>Password</th>
+            <th>Date</th>
+            <th>Description</th>
             <th colSpan={2}>Action</th>
           </tr>
-          {passwords.map((item) => (
+          {dates.map((item) => (
             <tr>
               <td>
                 <div
@@ -61,7 +42,7 @@ function Passwords() {
                     fontSize: "14px",
                   }}
                 >
-                  {item.account}
+                  {item.date}
                 </div>
               </td>
               <td>
@@ -74,7 +55,7 @@ function Passwords() {
                     fontSize: "14px",
                   }}
                 >
-                  {item.password}
+                  {item.description}
                 </div>
               </td>
               <td>
@@ -88,7 +69,7 @@ function Passwords() {
                     fontSize: "14px",
                   }}
                 >
-                  <RiFileCopyFill />
+                  <RiEdit2Fill />
                 </div>
               </td>
               <td>
@@ -100,7 +81,7 @@ function Passwords() {
                     padding: "8px",
                     borderRadius: "0px 5px 5px 0px",
                     fontSize: "14px",
-                    color: "red",
+                    color: "Red",
                   }}
                 >
                   <RiDeleteBin4Fill />
@@ -120,16 +101,12 @@ function Passwords() {
         <Button
           variant="contained"
           style={{ backgroundColor: "black", width: "200px" }}
-          onClick={handleModal}
         >
           Add new
         </Button>
-        {show && (
-          <AddPasswordModal show={show} setShow={setShow} userId={userId} />
-        )}
       </Box>
     </Box>
   );
 }
 
-export default Passwords;
+export default Dates;

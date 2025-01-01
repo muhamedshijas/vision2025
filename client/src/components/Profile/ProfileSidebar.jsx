@@ -34,7 +34,7 @@ function ProfileSidebar({ activeSection, setActiveSection }) {
           justifyContent: "flex-end",
         }}
       >
-        {["Personal", "Passwords", "Jobs", "Dates", "Vision Board"].map(
+        {["Personal", "Jobs", "Passwords", "Dates", "Vision Board"].map(
           (section, index) => (
             <ListItem
               key={index}
