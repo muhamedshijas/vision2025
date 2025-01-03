@@ -131,6 +131,23 @@ export class ProfileService {
 
     return { message: 'Date removed successfully' };
   }
+  async removePasswordByAccount(userId: string, account: string) {
+    try{
+      const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.userModel.updateOne(
+      { _id: userId },
+      { $pull: { passwords: { account } } } // Remove the date with the specific description
+    );    
+    return { message: 'password removed successfully' };
+    }catch(err){
+      console.log(err);
+      
+    }
+  }
 
   private encryptPassword(password: string): { encrypted: string; iv: string } {
     const iv = crypto.randomBytes(this.ivLength);

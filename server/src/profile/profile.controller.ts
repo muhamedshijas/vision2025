@@ -39,4 +39,11 @@ export class ProfileController {
     ) {
         return this.profileService.removeDateByDescription(userId, description);
     }
+    @Delete('deletepassword/:userId')
+    async deletePasswsordByAccount(
+        @Param('userId') userId: string,
+        @Body('account') account: string,
+    ) {
+        return this.profileService.removePasswordByAccount(userId, account);
+    }
 }

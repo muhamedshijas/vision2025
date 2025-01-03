@@ -1,7 +1,7 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 function AddPasswordModal({ show, setShow, userId }) {
   const handleClose = () => {
@@ -11,7 +11,7 @@ function AddPasswordModal({ show, setShow, userId }) {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [account, setAccount] = useState("");
-
+  const [refresh, setRefresh] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
     console.log(password, account);
@@ -25,14 +25,17 @@ function AddPasswordModal({ show, setShow, userId }) {
 
       if (result && result.data && !result.data.err) {
         // Success: Navigate to profile page
-        navigate('/profile');
+        setRefresh((prev) => !prev);
         handleClose();
       } else {
         // Handle error response from server
-        console.error('Error adding password:', result.data?.err || 'Unknown error');
+        console.error(
+          "Error adding password:",
+          result.data?.err || "Unknown error"
+        );
       }
     } catch (error) {
-      console.error('Error during submission:', error);
+      console.error("Error during submission:", error);
     }
   }
 

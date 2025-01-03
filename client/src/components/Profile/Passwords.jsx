@@ -43,9 +43,18 @@ function Passwords() {
     alert(`Password copied: ${password}`);
   };
 
-  const handleDelete = (id) => {
-    const updatedPasswords = passwords.filter((item) => item.id !== id);
-    setPasswords(updatedPasswords);
+  const handleDelete = async (account) => {
+    try {
+      const response = await axios.delete(`/profile/deletepassword/${userId}`, {
+        data: { account },
+      });
+      console.log(response.data.message);
+  
+      // Refresh the dates list
+      setRefresh((prev) => !prev);
+    } catch (error) {
+      console.error('Error deleting date:', error);
+    }
   };
 
   return (
@@ -115,7 +124,7 @@ function Passwords() {
                       color: "red",
                     }}
                   >
-                    <RiDeleteBin4Fill onClick={() => handleDelete(item.id)} />
+                    <RiDeleteBin4Fill onClick={() => handleDelete(item.account)} />
                   </div>
                 </td>
               </tr>
