@@ -5,6 +5,7 @@ import { User } from 'src/schma/user.schema';
 import { PersonalDto } from './dto/personal.dto';
 import { PasswordDto } from './dto/passwords.dto';
 import * as crypto from 'crypto';
+import { DatesDto } from './dto/dates.dto';
 
 @Injectable()
 export class ProfileService {
@@ -14,7 +15,7 @@ export class ProfileService {
     .digest(); // Ensure the key is exactly 32 bytes
   private readonly ivLength = 16;
 
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
   async editProfile(editDto: PersonalDto) {
     const { houseName, post, place, date, district, bloodGroup, pincode, userId } = editDto;
@@ -38,16 +39,16 @@ export class ProfileService {
 
   async addPassword(passwordDto: PasswordDto) {
     const { userId, account, password } = passwordDto;
-  
+
     // Find the user by ID
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  
+
     // Encrypt the password
     const { encrypted, iv } = this.encryptPassword(password);
-  
+
     // Use `findByIdAndUpdate` with the `$push` operator to add the new password
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
@@ -58,7 +59,7 @@ export class ProfileService {
       },
       { new: true } // Return the updated document
     );
-  
+
     return updatedUser;
   }
   async getPasswords(userId: string) {
@@ -75,6 +76,60 @@ export class ProfileService {
     });
 
     return decryptedPasswords;
+  }
+  async addDates(datesDto: DatesDto) {
+    const { userId, dates, description } = datesDto;
+    console.log(datesDto);
+
+    console.log(dates);
+
+    // Find the user by ID
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // If `dates` is null, initialize it as an empty array
+    if (!Array.isArray(user.dates)) {
+      user.dates = [];
+    }
+
+    // Push the new date object to the `dates` array
+    user.dates.push({ dates, description });
+
+    // Save the updated user
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          dates: { dates, description } // Push the encrypted password into the array
+        },
+      },
+      { new: true } // Return the updated document
+    );
+
+    console.log(updatedUser);
+    return updatedUser;
+  }
+
+  async getDates(userId) {
+    const user = await this.userModel.findById(userId).lean()
+    const dates = user.dates
+    return dates
+  }
+
+  async removeDateByDescription(userId: string, description: string) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.userModel.updateOne(
+      { _id: userId },
+      { $pull: { dates: { description } } } // Remove the date with the specific description
+    );
+
+    return { message: 'Date removed successfully' };
   }
 
   private encryptPassword(password: string): { encrypted: string; iv: string } {

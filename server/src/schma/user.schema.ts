@@ -25,7 +25,7 @@ export class User extends Document {
     passwords: { account: string; encrypted: string; iv:string }[];
 
     @Prop({ type: Array, default: [] }) // Change to array of objects for dates
-    dates: { field: string; value: string }[];
+    dates: { dates: string; description: string }[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

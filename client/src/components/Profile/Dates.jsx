@@ -1,21 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { RiDeleteBin4Fill, RiEdit2Fill } from "react-icons/ri";
 import { RiFileCopyFill } from "react-icons/ri";
+import { useSelector } from "react-redux";
+import AddDatesModal from "../../modals/AddDatesModal";
+import axios from "axios";
 function Dates() {
-  const [dates, setDates] = useState([
-    { id: 1, date: "28/07/2001", description: "Birthday" },
-    { id: 2, date: "28/07/2001", description: "Birthday" },
-    { id: 3, date: "28/07/2001", description: "Birthday" },
-    { id: 4, date: "28/07/2001", description: "Birthday" },
-    { id: 5, date: "28/07/2001", description: "Birthday" },
-    { id: 6, date: "28/07/2001", description: "Birthday" },
-    { id: 7, date: "28/07/2001", description: "Birthday" },
-    { id: 8, date: "28/07/2001", description: "Birthday" },
-    { id: 9, date: "28/07/2001", description: "Birthday" },
-    { id: 10, date: "28/07/2001", description: "Birthday" },
-    { id: 11, date: "28/07/2001", description: "Birthday" },
-  ]);
+  const [show, setShow] = useState(false);
+  const [dates,setDates]=useState([])
+  const [refresh,setRefresh]=useState(false)
+  const user = useSelector((state) => {
+    return state.user.detials;
+  });
+
+  const userId = user._id;
+
+  useEffect(() => {
+    const fetchPasswords = async () => {
+      try {
+        const response = await axios.get(`/profile/getdates/${userId}`);
+        setDates(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching passwords:", error);
+      }
+    };
+
+    if (userId) {
+      fetchPasswords();
+    }
+  }, [userId, refresh]);
+  const handleModal = () => {
+    setShow(true);
+  };
+  const handleDelete = async (description) => {
+    try {
+      const response = await axios.delete(`/profile/deletedate/${userId}`, {
+        data: { description },
+      });
+      console.log(response.data.message);
+  
+      // Refresh the dates list
+      setRefresh((prev) => !prev);
+    } catch (error) {
+      console.error('Error deleting date:', error);
+    }
+  };
 
   return (
     <Box p={4}>
@@ -42,7 +72,7 @@ function Dates() {
                     fontSize: "14px",
                   }}
                 >
-                  {item.date}
+                  {item.dates}
                 </div>
               </td>
               <td>
@@ -84,7 +114,7 @@ function Dates() {
                     color: "Red",
                   }}
                 >
-                  <RiDeleteBin4Fill />
+                  <RiDeleteBin4Fill onClick={() => handleDelete(item.description)}  />
                 </div>
               </td>
             </tr>
@@ -101,9 +131,13 @@ function Dates() {
         <Button
           variant="contained"
           style={{ backgroundColor: "black", width: "200px" }}
+          onClick={handleModal}
         >
           Add new
         </Button>
+        {show && (
+          <AddDatesModal show={show} setShow={setShow} userId={userId} />
+        )}
       </Box>
     </Box>
   );
