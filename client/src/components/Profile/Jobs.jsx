@@ -1,12 +1,17 @@
 import { Box, Typography, Button, Pagination } from "@mui/material";
 import React, { useState } from "react";
 import TemplateModals from "../../modals/TemplateModals";
+import AddJobModal from "../../modals/AddJobModal";
 
 function Jobs() {
-  const [templateShow, setTemplateShow] = useState(false);
+  const [templateModalShow, setTemplateModalShow] = useState(false);
+  const [jobAddModal, setJobAddModal] = useState(false);
 
   const handleTemplateModal = () => {
-    setTemplateShow(!templateShow);
+    setTemplateModalShow(!templateModalShow);
+  };
+  const handleAddModal = () => {
+    setJobAddModal(!jobAddModal);
   };
   const jobs = [
     {
@@ -161,14 +166,23 @@ function Jobs() {
         >
           Download Templates
         </Button>
-        <Button style={{ border: "1px solid #759EB8", color: "#759EB8" }}>
+        <Button
+          style={{ border: "1px solid #759EB8", color: "#759EB8" }}
+          onClick={handleAddModal}
+        >
           Add New Job
         </Button>
       </Box>
-      {templateShow && (
+      {templateModalShow && (
         <TemplateModals
-          templateShow={templateShow}
-          setTemplateShow={setTemplateShow}
+          templateShow={templateModalShow}
+          setTemplateShow={setTemplateModalShow}
+        />
+      )}
+      {jobAddModal && (
+        <AddJobModal
+          jobAddModal={jobAddModal}
+          setJobAddModal={setJobAddModal}
         />
       )}
     </div>
