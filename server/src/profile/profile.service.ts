@@ -79,9 +79,7 @@ export class ProfileService {
   }
   async addDates(datesDto: DatesDto) {
     const { userId, dates, description } = datesDto;
-    console.log(datesDto);
 
-    console.log(dates);
 
     // Find the user by ID
     const user = await this.userModel.findById(userId);
@@ -108,7 +106,6 @@ export class ProfileService {
       { new: true } // Return the updated document
     );
 
-    console.log(updatedUser);
     return updatedUser;
   }
 

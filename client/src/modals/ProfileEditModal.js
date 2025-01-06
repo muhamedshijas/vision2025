@@ -3,7 +3,6 @@ import { Box, Button, Typography, TextField, Grid } from "@mui/material";
 import axios from "axios";
 
 function ProfileEditModal({ showModal, setShowModal, userId }) {
-  console.log(userId);
 
   const [houseName, setHouseName] = useState("");
   const [date, setDate] = useState("");

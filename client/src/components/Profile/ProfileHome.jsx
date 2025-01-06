@@ -4,6 +4,7 @@ import ProfileSidebar from "./ProfileSidebar";
 import Personal from "./Personal";
 import Passwords from "./Passwords";
 import Dates from "./Dates";
+import Jobs from "./Jobs";
 
 function ProfileHome() {
   // State to track the active section
@@ -17,7 +18,7 @@ function ProfileHome() {
       case "Passwords":
         return <Passwords />;
       case "Jobs":
-        return <div>Jobs Section Content</div>;
+        return <Jobs/>
       case "Dates":
         return <Dates/>
       case "Vision Board":
