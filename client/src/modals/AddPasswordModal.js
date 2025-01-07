@@ -14,7 +14,6 @@ function AddPasswordModal({ show, setShow, userId }) {
   const [refresh, setRefresh] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(password, account);
 
     try {
       const result = await axios.post("/profile/addpassword", {

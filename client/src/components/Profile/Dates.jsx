@@ -20,7 +20,6 @@ function Dates() {
       try {
         const response = await axios.get(`/profile/getdates/${userId}`);
         setDates(response.data);
-        console.log(response);
       } catch (error) {
         console.error("Error fetching passwords:", error);
       }
@@ -38,7 +37,6 @@ function Dates() {
       const response = await axios.delete(`/profile/deletedate/${userId}`, {
         data: { description },
       });
-      console.log(response.data.message);
   
       // Refresh the dates list
       setRefresh((prev) => !prev);

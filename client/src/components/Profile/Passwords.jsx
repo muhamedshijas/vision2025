@@ -14,7 +14,6 @@ function Passwords() {
   const user = useSelector((state) => {
     return state.user.detials;
   });
-  console.log(user);
 
   const userId = user._id;
 
@@ -24,7 +23,6 @@ function Passwords() {
       try {
         const response = await axios.get(`/profile/getpasswords/${userId}`);
         setPasswords(response.data);
-        console.log(response);
       } catch (error) {
         console.error("Error fetching passwords:", error);
       }
@@ -48,7 +46,6 @@ function Passwords() {
       const response = await axios.delete(`/profile/deletepassword/${userId}`, {
         data: { account },
       });
-      console.log(response.data.message);
   
       // Refresh the dates list
       setRefresh((prev) => !prev);

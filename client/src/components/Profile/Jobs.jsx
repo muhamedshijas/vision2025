@@ -1,12 +1,15 @@
 import { Box, Typography, Button, Pagination } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TemplateModals from "../../modals/TemplateModals";
 import AddJobModal from "../../modals/AddJobModal";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 function Jobs() {
   const [templateModalShow, setTemplateModalShow] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [jobAddModal, setJobAddModal] = useState(false);
+  const [jobs, setJobs] = useState([]);
   const user = useSelector((state) => {
     return state.user.detials;
   });
@@ -18,56 +21,74 @@ function Jobs() {
   const handleAddModal = () => {
     setJobAddModal(!jobAddModal);
   };
-  const jobs = [
-    {
-      jobPosition: "FullStack Developer",
-      company: "Pulse63",
-      location: "Remote",
-      timePeriod: "2023 Sep to 2024 Sep",
-      package: "4.2 LPA",
-      projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-    },
-    {
-      jobPosition: "FullStack Developer",
-      company: "Pulse63",
-      location: "Remote",
-      timePeriod: "2023 Sep to 2024 Sep",
-      package: "4.2 LPA",
-      projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-    },
-    {
-      jobPosition: "FullStack Developer",
-      company: "Pulse63",
-      location: "Remote",
-      timePeriod: "2023 Sep to 2024 Sep",
-      package: "4.2 LPA",
-      projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-    },
-    {
-      jobPosition: "FullStack Developer",
-      company: "Pulse63",
-      location: "Remote",
-      timePeriod: "2023 Sep to 2024 Sep",
-      package: "4.2 LPA",
-      projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-    },
-    {
-      jobPosition: "Backend Developer",
-      company: "TechCorp",
-      location: "On-site",
-      timePeriod: "2022 Jan to 2023 Aug",
-      package: "6 LPA",
-      projects: ["FinTech", "DataSync", "ReportsAPI", "LogsSystem"],
-    },
-    {
-      jobPosition: "Frontend Developer",
-      company: "WebDesignPro",
-      location: "Hybrid",
-      timePeriod: "2021 May to 2022 Dec",
-      package: "5 LPA",
-      projects: ["UIBuilder", "StyleGuide", "AnimationLib", "PortfolioSite"],
-    },
-  ];
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        console.log("hiii");
+        
+        const response = await axios.get(`/profile/getjobs/${userId}`);
+        console.log(response.data);
+        setJobs(response.data);
+      } catch (error) {
+        console.error("Error fetching passwords:", error);
+      }
+    };
+
+    if (userId) {
+      fetchJobs();
+    }
+  }, [userId, refresh]);
+  // const jobs = [
+  //   {
+  //     jobPosition: "FullStack Developer",
+  //     company: "Pulse63",
+  //     location: "Remote",
+  //     timePeriod: "2023 Sep to 2024 Sep",
+  //     package: "4.2 LPA",
+  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
+  //   },
+  //   {
+  //     jobPosition: "FullStack Developer",
+  //     company: "Pulse63",
+  //     location: "Remote",
+  //     timePeriod: "2023 Sep to 2024 Sep",
+  //     package: "4.2 LPA",
+  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
+  //   },
+  //   {
+  //     jobPosition: "FullStack Developer",
+  //     company: "Pulse63",
+  //     location: "Remote",
+  //     timePeriod: "2023 Sep to 2024 Sep",
+  //     package: "4.2 LPA",
+  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
+  //   },
+  //   {
+  //     jobPosition: "FullStack Developer",
+  //     company: "Pulse63",
+  //     location: "Remote",
+  //     timePeriod: "2023 Sep to 2024 Sep",
+  //     package: "4.2 LPA",
+  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
+  //   },
+  //   {
+  //     jobPosition: "Backend Developer",
+  //     company: "TechCorp",
+  //     location: "On-site",
+  //     timePeriod: "2022 Jan to 2023 Aug",
+  //     package: "6 LPA",
+  //     projects: ["FinTech", "DataSync", "ReportsAPI", "LogsSystem"],
+  //   },
+  //   {
+  //     jobPosition: "Frontend Developer",
+  //     company: "WebDesignPro",
+  //     location: "Hybrid",
+  //     timePeriod: "2021 May to 2022 Dec",
+  //     package: "5 LPA",
+  //     projects: ["UIBuilder", "StyleGuide", "AnimationLib", "PortfolioSite"],
+  //   },
+  // ];
 
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 4;
@@ -102,11 +123,11 @@ function Jobs() {
           {/* Left Section: Job Details */}
           <Box display="flex" flexDirection="column" flex="1">
             <Typography variant="h6" fontWeight="bold">
-              {job.jobPosition}
+              {job.jobTitle}
             </Typography>
             <Typography variant="body1">{job.company}</Typography>
             <Typography variant="body2" color="text.secondary">
-              {job.package}
+              {job.packageValue +"LPA"}
             </Typography>
           </Box>
 

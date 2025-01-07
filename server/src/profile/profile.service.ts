@@ -148,7 +148,7 @@ export class ProfileService {
   }
 
   async addJobs(addJobDto: AddJobsDto) {
-    const { jobTitle, packageValue, projects, timePeriod, location, userId } = addJobDto
+    const { jobTitle, packageValue, projects, timePeriod, location, userId, company } = addJobDto
     const user = await this.userModel.findById(userId)
 
     if (!Array.isArray(user.dates)) {
@@ -158,12 +158,18 @@ export class ProfileService {
       userId,
       {
         $push: {
-          jobs: { jobTitle, packageValue, timePeriod, location, projects } // Push the encrypted password into the array
+          jobs: { jobTitle, packageValue, timePeriod, location, projects, company } // Push the encrypted password into the array
         },
       },
       { new: true } // Return the updated document
     );
     return updatedUser;
+  }
+
+  async getJobs(userId) {
+    const user = await this.userModel.findById(userId)
+    const jobs = user.jobs
+    return jobs
   }
 
   private encryptPassword(password: string): { encrypted: string; iv: string } {

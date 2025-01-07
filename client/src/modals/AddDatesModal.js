@@ -14,7 +14,6 @@ function AddDatesModal({ show, setShow, userId }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(description, dates);
 
     try {
       const result = await axios.post("/profile/adddates", {
@@ -25,7 +24,6 @@ function AddDatesModal({ show, setShow, userId }) {
 
       if (result && result.data && !result.data.err) {
         // Success: Navigate to profile page
-       console.log(result);
        
         handleClose();
       } else {

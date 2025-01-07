@@ -6,7 +6,6 @@ export class AddJobsDto {
 
     @IsString()
     company: string;
-
     @IsString()
     timePeriod: string;
 

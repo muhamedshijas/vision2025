@@ -51,6 +51,12 @@ export class ProfileController {
     @Post('addjob')
     async addJob(@Body() addJobDto: AddJobsDto) {
         return this.profileService.addJobs(addJobDto)
+    }
 
+    @Get('getjobs/:userId')
+    async getJobs(@Param('userId') userId: string,){
+        console.log("hiii");
+        
+        return this.profileService.getJobs(userId)
     }
 }

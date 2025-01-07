@@ -12,15 +12,11 @@ function Personal() {
   })
   const id=user._id
   const {personal}=user
-  console.log(personal);
   const calculateAge = (dob) => {
     if (!dob) return "N/A";
     const birthDate = new Date(dob);
     
-    const today = new Date();
-    console.log(today);
-    
-    console.log(dob);
+    const today = new Date()
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
 

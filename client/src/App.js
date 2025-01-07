@@ -37,7 +37,6 @@ function App() {
   }, [refresh]);
 
   // Logging to check if login is successful
-  console.log(login);
 
   return (
     <div className="App">

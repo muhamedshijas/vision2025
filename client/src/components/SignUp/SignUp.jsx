@@ -17,7 +17,6 @@ function SignUp() {
       password,
       phoneNumber,
     });
-    console.log(result);
   }
   return (
     <div style={{ height: "100vh" }}>
