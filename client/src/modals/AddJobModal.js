@@ -36,7 +36,7 @@ function AddJobModal({ jobAddModal, setJobAddModal, userId }) {
       location,
       timePeriod,
       projects,
-      userId
+      userId,
     });
     // Pass the data to the parent component
     setJobAddModal(!jobAddModal);
@@ -49,7 +49,9 @@ function AddJobModal({ jobAddModal, setJobAddModal, userId }) {
   };
 
   const addProjectField = () => {
-    setProjects([...projects, ""]);
+    if (projects.length < 4) {
+      setProjects([...projects, ""]);
+    }
   };
 
   const removeProjectField = (index) => {
@@ -207,6 +209,9 @@ function AddJobModal({ jobAddModal, setJobAddModal, userId }) {
             <Grid item xs={12}>
               <Typography variant="body1" gutterBottom>
                 Projects
+                <p style={{ color: "red", fontSize: "12px" }}>
+                  {projects.length >= 4 && "Only 4 projects acceptable"}
+                </p>
               </Typography>
               {projects.map((project, index) => (
                 <Box display="flex" alignItems="center" key={index}>
@@ -230,6 +235,7 @@ function AddJobModal({ jobAddModal, setJobAddModal, userId }) {
                 variant="outlined"
                 onClick={addProjectField}
                 sx={{ marginTop: "10px" }}
+                disabled={projects.length >= 4} // Disable button if 4 projects are added
               >
                 Add Project
               </Button>
