@@ -6,6 +6,7 @@ import { PersonalDto } from './dto/personal.dto';
 import { PasswordDto } from './dto/passwords.dto';
 import * as crypto from 'crypto';
 import { DatesDto } from './dto/dates.dto';
+import { AddJobsDto } from './dto/jobs.dto';
 
 @Injectable()
 export class ProfileService {
@@ -129,21 +130,40 @@ export class ProfileService {
     return { message: 'Date removed successfully' };
   }
   async removePasswordByAccount(userId: string, account: string) {
-    try{
+    try {
       const user = await this.userModel.findById(userId);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
 
-    await this.userModel.updateOne(
-      { _id: userId },
-      { $pull: { passwords: { account } } } // Remove the date with the specific description
-    );    
-    return { message: 'password removed successfully' };
-    }catch(err){
+      await this.userModel.updateOne(
+        { _id: userId },
+        { $pull: { passwords: { account } } } // Remove the date with the specific description
+      );
+      return { message: 'password removed successfully' };
+    } catch (err) {
       console.log(err);
-      
+
     }
+  }
+
+  async addJobs(addJobDto: AddJobsDto) {
+    const { jobTitle, packageValue, projects, timePeriod, location, userId } = addJobDto
+    const user = await this.userModel.findById(userId)
+
+    if (!Array.isArray(user.dates)) {
+      user.jobs = [];
+    }
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          jobs: { jobTitle, packageValue, timePeriod, location, projects } // Push the encrypted password into the array
+        },
+      },
+      { new: true } // Return the updated document
+    );
+    return updatedUser;
   }
 
   private encryptPassword(password: string): { encrypted: string; iv: string } {

@@ -2,11 +2,16 @@ import { Box, Typography, Button, Pagination } from "@mui/material";
 import React, { useState } from "react";
 import TemplateModals from "../../modals/TemplateModals";
 import AddJobModal from "../../modals/AddJobModal";
+import { useSelector } from "react-redux";
 
 function Jobs() {
   const [templateModalShow, setTemplateModalShow] = useState(false);
   const [jobAddModal, setJobAddModal] = useState(false);
+  const user = useSelector((state) => {
+    return state.user.detials;
+  });
 
+  const userId = user._id;
   const handleTemplateModal = () => {
     setTemplateModalShow(!templateModalShow);
   };
@@ -183,6 +188,7 @@ function Jobs() {
         <AddJobModal
           jobAddModal={jobAddModal}
           setJobAddModal={setJobAddModal}
+          userId={userId}
         />
       )}
     </div>

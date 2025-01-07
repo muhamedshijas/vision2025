@@ -8,54 +8,59 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 import React, { useState } from "react";
 
-function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
-  const [jobDetails, setJobDetails] = useState({
-    jobTitle: "",
-    company: "",
-    place: "",
-    package: "",
-    startMonth: "",
-    startYear: "",
-    endMonth: "",
-    endYear: "",
-    projects: [""],
-  });
+function AddJobModal({ jobAddModal, setJobAddModal, userId }) {
+  const [jobTitle, setJobTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
+  const [packageValue, setPackageValue] = useState("");
+  const [startMonth, setStartMonth] = useState("");
+  const [startYear, setStartYear] = useState("");
+  const [endMonth, setEndMonth] = useState("");
+  const [endYear, setEndYear] = useState("");
+  const [projects, setProjects] = useState([""]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setJobDetails((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const timePeriod = `${startMonth} ${startYear} to ${endMonth} ${endYear}`;
+    const data = await axios.post("/profile/addjob", {
+      jobTitle,
+      company,
+      packageValue,
+      location,
+      timePeriod,
+      projects,
+      userId
+    });
+    // Pass the data to the parent component
+    setJobAddModal(!jobAddModal);
+  }
 
   const handleProjectChange = (index, value) => {
-    const updatedProjects = [...jobDetails.projects];
+    const updatedProjects = [...projects];
     updatedProjects[index] = value;
-    setJobDetails((prev) => ({
-      ...prev,
-      projects: updatedProjects,
-    }));
+    setProjects(updatedProjects);
   };
 
   const addProjectField = () => {
-    setJobDetails((prev) => ({
-      ...prev,
-      projects: [...prev.projects, ""],
-    }));
+    setProjects([...projects, ""]);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(jobDetails); // Pass the data to the parent component
+  const removeProjectField = (index) => {
+    const updatedProjects = projects.filter((_, i) => i !== index);
+    setProjects(updatedProjects);
+  };
+
+  const handleClose = () => {
     setJobAddModal(!jobAddModal);
   };
-  const handlClose = () => {
-    setJobAddModal(!jobAddModal);
-  };
+
   const months = [
     "January",
     "February",
@@ -103,9 +108,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <TextField
                 fullWidth
                 label="Job Title"
-                name="jobTitle"
-                value={jobDetails.jobTitle}
-                onChange={handleInputChange}
+                value={jobTitle}
+                onChange={(e) => setJobTitle(e.target.value)}
                 required
               />
             </Grid>
@@ -113,9 +117,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <TextField
                 fullWidth
                 label="Company"
-                name="company"
-                value={jobDetails.company}
-                onChange={handleInputChange}
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
                 required
               />
             </Grid>
@@ -123,9 +126,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <TextField
                 fullWidth
                 label="Place"
-                name="place"
-                value={jobDetails.place}
-                onChange={handleInputChange}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 required
               />
             </Grid>
@@ -133,9 +135,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <TextField
                 fullWidth
                 label="Package"
-                name="package"
-                value={jobDetails.package}
-                onChange={handleInputChange}
+                value={packageValue}
+                onChange={(e) => setPackageValue(e.target.value)}
                 required
               />
             </Grid>
@@ -143,9 +144,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <FormControl fullWidth>
                 <InputLabel>Start Month</InputLabel>
                 <Select
-                  name="startMonth"
-                  value={jobDetails.startMonth}
-                  onChange={handleInputChange}
+                  value={startMonth}
+                  onChange={(e) => setStartMonth(e.target.value)}
                   required
                 >
                   {months.map((month) => (
@@ -160,9 +160,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <FormControl fullWidth>
                 <InputLabel>Start Year</InputLabel>
                 <Select
-                  name="startYear"
-                  value={jobDetails.startYear}
-                  onChange={handleInputChange}
+                  value={startYear}
+                  onChange={(e) => setStartYear(e.target.value)}
                   required
                 >
                   {years.map((year) => (
@@ -177,9 +176,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <FormControl fullWidth>
                 <InputLabel>End Month</InputLabel>
                 <Select
-                  name="endMonth"
-                  value={jobDetails.endMonth}
-                  onChange={handleInputChange}
+                  value={endMonth}
+                  onChange={(e) => setEndMonth(e.target.value)}
                   required
                 >
                   {months.map((month) => (
@@ -194,9 +192,8 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <FormControl fullWidth>
                 <InputLabel>End Year</InputLabel>
                 <Select
-                  name="endYear"
-                  value={jobDetails.endYear}
-                  onChange={handleInputChange}
+                  value={endYear}
+                  onChange={(e) => setEndYear(e.target.value)}
                   required
                 >
                   {years.map((year) => (
@@ -211,16 +208,23 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
               <Typography variant="body1" gutterBottom>
                 Projects
               </Typography>
-              {jobDetails.projects.map((project, index) => (
-                <TextField
-                  key={index}
-                  fullWidth
-                  margin="dense"
-                  label={`Project ${index + 1}`}
-                  value={project}
-                  onChange={(e) => handleProjectChange(index, e.target.value)}
-                  required
-                />
+              {projects.map((project, index) => (
+                <Box display="flex" alignItems="center" key={index}>
+                  <TextField
+                    fullWidth
+                    margin="dense"
+                    label={`Project ${index + 1}`}
+                    value={project}
+                    onChange={(e) => handleProjectChange(index, e.target.value)}
+                    required
+                  />
+                  <IconButton
+                    color="error"
+                    onClick={() => removeProjectField(index)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               ))}
               <Button
                 variant="outlined"
@@ -235,7 +239,7 @@ function AddJobModal({ jobAddModal, setJobAddModal,onSubmit }) {
             <Button variant="contained" color="primary" type="submit">
               Submit
             </Button>
-            <Button variant="outlined" color="secondary" onClick={handlClose}>
+            <Button variant="outlined" color="secondary" onClick={handleClose}>
               Cancel
             </Button>
           </Box>

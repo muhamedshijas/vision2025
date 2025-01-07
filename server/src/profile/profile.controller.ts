@@ -3,6 +3,7 @@ import { PersonalDto } from './dto/personal.dto';
 import { ProfileService } from './profile.service';
 import { PasswordDto } from './dto/passwords.dto';
 import { DatesDto } from './dto/dates.dto';
+import { AddJobsDto } from './dto/jobs.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -45,5 +46,11 @@ export class ProfileController {
         @Body('account') account: string,
     ) {
         return this.profileService.removePasswordByAccount(userId, account);
+    }
+
+    @Post('addjob')
+    async addJob(@Body() addJobDto: AddJobsDto) {
+        return this.profileService.addJobs(addJobDto)
+
     }
 }
