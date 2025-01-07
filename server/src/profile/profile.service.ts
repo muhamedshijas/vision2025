@@ -172,6 +172,24 @@ export class ProfileService {
     return jobs
   }
 
+  async removeJobByTimePeriod(userId: string, timePeriod: string) {
+    try {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      await this.userModel.updateOne(
+        { _id: userId },
+        { $pull: { jobs: { timePeriod } } }
+      );
+      return { message: 'jobs removed successfully' };
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
+
   private encryptPassword(password: string): { encrypted: string; iv: string } {
     const iv = crypto.randomBytes(this.ivLength);
     const cipher = crypto.createCipheriv(this.encryptionAlgorithm, this.secretKey, iv);

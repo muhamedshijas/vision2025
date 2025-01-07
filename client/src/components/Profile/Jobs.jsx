@@ -15,23 +15,42 @@ function Jobs() {
   });
 
   const userId = user._id;
+
   const handleTemplateModal = () => {
     setTemplateModalShow(!templateModalShow);
   };
+
   const handleAddModal = () => {
     setJobAddModal(!jobAddModal);
+  };
+
+  const handleDelete = async (timePeriod) => {
+    try {
+      console.log(timePeriod);
+      const response = await axios.delete(`/profile/deletejob/${userId}`, {
+      data:  {timePeriod},
+      });
+
+      if (response.data.success) {
+        // Remove the deleted job from the state
+        setJobs((prevJobs) =>
+          prevJobs.filter((job) => job.timePeriod !== timePeriod)
+        );
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
   };
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        console.log("hiii");
-        
         const response = await axios.get(`/profile/getjobs/${userId}`);
-        console.log(response.data);
         setJobs(response.data);
       } catch (error) {
-        console.error("Error fetching passwords:", error);
+        console.error("Error fetching jobs:", error);
       }
     };
 
@@ -39,56 +58,6 @@ function Jobs() {
       fetchJobs();
     }
   }, [userId, refresh]);
-  // const jobs = [
-  //   {
-  //     jobPosition: "FullStack Developer",
-  //     company: "Pulse63",
-  //     location: "Remote",
-  //     timePeriod: "2023 Sep to 2024 Sep",
-  //     package: "4.2 LPA",
-  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-  //   },
-  //   {
-  //     jobPosition: "FullStack Developer",
-  //     company: "Pulse63",
-  //     location: "Remote",
-  //     timePeriod: "2023 Sep to 2024 Sep",
-  //     package: "4.2 LPA",
-  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-  //   },
-  //   {
-  //     jobPosition: "FullStack Developer",
-  //     company: "Pulse63",
-  //     location: "Remote",
-  //     timePeriod: "2023 Sep to 2024 Sep",
-  //     package: "4.2 LPA",
-  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-  //   },
-  //   {
-  //     jobPosition: "FullStack Developer",
-  //     company: "Pulse63",
-  //     location: "Remote",
-  //     timePeriod: "2023 Sep to 2024 Sep",
-  //     package: "4.2 LPA",
-  //     projects: ["Tealth", "Hoops", "HoopsAPI", "Petto"],
-  //   },
-  //   {
-  //     jobPosition: "Backend Developer",
-  //     company: "TechCorp",
-  //     location: "On-site",
-  //     timePeriod: "2022 Jan to 2023 Aug",
-  //     package: "6 LPA",
-  //     projects: ["FinTech", "DataSync", "ReportsAPI", "LogsSystem"],
-  //   },
-  //   {
-  //     jobPosition: "Frontend Developer",
-  //     company: "WebDesignPro",
-  //     location: "Hybrid",
-  //     timePeriod: "2021 May to 2022 Dec",
-  //     package: "5 LPA",
-  //     projects: ["UIBuilder", "StyleGuide", "AnimationLib", "PortfolioSite"],
-  //   },
-  // ];
 
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 4;
@@ -127,7 +96,7 @@ function Jobs() {
             </Typography>
             <Typography variant="body1">{job.company}</Typography>
             <Typography variant="body2" color="text.secondary">
-              {job.packageValue +"LPA"}
+              {job.packageValue + " LPA"}
             </Typography>
           </Box>
 
@@ -168,8 +137,9 @@ function Jobs() {
               variant="body2"
               color="red"
               style={{ cursor: "pointer" }}
+              onClick={() => handleDelete(job.timePeriod)}
             >
-              remove
+              Remove
             </Typography>
           </Box>
         </Box>

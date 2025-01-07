@@ -54,9 +54,16 @@ export class ProfileController {
     }
 
     @Get('getjobs/:userId')
-    async getJobs(@Param('userId') userId: string,){
-        console.log("hiii");
-        
+    async getJobs(@Param('userId') userId: string,) {
+
+
         return this.profileService.getJobs(userId)
     }
+    @Delete('deletejob/:userId')
+    async deleteJob(@Param('userId') userId: string,
+        @Body('timePeriod') timePeriod: string) {
+        return this.profileService.removeJobByTimePeriod(userId, timePeriod)
+
+    }
+
 }
