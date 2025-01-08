@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { RiFileCopyFill } from "react-icons/ri";
 import AddPasswordModal from "../../modals/AddPasswordModal";
@@ -32,13 +32,14 @@ function Passwords() {
       fetchPasswords();
     }
   }, [userId, refresh]);
+
   const handleModal = () => {
     setShow(true);
   };
 
   const handleCopy = (password) => {
     navigator.clipboard.writeText(password);
-    alert(`Password copied: ${password}`);
+    alert(`Password copied to clipboard!`);
   };
 
   const handleDelete = async (account) => {
@@ -46,11 +47,11 @@ function Passwords() {
       const response = await axios.delete(`/profile/deletepassword/${userId}`, {
         data: { account },
       });
-  
-      // Refresh the dates list
+
+      // Refresh the passwords list
       setRefresh((prev) => !prev);
     } catch (error) {
-      console.error('Error deleting date:', error);
+      console.error("Error deleting password:", error);
     }
   };
 
@@ -61,7 +62,7 @@ function Passwords() {
       </Typography>
 
       <Box>
-        <table style={{ textAlign: "center" }}>
+        <table style={{ textAlign: "center", width: "100%" }}>
           <thead>
             <tr>
               <th>Account</th>
@@ -94,7 +95,7 @@ function Passwords() {
                       fontSize: "14px",
                     }}
                   >
-                    {item.password}
+                    ••••••••••••
                   </div>
                 </td>
                 <td>
@@ -103,7 +104,6 @@ function Passwords() {
                     style={{
                       border: "1px solid black",
                       padding: "8px",
-                      borderRadius: "0px 0px 0px 0px",
                       fontSize: "14px",
                     }}
                   >
