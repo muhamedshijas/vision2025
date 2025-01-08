@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import { RiDeleteBin4Fill } from "react-icons/ri";
-import { RiFileCopyFill } from "react-icons/ri";
+import { Box, Button, IconButton, Typography, Pagination } from "@mui/material";
+import { RiDeleteBin4Fill, RiFileCopyFill } from "react-icons/ri";
 import AddPasswordModal from "../../modals/AddPasswordModal";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios"; // You can use axios or fetch for API calls
+import axios from "axios";
 
 function Passwords() {
   const dispatch = useDispatch();
   const [passwords, setPasswords] = useState([]);
   const [show, setShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const passwordsPerPage = 10; // Number of passwords per page
+
   const user = useSelector((state) => {
     return state.user.detials;
   });
 
   const userId = user._id;
 
-  // Fetch passwords when the component is mounted or when the userId changes
+  // Fetch passwords
   useEffect(() => {
     const fetchPasswords = async () => {
       try {
@@ -33,26 +35,37 @@ function Passwords() {
     }
   }, [userId, refresh]);
 
+  // Handle modal visibility
   const handleModal = () => {
     setShow(true);
   };
 
+  // Handle copying password
   const handleCopy = (password) => {
     navigator.clipboard.writeText(password);
     alert(`Password copied to clipboard!`);
   };
 
+  // Handle deleting password
   const handleDelete = async (account) => {
     try {
       const response = await axios.delete(`/profile/deletepassword/${userId}`, {
         data: { account },
       });
 
-      // Refresh the passwords list
-      setRefresh((prev) => !prev);
+      setRefresh((prev) => !prev); // Refresh passwords after deletion
     } catch (error) {
       console.error("Error deleting password:", error);
     }
+  };
+
+  // Pagination logic
+  const totalPages = Math.ceil(passwords.length / passwordsPerPage);
+  const startIndex = (currentPage - 1) * passwordsPerPage;
+  const currentPasswords = passwords.slice(startIndex, startIndex + passwordsPerPage);
+
+  const handleChangePage = (event, page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -65,17 +78,16 @@ function Passwords() {
         <table style={{ textAlign: "center", width: "100%" }}>
           <thead>
             <tr>
-              <th>Account</th>
+              <th>Account/User Name</th>
               <th>Password</th>
               <th colSpan={2}>Action</th>
             </tr>
           </thead>
           <tbody>
-            {passwords.map((item) => (
-              <tr key={item.id}>
+            {currentPasswords.map((item, index) => (
+              <tr key={index}>
                 <td>
                   <div
-                    className="password-item"
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -88,7 +100,6 @@ function Passwords() {
                 </td>
                 <td>
                   <div
-                    className="password-item"
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -100,7 +111,6 @@ function Passwords() {
                 </td>
                 <td>
                   <div
-                    className="password-item"
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -112,7 +122,6 @@ function Passwords() {
                 </td>
                 <td>
                   <div
-                    className="password-item"
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -130,6 +139,17 @@ function Passwords() {
         </table>
       </Box>
 
+      {/* Pagination Section */}
+      <Box display="flex" justifyContent="center" marginTop="16px">
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handleChangePage}
+          color="primary"
+        />
+      </Box>
+
+      {/* Add new password button */}
       <Box
         marginTop="10px"
         width="100%"
