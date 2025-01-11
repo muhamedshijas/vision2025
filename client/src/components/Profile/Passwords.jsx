@@ -63,7 +63,7 @@ function Passwords() {
   const totalPages = Math.ceil(passwords.length / passwordsPerPage);
   const startIndex = (currentPage - 1) * passwordsPerPage;
   const currentPasswords = passwords.slice(startIndex, startIndex + passwordsPerPage);
-
+ 
   const handleChangePage = (event, page) => {
     setCurrentPage(page);
   };
