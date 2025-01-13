@@ -12,7 +12,7 @@ import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import { useEffect } from "react";
 import ProfilePage from "./pages/Profile/HomePage";
-import PersonalPage from "./pages/Profile/PersonalPage";
+import DailyTaskPage from "./pages/DailyTask/DailyTaskPage";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -47,7 +47,7 @@ function App() {
             <Route path="/login" element={<Navigate to="/" />} />
             <Route path="/signup" element={<Navigate to="/" />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/profile/personal" element={<PersonalPage />} />
+            <Route path="/dailytask" element={<DailyTaskPage />} />
           </>
         ) : (
           <>

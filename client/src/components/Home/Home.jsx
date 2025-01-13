@@ -46,22 +46,24 @@ function Home() {
           maxWidth="50%" // Adjust max width for proper layout
         >
           {/* Box 1 */}
-          <Box
-            height="230px"
-            width="230px"
-            borderRadius="22px"
-            bgcolor="#759EB8"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-around"
-            alignItems="center"
-            color="white"
-            fontWeight="bold"
-            fontSize="22px"
-          >
-            <PiClockFill fontSize="180px" />
-            Daily Task
-          </Box>
+          <Link to="/dailytask" style={{ textDecoration: "none" }}>
+            <Box
+              height="230px"
+              width="230px"
+              borderRadius="22px"
+              bgcolor="#759EB8" 
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-around"
+              alignItems="center"
+              color="white"
+              fontWeight="bold"
+              fontSize="22px"
+            >
+              <PiClockFill fontSize="180px" />
+              Daily Task
+            </Box>
+          </Link>
           {/* Box 2 */}
           <Box
             height="230px"
