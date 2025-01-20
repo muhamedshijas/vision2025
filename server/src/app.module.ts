@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
+import { DailyTaskModule } from './daily-task/daily-task.module';
 
 @Module({
   imports: [
@@ -17,6 +18,9 @@ import { ProfileModule } from './profile/profile.module';
     AuthModule,
 
     ProfileModule,
+
+    DailyTaskModule,
+
   ],
   controllers: [],
   providers: [],
