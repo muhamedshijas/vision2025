@@ -14,7 +14,9 @@ function DailyTaskMain() {
       case "Entertainment":
         return <div>Entertainment</div>;
       case "Jobs":
-        return <Jobs/>;
+        return <Jobs />;
+      case "Daily Quotes":
+        return <div>daily Qotes section</div>;
       case "Daily Report":
         return <div>Daily Report</div>;
       default:

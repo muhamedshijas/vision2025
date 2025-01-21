@@ -17,7 +17,10 @@ class Job {
     status: string;
 
     @Prop({ required: false }) // Optional field for email
-    emailAddress?: string;
+    email?: string;
+
+    @Prop({ required: true })
+    place: string
 }
 
 // Define the main schema
@@ -27,6 +30,8 @@ export class DailyReports extends Document {
     userId: Types.ObjectId
     @Prop({ type: [Job], default: [] }) // Array of Job subdocuments
     jobsdata: Types.Array<Job>;
+    @Prop({ type: String })
+    date: String
 }
 
 // Create the Mongoose schemas

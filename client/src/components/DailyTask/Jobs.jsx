@@ -4,6 +4,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { RiDeleteBin4Fill, RiEdit2Fill } from "react-icons/ri";
 import { Button } from "@mui/material";
+import AddJobs from "../../modals/DailyTask/AddJobs";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 function LinearProgressWithLabel({ value }) {
   return (
@@ -21,19 +24,34 @@ function LinearProgressWithLabel({ value }) {
 }
 
 function Jobs() {
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      company: "ABC Corp",
-      designation: "Software Engineer",
-      applied_through: "Indeed",
-      application_status: "Pending",
-    },
-  ]);
+  const user = useSelector((state) => {
+    return state.user.detials;
+  });
+  const userId = user._id;
+  const [jobs, setJobs] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  useEffect(() => {
+    const fetchDates = async () => {
+      try {
+        const response = await axios.get(`daily-task/get-jobs/${userId}`);
+        setJobs(response.data);
+        console.log(jobs);
+      } catch (error) {
+        console.error("Error fetching passwords:", error);
+      }
+    };
+
+    if (userId) {
+      fetchDates();
+    }
+  }, [userId, refresh]);
 
   const dailyTarget = 10; // The daily target of jobs
   const [progress, setProgress] = useState(0);
-
+  const [showAddModal, setShowAddModal] = useState(false);
+  const handleModal = () => {
+    setShowAddModal(!showAddModal);
+  };
   // Update progress whenever the number of jobs changes
   useEffect(() => {
     setProgress((jobs.length / dailyTarget) * 100);
@@ -61,44 +79,118 @@ function Jobs() {
       <Typography variant="h4" textAlign="center" mb={4}>
         Job Application Tracker
       </Typography>
-
       <LinearProgressWithLabel value={progress} />
-
-      <Box p={4}>
-        <Typography variant="h5" mb={2} textAlign="center" fontWeight={600}>
-          Important Dates
-        </Typography>
-
-        <Box>
-          <table style={{ width: "100%", textAlign: "center", borderCollapse: "collapse" }}>
-            <thead>
+      <Box width="100%">
+        <Box display="flex" justifyContent="center" alignItems="center ">
+          <table style={{ textAlign: "center" }}>
+            <tr>
+              <th>Company</th>
+              <th>Designation</th>
+              <th>Place</th>
+              <th>Applied Through</th>
+              <th>Status</th>
+              <th colSpan={2}>Action</th>
+            </tr>
+            {jobs.map((item) => (
               <tr>
-                <th style={{ border: "1px solid black", padding: "8px" }}>Company</th>
-                <th style={{ border: "1px solid black", padding: "8px" }}>Status</th>
-                <th style={{ border: "1px solid black", padding: "8px" }}>Edit</th>
-                <th style={{ border: "1px solid black", padding: "8px" }}>Delete</th>
+                <td>
+                  <div
+                    className=""
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      borderRadius: "5px 0px 0px 5px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.company}
+                  </div>
+                </td>
+                <td>
+                  {" "}
+                  <div
+                    className=""
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.designation}
+                  </div>
+                </td>
+                <td>
+                  {" "}
+                  <div
+                    className=""
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.place}
+                  </div>
+                </td>
+                <td>
+                  {" "}
+                  <div
+                    className=""
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.email ? item.email : item.appliedThrough}
+                  </div>
+                </td>
+                <td>
+                  {" "}
+                  <div
+                    className=""
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.status}
+                  </div>
+                </td>
+                <td>
+                  {" "}
+                  <div
+                    className=""
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      borderRadius: "0px 0px 0px 0px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    <RiEdit2Fill />
+                  </div>
+                </td>
+                <td>
+                  {" "}
+                  <div
+                    className=""
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      borderRadius: "0px 5px 5px 0px",
+                      fontSize: "14px",
+                      color: "Red",
+                    }}
+                  >
+                    <RiDeleteBin4Fill />
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {jobs.map((item) => (
-                <tr key={item.id}>
-                  <td style={{ border: "1px solid black", padding: "8px" }}>{item.company}</td>
-                  <td style={{ border: "1px solid black", padding: "8px" }}>{item.application_status}</td>
-                  <td style={{ border: "1px solid black", padding: "8px" }}>
-                    <RiEdit2Fill style={{ cursor: "pointer" }} />
-                  </td>
-                  <td style={{ border: "1px solid black", padding: "8px", color: "red" }}>
-                    <RiDeleteBin4Fill
-                      style={{ cursor: "pointer" }}
-                      onClick={() => deleteJob(item.id)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            ))}
           </table>
         </Box>
-
         <Box
           marginTop="10px"
           width="100%"
@@ -106,14 +198,23 @@ function Jobs() {
           justifyContent="center"
           alignItems="center"
         >
-          <Button
-            variant="contained"
-            style={{ backgroundColor: "black", width: "200px" }}
-            onClick={addJob}
-          >
-            Add New Job
-          </Button>
+          {jobs.length < dailyTarget && (
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "black", width: "200px" }}
+              onClick={handleModal}
+            >
+              Add New Job
+            </Button>
+          )}
         </Box>
+        {showAddModal && (
+          <AddJobs
+            setShowAddModal={setShowAddModal}
+            showAddModal={showAddModal}
+            userId={userId}
+          />
+        )}
       </Box>
     </div>
   );

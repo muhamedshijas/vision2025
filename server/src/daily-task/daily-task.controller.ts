@@ -5,8 +5,13 @@ import { AddJobsDto } from './dto/addJob.dto';
 export class DailyTaskController {
   constructor(private readonly dailyTaskService: DailyTaskService) { }
 
-  @Post('addJob')
+  @Post('add-job')
   async addJob(@Body() addJobDto: AddJobsDto) {
     return this.dailyTaskService.addJobs(addJobDto)
+  }
+
+  @Get('get-jobs/:userId')
+  async getJobs(@Param('userId') userId: string) {
+    return this.dailyTaskService.getJobs(userId);
   }
 }

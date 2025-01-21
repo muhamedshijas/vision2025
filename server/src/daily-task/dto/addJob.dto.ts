@@ -22,4 +22,19 @@ export class AddJobsDto {
     @ApiProperty()
     @IsString()
     designation: string
+
+    @ApiProperty()
+    @IsString()
+    appliedThrough: string
+
+    @ApiProperty()
+    @IsString()
+    email?: string
+
+    @ApiProperty()
+    @IsString()
+    date: string
+
+
+
 }

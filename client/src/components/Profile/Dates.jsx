@@ -16,7 +16,7 @@ function Dates() {
   const userId = user._id;
 
   useEffect(() => {
-    const fetchPasswords = async () => {
+    const fetchDates = async () => {
       try {
         const response = await axios.get(`/profile/getdates/${userId}`);
         setDates(response.data);
@@ -26,7 +26,7 @@ function Dates() {
     };
 
     if (userId) {
-      fetchPasswords();
+      fetchDates();
     }
   }, [userId, refresh]);
   const handleModal = () => {
