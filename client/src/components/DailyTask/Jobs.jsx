@@ -91,11 +91,23 @@ function Jobs() {
               <th>Status</th>
               <th colSpan={2}>Action</th>
             </tr>
-            {jobs.map((item) => (
-              <tr>
-                <td>
+            {jobs.map((item, index) => (
+              <tr
+                key={index}
+                style={{
+                  borderRadius: "10px",
+                  backgroundColor:
+                    item.status === "Pending"
+                      ? "white" // Default color
+                      : item.status === "Rejected"
+                      ? "red"
+                      : item.status === "Call Backed"
+                      ? "yellow"
+                      : "white", // Fallback color
+                }}
+              >
+                <td style={{ borderRadius: "5px 0px 0px 5px" }}>
                   <div
-                    className=""
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -153,6 +165,7 @@ function Jobs() {
                       border: "1px solid black",
                       padding: "8px",
                       fontSize: "14px",
+                      color: {},
                     }}
                   >
                     {item.status}
@@ -172,7 +185,7 @@ function Jobs() {
                     <RiEdit2Fill />
                   </div>
                 </td>
-                <td>
+                <td style={{ borderRadius: "0px 5px 5px 0px" }}>
                   {" "}
                   <div
                     className=""
