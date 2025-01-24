@@ -67,4 +67,17 @@ export class DailyTaskService {
       throw new Error('Failed to fetch jobs');
     }
   }
+
+  async updateJobStatus(userId, jobId, status) {
+    try {
+      await this.dailyReportModel.updateOne(
+        { userId: userId, 'jobsdata._id': jobId },
+        { $set: { 'jobsdata.$.status': status } }
+      );
+      return {status:true}
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
 }

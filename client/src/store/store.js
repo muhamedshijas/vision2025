@@ -1,17 +1,20 @@
-import {createStore} from 'redux';
-const initialState={
-    user:{login:null},
-    refresh:true
-    
+// store.js
+import { createStore } from "redux";
+
+const initialState = {
+  user: { login: null },
+  refresh: true,
+};
+
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case "user":
+      return { ...state, user: action.payload };
+    case "refresh":
+      return { ...state, refresh: !state.refresh }; // Toggle refresh state
+    default:
+      return state;
+  }
 }
 
-function reducer(state=initialState, action){
-    switch(action.type){
-        case 'user': return {...state, user:action.payload};
-        case 'refresh': return {...state, refresh:!state.refresh};
-        default: return state;
-    }
-
-}
-
-export default createStore(reducer)
+export default createStore(reducer);

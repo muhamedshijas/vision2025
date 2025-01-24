@@ -2,21 +2,38 @@ import React, { useState, useEffect } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { RiDeleteBin4Fill, RiEdit2Fill } from "react-icons/ri";
+import {
+  RiDeleteBin4Fill,
+  RiEdit2Fill,
+  RiCheckboxCircleFill,
+} from "react-icons/ri";
 import { Button } from "@mui/material";
 import AddJobs from "../../modals/DailyTask/AddJobs";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import UpdateStatusModal from "../../modals/DailyTask/UpdateStatusModal";
 
 function LinearProgressWithLabel({ value }) {
   return (
     <Box display="flex" alignItems="center">
       <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" value={value} />
+        <LinearProgress
+          variant="determinate"
+          value={value}
+          sx={{
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: value === 100 ? "green" : "primary.main", // Change bar color
+            },
+          }}
+        />
       </Box>
       <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">
-          {`${Math.round(value)}%`}
+        <Typography
+          variant="body2"
+          color={value === 100 ? "green" : "textSecondary"}
+          fontWeight={value == 100 ? 600 : 500}
+        >
+          {value === 100 ? <RiCheckboxCircleFill /> : `${Math.round(value)}%`}
         </Typography>
       </Box>
     </Box>
@@ -24,41 +41,57 @@ function LinearProgressWithLabel({ value }) {
 }
 
 function Jobs() {
-  const user = useSelector((state) => {
-    return state.user.detials;
-  });
+  const user = useSelector((state) => state.user.detials);
   const userId = user._id;
   const [jobs, setJobs] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const refresh = useSelector((state) => state.refresh);
+
   useEffect(() => {
-    const fetchDates = async () => {
+    const fetchJobs = async () => {
       try {
         const response = await axios.get(`daily-task/get-jobs/${userId}`);
-        setJobs(response.data);
-        console.log(jobs);
+        const sortedJobs = response.data.sort((a, b) => {
+          const priority = {
+            Indeed: 1,
+            Naukri: 2,
+            Email: 3,
+          };
+          return (
+            (priority[a.appliedThrough] || 4) - (priority[b.appliedThrough] || 4)
+          );
+        });
+        setJobs(sortedJobs);
       } catch (error) {
-        console.error("Error fetching passwords:", error);
+        console.error("Error fetching jobs:", error);
       }
     };
 
     if (userId) {
-      fetchDates();
+      fetchJobs();
     }
   }, [userId, refresh]);
 
   const dailyTarget = 10; // The daily target of jobs
-  const [progress, setProgress] = useState(0);
-  const [showAddModal, setShowAddModal] = useState(false);
+
   const handleModal = () => {
     setShowAddModal(!showAddModal);
   };
+
+  const handleEditModal = (job) => {
+    setSelectedJob(job);
+    setShowEditModal(true);
+  };
+
   // Update progress whenever the number of jobs changes
   useEffect(() => {
     setProgress((jobs.length / dailyTarget) * 100);
   }, [jobs]);
 
   const addJob = () => {
-    // Add a new job to the list
     const newJob = {
       id: jobs.length + 1,
       company: `Company ${jobs.length + 1}`,
@@ -70,7 +103,6 @@ function Jobs() {
   };
 
   const deleteJob = (id) => {
-    // Remove a job from the list
     setJobs(jobs.filter((job) => job.id !== id));
   };
 
@@ -79,8 +111,8 @@ function Jobs() {
       <Typography variant="h4" textAlign="center" mb={4}>
         Job Application Tracker
       </Typography>
-      <LinearProgressWithLabel value={progress} />
       <Box width="100%">
+        <LinearProgressWithLabel value={progress} />
         <Box display="flex" justifyContent="center" alignItems="center ">
           <table style={{ textAlign: "center" }}>
             <tr>
@@ -98,12 +130,13 @@ function Jobs() {
                   borderRadius: "10px",
                   backgroundColor:
                     item.status === "Pending"
-                      ? "white" // Default color
+                      ? "white"
                       : item.status === "Rejected"
                       ? "red"
                       : item.status === "Call Backed"
                       ? "yellow"
                       : "white", // Fallback color
+                  color: item.status === "Rejected" ? "white" : "",
                 }}
               >
                 <td style={{ borderRadius: "5px 0px 0px 5px" }}>
@@ -119,9 +152,7 @@ function Jobs() {
                   </div>
                 </td>
                 <td>
-                  {" "}
                   <div
-                    className=""
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -132,9 +163,7 @@ function Jobs() {
                   </div>
                 </td>
                 <td>
-                  {" "}
                   <div
-                    className=""
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -145,9 +174,7 @@ function Jobs() {
                   </div>
                 </td>
                 <td>
-                  {" "}
                   <div
-                    className=""
                     style={{
                       border: "1px solid black",
                       padding: "8px",
@@ -158,43 +185,35 @@ function Jobs() {
                   </div>
                 </td>
                 <td>
-                  {" "}
                   <div
-                    className=""
                     style={{
                       border: "1px solid black",
                       padding: "8px",
                       fontSize: "14px",
-                      color: {},
                     }}
                   >
                     {item.status}
                   </div>
                 </td>
                 <td>
-                  {" "}
                   <div
-                    className=""
                     style={{
                       border: "1px solid black",
                       padding: "8px",
-                      borderRadius: "0px 0px 0px 0px",
                       fontSize: "14px",
                     }}
                   >
-                    <RiEdit2Fill />
+                    <RiEdit2Fill onClick={() => handleEditModal(item)} />
                   </div>
                 </td>
                 <td style={{ borderRadius: "0px 5px 5px 0px" }}>
-                  {" "}
                   <div
-                    className=""
                     style={{
                       border: "1px solid black",
                       padding: "8px",
                       borderRadius: "0px 5px 5px 0px",
                       fontSize: "14px",
-                      color: "Red",
+                      color: item.status === "Rejected" ? "white" : "red",
                     }}
                   >
                     <RiDeleteBin4Fill />
@@ -225,6 +244,15 @@ function Jobs() {
           <AddJobs
             setShowAddModal={setShowAddModal}
             showAddModal={showAddModal}
+            userId={userId}
+          />
+        )}
+
+        {showEditModal && (
+          <UpdateStatusModal
+            job={selectedJob}
+            showEditModal={showEditModal}
+            setShowEditModal={setShowEditModal}
             userId={userId}
           />
         )}

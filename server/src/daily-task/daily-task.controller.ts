@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { DailyTaskService } from './daily-task.service';
 import { AddJobsDto } from './dto/addJob.dto';
 @Controller('daily-task')
@@ -13,5 +13,14 @@ export class DailyTaskController {
   @Get('get-jobs/:userId')
   async getJobs(@Param('userId') userId: string) {
     return this.dailyTaskService.getJobs(userId);
+  }
+
+  @Put('update-status/:userId')
+  async updateJobStatus(
+    @Param('userId') userId: string,
+    @Body() body: { status: string; jobId: string }
+  ) {
+    const { status, jobId } = body
+    return this.dailyTaskService.updateJobStatus(userId, jobId, status)
   }
 }
