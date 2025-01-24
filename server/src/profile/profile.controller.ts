@@ -23,6 +23,14 @@ export class ProfileController {
         return this.profileService.getPasswords(userId);
     }
 
+    @Delete('deletepassword/:userId')
+    async deletePasswsordByAccount(
+        @Param('userId') userId: string,
+        @Body('account') account: string,
+    ) {
+        return this.profileService.removePasswordByAccount(userId, account);
+    }
+
     @Post('adddates')
     async addDates(@Body() datesDto: DatesDto) {
         return this.profileService.addDates(datesDto)
@@ -40,13 +48,6 @@ export class ProfileController {
     ) {
         return this.profileService.removeDateByDescription(userId, description);
     }
-    @Delete('deletepassword/:userId')
-    async deletePasswsordByAccount(
-        @Param('userId') userId: string,
-        @Body('account') account: string,
-    ) {
-        return this.profileService.removePasswordByAccount(userId, account);
-    }
 
     @Post('addjob')
     async addJob(@Body() addJobDto: AddJobsDto) {
@@ -55,15 +56,12 @@ export class ProfileController {
 
     @Get('getjobs/:userId')
     async getJobs(@Param('userId') userId: string,) {
-
-
         return this.profileService.getJobs(userId)
     }
     @Delete('deletejob/:userId')
     async deleteJob(@Param('userId') userId: string,
         @Body('timePeriod') timePeriod: string) {
         return this.profileService.removeJobByTimePeriod(userId, timePeriod)
-
     }
 
 }

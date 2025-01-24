@@ -1,39 +1,54 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document, Types } from "mongoose";
 
-// Define a subdocument schema for jobs
-@Schema({ _id: true }) // Automatically includes _id for each object in the array
+@Schema({ _id: true })
 class Job {
-    @Prop({ required: true })
-    company: string;
+  @Prop({ required: true })
+  company: string;
 
-    @Prop({ required: true })
-    designation: string;
+  @Prop({ required: true })
+  designation: string;
 
-    @Prop({ required: true })
-    appliedThrough: string;
+  @Prop({ required: true })
+  appliedThrough: string;
 
-    @Prop({ required: true })
-    status: string;
+  @Prop({ required: true })
+  status: string;
 
-    @Prop({ required: false }) // Optional field for email
-    email?: string;
+  @Prop({ required: false })
+  email?: string;
 
-    @Prop({ required: true })
-    place: string
+  @Prop({ required: true })
+  place: string;
 }
 
-// Define the main schema
+@Schema()
+class DailyQuote {
+  @Prop({ type: Number, required: true })
+  rating: number;
+
+  @Prop({ type: String, required: true })
+  quote: string;
+
+  @Prop({ type: String, required: false })
+  review?: string;
+}
+
 @Schema()
 export class DailyReports extends Document {
-    @Prop({ type: Types.ObjectId })
-    userId: Types.ObjectId
-    @Prop({ type: [Job], default: [] }) // Array of Job subdocuments
-    jobsdata: Types.Array<Job>;
-    @Prop({ type: String })
-    date: String
+  @Prop({ type: Types.ObjectId, required: true })
+  userId: Types.ObjectId;
+
+  @Prop({ type: [Job], default: [] })
+  jobsdata: Types.Array<Job>;
+
+  @Prop({ type: String, required: true })
+  date: string;
+
+  @Prop({ type: DailyQuote, default: null })
+  daily_Quote: DailyQuote;
 }
 
-// Create the Mongoose schemas
 export const JobSchema = SchemaFactory.createForClass(Job);
+export const DailyQuoteSchema = SchemaFactory.createForClass(DailyQuote);
 export const DailyReportsSchema = SchemaFactory.createForClass(DailyReports);

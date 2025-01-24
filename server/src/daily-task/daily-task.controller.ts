@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { DailyTaskService } from './daily-task.service';
 import { AddJobsDto } from './dto/addJob.dto';
+import { AddDailyQuotesDto } from './dto/addDailyQuotes.dto';
 @Controller('daily-task')
 export class DailyTaskController {
   constructor(private readonly dailyTaskService: DailyTaskService) { }
@@ -22,5 +23,12 @@ export class DailyTaskController {
   ) {
     const { status, jobId } = body
     return this.dailyTaskService.updateJobStatus(userId, jobId, status)
+  }
+
+  @Post('add-daily-quotes')
+  async addDailyQuotes(@Body()dailyQuotesDto:AddDailyQuotesDto){
+    console.log(dailyQuotesDto);
+    
+    return
   }
 }
