@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import React, { useState } from "react";
 import DailyTaskSideBar from "./DailyTaskSidebar";
 import Jobs from "./Jobs";
+import DailyQuotes from "./DailyQuotes";
 function DailyTaskMain() {
   // State to track the active section
   const [activeSection, setActiveSection] = useState("Personal");
@@ -16,11 +17,9 @@ function DailyTaskMain() {
       case "Jobs":
         return <Jobs />;
       case "Daily Quotes":
-        return <div>daily Qotes section</div>;
+        return <DailyQuotes/>
       case "Daily Report":
         return <div>Daily Report</div>;
-      default:
-        return <div>Select a section to view content</div>;
     }
   };
 

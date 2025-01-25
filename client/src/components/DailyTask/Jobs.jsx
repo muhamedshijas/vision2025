@@ -114,7 +114,7 @@ function Jobs() {
       <Box width="100%">
         <LinearProgressWithLabel value={progress} />
         <Box display="flex" justifyContent="center" alignItems="center ">
-          <table style={{ textAlign: "center" }}>
+          <table style={{ textAlign: "center", width:"100%"}}>
             <tr>
               <th>Company</th>
               <th>Designation</th>
