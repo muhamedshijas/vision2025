@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { AddJobsDto } from './dto/addJob.dto';
 import { DailyReports } from 'src/schma/daily-report.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { catchError } from 'rxjs';
 
 @Injectable()
 export class DailyTaskService {
@@ -74,10 +75,40 @@ export class DailyTaskService {
         { userId: userId, 'jobsdata._id': jobId },
         { $set: { 'jobsdata.$.status': status } }
       );
-      return {status:true}
+      return { status: true }
     } catch (err) {
       console.log(err);
 
     }
   }
+
+  async deleteJobs(userId: string, jobId: string): Promise<void> {
+    try {
+      // Validate inputs
+      if (!Types.ObjectId.isValid(jobId)) {
+        throw new Error(`Invalid jobId: ${jobId}`);
+      }
+      const updatedId = new Types.ObjectId(jobId);
+  
+      // Check if job exists for the user
+      const jobExists = await this.dailyReportModel.findOne(
+        { userId: userId, "jobsdata._id": updatedId }
+      );
+  
+      // Perform the update operation
+      const result = await this.dailyReportModel.updateOne(
+        { userId: userId, "jobsdata._id": updatedId }, // Match by userId and jobId
+        { $pull: { jobsdata: { _id: updatedId } } } // Pull the job with the correct _id
+      );
+  
+  
+      // After the update, re-fetch the document to confirm the job was deleted
+      const updatedDocument = await this.dailyReportModel.findOne({ userId: userId });
+    
+    } catch (err) {
+      console.error("Error deleting job:", err.message);
+      throw err; // Rethrow the error for further handling
+    }
+  }
+  
 }

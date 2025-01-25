@@ -26,7 +26,6 @@ function Jobs() {
 
   const handleDelete = async (timePeriod) => {
     try {
-      console.log(timePeriod);
       const response = await axios.delete(`/profile/deletejob/${userId}`, {
       data:  {timePeriod},
       });

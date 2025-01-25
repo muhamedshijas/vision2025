@@ -26,7 +26,6 @@ function UpdateStatusModal({ job, showEditModal, setShowEditModal, userId }) {
     e.preventDefault();
 
     try {
-      console.log(job._id);
       const {data} = await axios.put(`/daily-task/update-status/${userId}`, {
         status: updatedStatus,
         jobId: job._id,

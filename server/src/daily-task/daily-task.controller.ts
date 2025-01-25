@@ -25,10 +25,20 @@ export class DailyTaskController {
     return this.dailyTaskService.updateJobStatus(userId, jobId, status)
   }
 
+  @Delete('delete-job/:userId')
+  async deleteJob(
+    @Param('userId') userId: string,
+    @Body('jobId') jobId: string,
+    @Body('date') date: string,
+  ) {
+    return this.dailyTaskService.deleteJobs(userId,jobId)
+
+  }
+
   @Post('add-daily-quotes')
-  async addDailyQuotes(@Body()dailyQuotesDto:AddDailyQuotesDto){
+  async addDailyQuotes(@Body() dailyQuotesDto: AddDailyQuotesDto) {
     console.log(dailyQuotesDto);
-    
+
     return
   }
 }

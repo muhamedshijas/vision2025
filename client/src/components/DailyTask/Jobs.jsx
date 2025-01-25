@@ -9,7 +9,7 @@ import {
 } from "react-icons/ri";
 import { Button } from "@mui/material";
 import AddJobs from "../../modals/DailyTask/AddJobs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import UpdateStatusModal from "../../modals/DailyTask/UpdateStatusModal";
 
@@ -43,6 +43,8 @@ function LinearProgressWithLabel({ value }) {
 function Jobs() {
   const user = useSelector((state) => state.user.detials);
   const userId = user._id;
+  const date = new Date();
+
   const [jobs, setJobs] = useState([]);
   const [progress, setProgress] = useState(0);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -61,7 +63,8 @@ function Jobs() {
             Email: 3,
           };
           return (
-            (priority[a.appliedThrough] || 4) - (priority[b.appliedThrough] || 4)
+            (priority[a.appliedThrough] || 4) -
+            (priority[b.appliedThrough] || 4)
           );
         });
         setJobs(sortedJobs);
@@ -90,21 +93,14 @@ function Jobs() {
   useEffect(() => {
     setProgress((jobs.length / dailyTarget) * 100);
   }, [jobs]);
-
-  const addJob = () => {
-    const newJob = {
-      id: jobs.length + 1,
-      company: `Company ${jobs.length + 1}`,
-      designation: "New Role",
-      applied_through: "LinkedIn",
-      application_status: "Pending",
-    };
-    setJobs([...jobs, newJob]);
-  };
-
-  const deleteJob = (id) => {
-    setJobs(jobs.filter((job) => job.id !== id));
-  };
+  const dispatch = useDispatch();
+  const noUpdation = jobs.length == 0;
+  async function handleDelete(jobId) {
+    const result = await axios.delete(`/daily-task/delete-job/${userId}`, {
+      data: { jobId, date },
+    });
+    dispatch({ type: "refresh" });
+  }
 
   return (
     <div>
@@ -114,114 +110,120 @@ function Jobs() {
       <Box width="100%">
         <LinearProgressWithLabel value={progress} />
         <Box display="flex" justifyContent="center" alignItems="center ">
-          <table style={{ textAlign: "center", width:"100%"}}>
-            <tr>
-              <th>Company</th>
-              <th>Designation</th>
-              <th>Place</th>
-              <th>Applied Through</th>
-              <th>Status</th>
-              <th colSpan={2}>Action</th>
-            </tr>
-            {jobs.map((item, index) => (
-              <tr
-                key={index}
-                style={{
-                  borderRadius: "10px",
-                  backgroundColor:
-                    item.status === "Pending"
-                      ? "white"
-                      : item.status === "Rejected"
-                      ? "red"
-                      : item.status === "Call Backed"
-                      ? "yellow"
-                      : "white", // Fallback color
-                  color: item.status === "Rejected" ? "white" : "",
-                }}
-              >
-                <td style={{ borderRadius: "5px 0px 0px 5px" }}>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      borderRadius: "5px 0px 0px 5px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {item.company}
-                  </div>
-                </td>
-                <td>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {item.designation}
-                  </div>
-                </td>
-                <td>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {item.place}
-                  </div>
-                </td>
-                <td>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {item.email ? item.email : item.appliedThrough}
-                  </div>
-                </td>
-                <td>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {item.status}
-                  </div>
-                </td>
-                <td>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    <RiEdit2Fill onClick={() => handleEditModal(item)} />
-                  </div>
-                </td>
-                <td style={{ borderRadius: "0px 5px 5px 0px" }}>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      borderRadius: "0px 5px 5px 0px",
-                      fontSize: "14px",
-                      color: item.status === "Rejected" ? "white" : "red",
-                    }}
-                  >
-                    <RiDeleteBin4Fill />
-                  </div>
-                </td>
+          {noUpdation ? (
+            <p>No Data Available</p>
+          ) : (
+            <table style={{ textAlign: "center", width: "100%" }}>
+              <tr>
+                <th>Company</th>
+                <th>Designation</th>
+                <th>Place</th>
+                <th>Applied Through</th>
+                <th>Status</th>
+                <th colSpan={2}>Action</th>
               </tr>
-            ))}
-          </table>
+              {jobs.map((item, index) => (
+                <tr
+                  key={index}
+                  style={{
+                    borderRadius: "10px",
+                    backgroundColor:
+                      item.status === "Pending"
+                        ? "white"
+                        : item.status === "Rejected"
+                        ? "red"
+                        : item.status === "Call Backed"
+                        ? "yellow"
+                        : "white", // Fallback color
+                    color: item.status === "Rejected" ? "white" : "",
+                  }}
+                >
+                  <td style={{ borderRadius: "5px 0px 0px 5px" }}>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        padding: "8px",
+                        borderRadius: "5px 0px 0px 5px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.company}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        padding: "8px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.designation}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        padding: "8px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.place}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        padding: "8px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.email ? item.email : item.appliedThrough}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        padding: "8px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item.status}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        padding: "8px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      <RiEdit2Fill onClick={() => handleEditModal(item)} />
+                    </div>
+                  </td>
+                  <td style={{ borderRadius: "0px 5px 5px 0px" }}>
+                    <div
+                      style={{
+                        border: "1px solid black",
+                        padding: "8px",
+                        borderRadius: "0px 5px 5px 0px",
+                        fontSize: "14px",
+                        color: item.status === "Rejected" ? "white" : "red",
+                      }}
+                    >
+                      <RiDeleteBin4Fill
+                        onClick={() => handleDelete(item._id)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </table>
+          )}
         </Box>
         <Box
           marginTop="10px"
