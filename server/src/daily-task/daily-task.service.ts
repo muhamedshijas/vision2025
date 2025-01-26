@@ -59,7 +59,9 @@ export class DailyTaskService {
     try {
       // Query the database for the specific user and date
       const data = await this.dailyReportModel.findOne({ userId, date: formattedDate });
-
+      if (!data) {
+        return
+      }
       const jobs = data.jobsdata
       return jobs
 
@@ -89,26 +91,26 @@ export class DailyTaskService {
         throw new Error(`Invalid jobId: ${jobId}`);
       }
       const updatedId = new Types.ObjectId(jobId);
-  
+
       // Check if job exists for the user
       const jobExists = await this.dailyReportModel.findOne(
         { userId: userId, "jobsdata._id": updatedId }
       );
-  
+
       // Perform the update operation
       const result = await this.dailyReportModel.updateOne(
         { userId: userId, "jobsdata._id": updatedId }, // Match by userId and jobId
         { $pull: { jobsdata: { _id: updatedId } } } // Pull the job with the correct _id
       );
-  
-  
+
+
       // After the update, re-fetch the document to confirm the job was deleted
       const updatedDocument = await this.dailyReportModel.findOne({ userId: userId });
-    
+
     } catch (err) {
       console.error("Error deleting job:", err.message);
       throw err; // Rethrow the error for further handling
     }
   }
-  
+
 }
