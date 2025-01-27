@@ -5,7 +5,7 @@ import Jobs from "./Jobs";
 import DailyQuotes from "./DailyQuotes";
 function DailyTaskMain() {
   // State to track the active section
-  const [activeSection, setActiveSection] = useState("Personal");
+  const [activeSection, setActiveSection] = useState("Daily Quotes");
 
   // Section content based on the active section
   const renderContent = () => {
@@ -17,9 +17,11 @@ function DailyTaskMain() {
       case "Jobs":
         return <Jobs />;
       case "Daily Quotes":
-        return <DailyQuotes/>
+        return <DailyQuotes />;
       case "Daily Report":
         return <div>Daily Report</div>;
+      default:
+        return <div>Select a section to view content</div>;
     }
   };
 

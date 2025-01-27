@@ -113,7 +113,28 @@ export class DailyTaskService {
       throw err; // Rethrow the error for further handling
     }
   }
+  async getDaillyFeedback(userId) {
+    const date = new Date()
+    date.setDate(date.getDate() - 1);
 
+    // Format the date in YYYY-MM-DD format
+    const yesterday = date.toISOString().split('T')[0];
+
+ 
+      // Output: "2025-01-26"
+
+    const data = await this.dailyReportModel.findOne({ userId: userId, date: yesterday }).lean()
+    
+    
+    if (!data) {
+      
+      return
+    }
+
+    const feedback = data.daily_Quote
+    
+    return feedback
+  }
   async addDailyFeedback(addDailyFeedback: AddDailyFeedbackDto) {
     try {
       const userId = addDailyFeedback.userId
@@ -123,12 +144,11 @@ export class DailyTaskService {
         phrase: addDailyFeedback.phrase,
         productivity: addDailyFeedback.productivity,
         interaction: addDailyFeedback.interaction,
-        rating:addDailyFeedback.rating
+        rating: addDailyFeedback.rating
       }
-      console.log(daily_Quote);
-      
+
       const userData = await this.dailyReportModel.findOne({ userId: userId, date: date }).lean()
-  
+
       if (userData) {
         // If data exists, update the daily_Quote
         await this.dailyReportModel.findOneAndUpdate(
@@ -146,14 +166,14 @@ export class DailyTaskService {
         })
         console.log("Daily feedback added successfully")
       }
-      
+
     } catch (error) {
       console.error("Error while adding or updating daily feedback:", error)
       // Optionally, you can throw the error again to be handled higher in the stack if needed
       throw new Error("Error adding or updating daily feedback")
     }
   }
-  
+
 
 
 }

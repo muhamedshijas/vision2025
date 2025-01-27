@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Rating, Button } from "@mui/material"; // Import Rating component from MUI
 import DailyFeedbackModal from "../../modals/DailyTask/DailyFeedbackModal";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 function DailyQuotes() {
   const [show, setShow] = useState(false);
   const [dailyFeedback, setDailyFeedBack] = useState({});
+  const refresh = useSelector((state) => state.refresh);
+  const user = useSelector((state) => state.user.detials);
+  const userId = user._id;
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const formattedDate = yesterday.toISOString().split("T")[0];
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const response = await axios.get(`daily-task/get-feedback/${userId}`);
+
+        setDailyFeedBack(response.data);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      }
+    };
+
+    if (userId) {
+      fetchFeedback();
+    }
+  }, [userId, refresh]);
+
   const handleModal = () => {
     setShow(!show);
   };
-  const user = useSelector((state) => state.user.detials);
-  const userId = user._id;
+
   return (
     <div style={{ height: "100%" }}>
       {dailyFeedback === null || Object.keys(dailyFeedback).length === 0 ? (
@@ -50,7 +72,14 @@ function DailyQuotes() {
           flexDirection="column"
           gap="30px"
         >
-          <Typography>Feedback of 28/07/2024</Typography>
+          <Typography
+            sx={{
+              fontSize: "25px",
+              fontWeight: 600,
+            }}
+          >
+            Feedback of {formattedDate}
+          </Typography>
           <Box
             height="150px"
             width="90%"
@@ -89,9 +118,9 @@ function DailyQuotes() {
                 OVERALL DAY
               </Typography>
               <Typography>
-                {dailyFeedback.overallDay == ""
+                {dailyFeedback.overAll == ""
                   ? "no data"
-                  : dailyFeedback.overallDay}
+                  : dailyFeedback.overAll}
               </Typography>
             </Box>
             <Box

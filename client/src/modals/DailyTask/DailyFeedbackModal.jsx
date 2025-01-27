@@ -11,13 +11,16 @@ import {
   Rating,
 } from "@mui/material";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 function DailyFeedbackModal({ show, setShow, userId }) {
+  const dispatch = useDispatch();
   const [overAll, setOverall] = useState("");
   const [interaction, setInteraction] = useState("");
   const [productivity, setProductivity] = useState("");
   const [rating, setRating] = useState(null);
   const [phrase, setPhrase] = useState("");
+  
 
   const handleModal = () => {
     setShow(!show);
@@ -34,8 +37,12 @@ function DailyFeedbackModal({ show, setShow, userId }) {
       phrase,
       date: formattedDate,
       userId,
-      interaction
+      interaction,
     });
+    if (!data.err) {
+      dispatch({ type: "refresh" });
+      setShow(!show);
+    }
   }
   return (
     <Box

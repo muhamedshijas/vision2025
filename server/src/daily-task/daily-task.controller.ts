@@ -32,12 +32,16 @@ export class DailyTaskController {
     @Body('date') date: string,
   ) {
     return this.dailyTaskService.deleteJobs(userId, jobId)
+  }
 
+  @Get('get-feedback/:userId')
+  async getDailyFeedback(@Param('userId') userId: string) {
+    
+    return this.dailyTaskService.getDaillyFeedback(userId)
   }
 
   @Post('add-daily-feedback')
   async addDailyQuotes(@Body() dailyFeedbackDto: AddDailyFeedbackDto) {
-    console.log("hiiii");
     return this.dailyTaskService.addDailyFeedback(dailyFeedbackDto)
 
     return
