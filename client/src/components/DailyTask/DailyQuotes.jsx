@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Box, Typography, Rating, Button } from "@mui/material"; // Import Rating component from MUI
 import DailyFeedbackModal from "../../modals/DailyTask/DailyFeedbackModal";
+import { useSelector } from "react-redux";
 
 function DailyQuotes() {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [dailyFeedback, setDailyFeedBack] = useState({
-    phrase:"abc d ef gh i jk lm no p r stu v w xyz   "
-  });
+  const [show, setShow] = useState(false);
+  const [dailyFeedback, setDailyFeedBack] = useState({});
   const handleModal = () => {
-    setModalOpen(!isModalOpen);
+    setShow(!show);
   };
+  const user = useSelector((state) => state.user.detials);
+  const userId = user._id;
   return (
-    <div style={{ height: "100%"  }}>
+    <div style={{ height: "100%" }}>
       {dailyFeedback === null || Object.keys(dailyFeedback).length === 0 ? (
         <Box
           width="100%"
@@ -64,7 +65,7 @@ function DailyQuotes() {
               PHRASE THAT MAKE THIS DAY MEMORABLE
             </Typography>
             <Typography sx={{ fontSize: "20px" }}>
-              {dailyFeedback.phrase}
+              {dailyFeedback.phrase == "" ? "no data" : dailyFeedback.phrase}
             </Typography>
           </Box>
 
@@ -87,7 +88,11 @@ function DailyQuotes() {
               <Typography sx={{ fontWeight: 600, fontSize: "25px" }}>
                 OVERALL DAY
               </Typography>
-              <Typography>{dailyFeedback.overallDay}</Typography>
+              <Typography>
+                {dailyFeedback.overallDay == ""
+                  ? "no data"
+                  : dailyFeedback.overallDay}
+              </Typography>
             </Box>
             <Box
               width="250px"
@@ -102,7 +107,11 @@ function DailyQuotes() {
               <Typography sx={{ fontWeight: 600, fontSize: "25px" }}>
                 PRODUCTIVITY
               </Typography>
-              <Typography>{dailyFeedback.productivity}</Typography>
+              <Typography>
+                {dailyFeedback.productivity == ""
+                  ? "No data"
+                  : dailyFeedback.productivity}
+              </Typography>
             </Box>
             <Box
               width="250px"
@@ -117,7 +126,11 @@ function DailyQuotes() {
               <Typography sx={{ fontWeight: 600, fontSize: "25px" }}>
                 INTERACTION
               </Typography>
-              <Typography>{dailyFeedback.interaction}</Typography>
+              <Typography>
+                {dailyFeedback.interaction == ""
+                  ? "No data"
+                  : dailyFeedback.interaction}
+              </Typography>
             </Box>
           </Box>
 
@@ -144,7 +157,9 @@ function DailyQuotes() {
           </Box>
         </Box>
       )}
-      {isModalOpen && <DailyFeedbackModal />}
+      {show && (
+        <DailyFeedbackModal show={show} setShow={setShow} userId={userId} />
+      )}
     </div>
   );
 }

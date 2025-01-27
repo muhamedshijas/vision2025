@@ -4,6 +4,7 @@ import { DailyReports } from 'src/schma/daily-report.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { catchError } from 'rxjs';
+import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
 
 @Injectable()
 export class DailyTaskService {
@@ -112,5 +113,47 @@ export class DailyTaskService {
       throw err; // Rethrow the error for further handling
     }
   }
+
+  async addDailyFeedback(addDailyFeedback: AddDailyFeedbackDto) {
+    try {
+      const userId = addDailyFeedback.userId
+      const date = addDailyFeedback.date
+      const daily_Quote = {
+        overAll: addDailyFeedback.overAll,
+        phrase: addDailyFeedback.phrase,
+        productivity: addDailyFeedback.productivity,
+        interaction: addDailyFeedback.interaction,
+        rating:addDailyFeedback.rating
+      }
+      console.log(daily_Quote);
+      
+      const userData = await this.dailyReportModel.findOne({ userId: userId, date: date }).lean()
+  
+      if (userData) {
+        // If data exists, update the daily_Quote
+        await this.dailyReportModel.findOneAndUpdate(
+          { userId: userId, date: date },
+          { $set: { daily_Quote: daily_Quote } },
+          { new: true } // This option returns the updated document
+        )
+        console.log("Daily feedback updated successfully")
+      } else {
+        // If no data exists, create a new entry
+        await this.dailyReportModel.create({
+          userId: userId,
+          date: date,
+          daily_Quote: daily_Quote
+        })
+        console.log("Daily feedback added successfully")
+      }
+      
+    } catch (error) {
+      console.error("Error while adding or updating daily feedback:", error)
+      // Optionally, you can throw the error again to be handled higher in the stack if needed
+      throw new Error("Error adding or updating daily feedback")
+    }
+  }
+  
+
 
 }

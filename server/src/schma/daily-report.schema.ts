@@ -28,10 +28,18 @@ class DailyQuote {
   rating: number;
 
   @Prop({ type: String, required: true })
-  quote: string;
+  phrase: string;
 
-  @Prop({ type: String, required: false })
-  review?: string;
+  @Prop({ type: String, required: true })
+  interaction: string;
+
+  @Prop({ type: String, required: true })
+  overAll: string;
+  
+  @Prop({ type: String, required: true })
+  productivity: string;
+
+
 }
 
 @Schema()
