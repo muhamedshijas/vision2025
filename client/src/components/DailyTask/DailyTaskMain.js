@@ -3,20 +3,21 @@ import React, { useState } from "react";
 import DailyTaskSideBar from "./DailyTaskSidebar";
 import Jobs from "./Jobs";
 import DailyQuotes from "./DailyQuotes";
+import DailyRoutine from "./DailyRoutine";
 function DailyTaskMain() {
   // State to track the active section
-  const [activeSection, setActiveSection] = useState("Daily Quotes");
+  const [activeSection, setActiveSection] = useState("Feedback");
 
   // Section content based on the active section
   const renderContent = () => {
     switch (activeSection) {
       case "Relgious":
         return <div>Relgious Section</div>;
-      case "Entertainment":
-        return <div>Entertainment</div>;
+      case "Daily Routine":
+        return <DailyRoutine/>;
       case "Jobs":
         return <Jobs />;
-      case "Daily Quotes":
+      case "Feedback":
         return <DailyQuotes />;
       case "Daily Report":
         return <div>Daily Report</div>;

@@ -12,7 +12,15 @@ function DailyQuotes() {
   const userId = user._id;
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const formattedDate = yesterday.toISOString().split("T")[0];
+
+  // Get day, month, and year components
+  const day = String(yesterday.getDate()).padStart(2, "0");
+  const month = String(yesterday.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const year = yesterday.getFullYear();
+
+  // Format the date as ddd-mm-yyyy
+  const formattedDate = `${day}-${month}-${year}`;
+
   useEffect(() => {
     const fetchFeedback = async () => {
       try {

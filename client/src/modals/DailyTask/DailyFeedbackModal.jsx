@@ -9,6 +9,7 @@ import {
   Button,
   TextField,
   Rating,
+  FormHelperText,
 } from "@mui/material";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -20,14 +21,16 @@ function DailyFeedbackModal({ show, setShow, userId }) {
   const [productivity, setProductivity] = useState("");
   const [rating, setRating] = useState(null);
   const [phrase, setPhrase] = useState("");
-  
+  const [error, setError] = useState("");
 
   const handleModal = () => {
     setShow(!show);
   };
+
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const formattedDate = yesterday.toISOString().split("T")[0];
+
   async function handleSubmit(e) {
     e.preventDefault();
     const data = await axios.post("/daily-task/add-daily-feedback", {
@@ -44,6 +47,17 @@ function DailyFeedbackModal({ show, setShow, userId }) {
       setShow(!show);
     }
   }
+
+  const handlePhraseChange = (e) => {
+    const newPhrase = e.target.value;
+    if (newPhrase.length <= 70) {
+      setPhrase(newPhrase);
+      setError(""); // Clear error if within the limit
+    } else {
+      setError("Maximum 50 characters are allowed.");
+    }
+  };
+
   return (
     <Box
       width="100vw"
@@ -72,55 +86,31 @@ function DailyFeedbackModal({ show, setShow, userId }) {
         <form onSubmit={handleSubmit}>
           {/* Day Overall */}
           <FormControl fullWidth margin="normal">
-            <Typography variant="body1">
-              1. How was your day overall?
-            </Typography>
+            <Typography variant="body1">1. How was your day overall?</Typography>
             <RadioGroup
               row
               value={overAll}
               onChange={(e) => setOverall(e.target.value)}
             >
-              <FormControlLabel
-                value="Amazing"
-                control={<Radio />}
-                label="AMAZING"
-              />
+              <FormControlLabel value="Amazing" control={<Radio />} label="AMAZING" />
               <FormControlLabel value="Good" control={<Radio />} label="GOOD" />
-              <FormControlLabel
-                value="Average"
-                control={<Radio />}
-                label="AVERAGE"
-              />
+              <FormControlLabel value="Average" control={<Radio />} label="AVERAGE" />
               <FormControlLabel value="bad" control={<Radio />} label="BAD" />
             </RadioGroup>
           </FormControl>
 
           {/* Interaction */}
           <FormControl fullWidth margin="normal">
-            <Typography variant="body1">
-              2. How was your interaction with others?
-            </Typography>
+            <Typography variant="body1">2. How was your interaction with others?</Typography>
             <RadioGroup
               row
               value={interaction}
               onChange={(e) => setInteraction(e.target.value)}
             >
-              <FormControlLabel
-                value="Great"
-                control={<Radio />}
-                label="Great"
-              />
+              <FormControlLabel value="Great" control={<Radio />} label="Great" />
               <FormControlLabel value="good" control={<Radio />} label="GOOD" />
-              <FormControlLabel
-                value="Neutral"
-                control={<Radio />}
-                label="Neutral"
-              />
-              <FormControlLabel
-                value="Avoid People"
-                control={<Radio />}
-                label="Avoid People"
-              />
+              <FormControlLabel value="Neutral" control={<Radio />} label="Neutral" />
+              <FormControlLabel value="Avoid People" control={<Radio />} label="Avoid People" />
             </RadioGroup>
           </FormControl>
 
@@ -132,21 +122,9 @@ function DailyFeedbackModal({ show, setShow, userId }) {
               value={productivity}
               onChange={(e) => setProductivity(e.target.value)}
             >
-              <FormControlLabel
-                value="Productive"
-                control={<Radio />}
-                label="Productive"
-              />
-              <FormControlLabel
-                value="Neutral"
-                control={<Radio />}
-                label="Neutral"
-              />
-              <FormControlLabel
-                value="Wasted Day"
-                control={<Radio />}
-                label="Wasted Day"
-              />
+              <FormControlLabel value="Productive" control={<Radio />} label="Productive" />
+              <FormControlLabel value="Neutral" control={<Radio />} label="Neutral" />
+              <FormControlLabel value="Wasted Day" control={<Radio />} label="Wasted Day" />
             </RadioGroup>
           </FormControl>
 
@@ -161,7 +139,7 @@ function DailyFeedbackModal({ show, setShow, userId }) {
           </FormControl>
 
           {/* Memorable Phrase */}
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="normal" error={Boolean(error)}>
             <Typography variant="body1">
               5. A phrase that made this day memorable
             </Typography>
@@ -172,8 +150,9 @@ function DailyFeedbackModal({ show, setShow, userId }) {
               rows={2}
               placeholder="Write here..."
               value={phrase}
-              onChange={(e) => setPhrase(e.target.value)}
+              onChange={handlePhraseChange}
             />
+            {error && <FormHelperText>{error}</FormHelperText>}
           </FormControl>
 
           <Box mt={3} width="100%" display="flex" justifyContent="space-around">
@@ -181,6 +160,7 @@ function DailyFeedbackModal({ show, setShow, userId }) {
               type="submit"
               variant="contained"
               sx={{ bgcolor: "black", color: "white", width: "150px" }}
+              disabled={error !== ""} // Disable button if there's an error
             >
               UPDATE
             </Button>

@@ -47,7 +47,7 @@ function DailyTaskSideBar({ activeSection, setActiveSection }) {
           justifyContent: "flex-end",
         }}
       >
-        {["Relgious", "Entertainment", "Jobs","Daily Quotes", "Daily Report"].map(
+        {["Relgious", "Daily Routine", "Jobs","Feedback", "Daily Report"].map(
           (section, index) => (
             <ListItem
               key={index}
