@@ -1,6 +1,10 @@
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { GiKeyboard } from "react-icons/gi";
+import gitHub from "../../assets/icons/github.png";
+import suitcase from "../../assets/icons/suitcase.png";
+import keyboard from "../../assets/icons/keyboard.png";
+import script from "../../assets/icons/script.png";
 import { RiGithubFill, RiTerminalBoxFill } from "react-icons/ri";
 import {
   getGitColor,
@@ -73,7 +77,7 @@ function DailyRoutine() {
               variant="determinate"
               value={wpm ? (wpm / targetWPM) * 100 : 1} // Calculate percentage
               size={150}
-              thickness={3}
+              thickness={2}
               style={{ position: "absolute" }}
               color={getTypingColor(wpm, targetWPM)} // Dynamically set color
             />
@@ -86,8 +90,10 @@ function DailyRoutine() {
               position="relative"
             >
               <Typography>Typing</Typography>
-              <GiKeyboard fontSize="50px" />
-              <Typography variant="body2">{wpm ? wpm : "no data"}</Typography>
+              <img src={keyboard} width="60px" height="60px" />
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {wpm ? wpm : "no data"}
+              </Typography>
             </Box>
           </Box>
           <Box
@@ -104,7 +110,7 @@ function DailyRoutine() {
               variant="determinate"
               value={problems ? (problems / targetProblems) * 100 : 1} // Calculate percentage
               size={150}
-              thickness={3}
+              thickness={2}
               style={{ position: "absolute" }}
               color={getLeetCodeColor(problems, targetProblems)} // Dynamically set color
             />
@@ -117,8 +123,8 @@ function DailyRoutine() {
               position="relative"
             >
               <Typography>Leetcode</Typography>
-              <RiTerminalBoxFill fontSize="50px" />
-              <Typography variant="body2">
+              <img src={script} width="60px" height="60px" />
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
                 {problems ? problems : "no data"}
               </Typography>
             </Box>
@@ -137,7 +143,7 @@ function DailyRoutine() {
               variant="determinate"
               value={commits ? (commits / targetCommits) * 100 : 1} // Calculate percentage
               size={150}
-              thickness={3}
+              thickness={2}
               style={{ position: "absolute" }}
               color={getGitColor(commits, targetCommits)} // Dynamically set color
             />
@@ -150,7 +156,7 @@ function DailyRoutine() {
               position="relative"
             >
               <Typography>Git Commits</Typography>
-              <RiGithubFill fontSize="50px" />
+              <img src={gitHub} width="60px" height="60px" />
               <Typography variant="body2">
                 {commits ? commits : "no data"}
               </Typography>
@@ -170,7 +176,7 @@ function DailyRoutine() {
               variant="determinate"
               value={jobs ? (jobs / targetJobCount) * 100 : 1} // Calculate percentage
               size={150}
-              thickness={3}
+              thickness={2}
               style={{ position: "absolute" }}
               color={getJobColor(jobs, targetJobCount)} // Dynamically set color
             />
@@ -183,8 +189,10 @@ function DailyRoutine() {
               position="relative"
             >
               <Typography>Jobs</Typography>
-              <RiGithubFill fontSize="50px" />
-              <Typography variant="body2">{jobs ? jobs : "no data"}</Typography>
+              <img src={suitcase} width="60px" height="60px" />
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {jobs ? jobs : "no data"}
+              </Typography>
             </Box>
           </Box>
         </Box>
