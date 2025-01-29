@@ -4,10 +4,26 @@ import { useSelector } from "react-redux";
 import { RiArrowDropLeftLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
+// Import flat icons
+import personalIcon from "../../assets/icons/user.png";
+import jobsIcon from "../../assets/icons/jobs.png";
+import passwordsIcon from "../../assets/icons/password.png";
+import datesIcon from "../../assets/icons/dates.png";
+import visionBoardIcon from "../../assets/icons/visionBoard.png";
+import avatar from "../../assets/icons/userAvatar.png";
+
 function ProfileSidebar({ activeSection, setActiveSection }) {
-  const user = useSelector((state) => {
-    return state.user.detials;
-  });
+  const user = useSelector((state) => state.user.details);
+
+  // Icon mapping for each section
+  const sectionIcons = {
+    Personal: personalIcon,
+    Jobs: jobsIcon,
+    Passwords: passwordsIcon,
+    Dates: datesIcon,
+    "Vision Board": visionBoardIcon,
+  };
+
   return (
     <Box
       width="300px"
@@ -17,11 +33,14 @@ function ProfileSidebar({ activeSection, setActiveSection }) {
       paddingTop="20px"
       borderRadius="8px 0 0 8px"
     >
-      <Typography style={{ paddingLeft: "10px"  }}>
+      {/* Back Button */}
+      <Typography style={{ paddingLeft: "10px" }}>
         <Link to="/" style={{ textDecoration: "none", color: "white" }}>
           <RiArrowDropLeftLine style={{ fontWeight: 600, fontSize: "22px" }} />
         </Link>
       </Typography>
+
+      {/* User Profile Section */}
       <Box
         width="100%"
         display="flex"
@@ -32,9 +51,14 @@ function ProfileSidebar({ activeSection, setActiveSection }) {
         <Box
           height="200px"
           width="200px"
-          borderRadius="180px"
+          borderRadius="50%"
           bgcolor="white"
-        ></Box>
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <img src={avatar} width="150px" height="150px" />
+        </Box>
         <Typography
           style={{ fontWeight: 700, marginTop: "5px", color: "white" }}
         >
@@ -44,6 +68,8 @@ function ProfileSidebar({ activeSection, setActiveSection }) {
           {user?.email}
         </Typography>
       </Box>
+
+      {/* Sidebar Menu */}
       <List
         style={{
           marginTop: "10px",
@@ -65,24 +91,32 @@ function ProfileSidebar({ activeSection, setActiveSection }) {
                 backgroundColor:
                   activeSection === section
                     ? "white"
-                    : "rgba(255, 255, 255, 0.1)", // Change background color for active section
+                    : "rgba(255, 255, 255, 0.1)",
                 borderRadius: "5px 0px 0px 5px",
                 color: activeSection === section ? "#759EB8" : "white",
                 cursor: "pointer",
               }}
               sx={{
-                fontWeight: activeSection === section ? "normal" : "bold", // Set bold for non-active sections
+                fontWeight: activeSection === section ? "normal" : "bold",
               }}
               onClick={() => setActiveSection(section)}
             >
-              <ListItemText
-                primary={section}
-                sx={{
-                  fontWeight: 800,
-                  color: activeSection === section ? "#759EB8" : "white", // Ensure color consistency
-                  fontSize: "20px", // Font size to apply to each sectio
-                }}
-              />
+              {/* Icon + Text */}
+              <Box display="flex" alignItems="center" gap={1}>
+                <img
+                  src={sectionIcons[section]}
+                  alt={section}
+                  style={{ width: "30px", height: "30px" }}
+                />
+                <ListItemText
+                  primary={section}
+                  sx={{
+                    fontWeight: 800,
+                    color: activeSection === section ? "#759EB8" : "white",
+                    fontSize: "20px",
+                  }}
+                />
+              </Box>
             </ListItem>
           )
         )}

@@ -1,6 +1,10 @@
 import { Box, Button } from "@mui/material";
 import axios from "axios";
 import React from "react";
+import dailyTask from "../../assets/icons/daily.png";
+import monthlyTask from "../../assets/icons/monthly.png";
+import annualTask from "../../assets/icons/annual.png";
+import personal from "../../assets/icons/user.png";
 import { PiClockFill } from "react-icons/pi";
 import {
   RiCalendarScheduleFill,
@@ -51,7 +55,7 @@ function Home() {
               height="230px"
               width="230px"
               borderRadius="22px"
-              bgcolor="#759EB8" 
+              bgcolor="#759EB8"
               display="flex"
               flexDirection="column"
               justifyContent="space-around"
@@ -60,7 +64,7 @@ function Home() {
               fontWeight="bold"
               fontSize="22px"
             >
-              <PiClockFill fontSize="180px" />
+              <img src={dailyTask} height="180px" width="180px" />
               Daily Task
             </Box>
           </Link>
@@ -78,7 +82,7 @@ function Home() {
             fontWeight="bold"
             fontSize="22px"
           >
-            <RiCalendarScheduleFill fontSize="180px" />
+            <img src={monthlyTask} height="150px" width="150px" />
             Monthly Task
           </Box>
           {/* Box 3 */}
@@ -95,7 +99,7 @@ function Home() {
             fontWeight="bold"
             fontSize="22px"
           >
-            <RiFlagFill fontSize="180px" />
+            <img src={annualTask} height="180px" width="180px" />
             Annual Task
           </Box>
           {/* Box 4 */}
@@ -113,7 +117,7 @@ function Home() {
               fontWeight="bold"
               fontSize="22px"
             >
-              <RiUserHeartFill fontSize="180px" textDecoration="none" />
+              <img src={personal} height="180px" width="180px" />
               Personal Data
             </Box>
           </Link>
