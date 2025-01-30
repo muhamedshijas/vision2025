@@ -5,6 +5,9 @@ import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { catchError } from 'rxjs';
 import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
+import { DailyRoutineDto } from './dto/dailyRoutine.dto';
+import { calculateSleepDuration, calculateSleepScore } from 'src/utils/scoreCaluculater';
+
 
 @Injectable()
 export class DailyTaskService {
@@ -120,19 +123,19 @@ export class DailyTaskService {
     // Format the date in YYYY-MM-DD format
     const yesterday = date.toISOString().split('T')[0];
 
- 
-      // Output: "2025-01-26"
+
+    // Output: "2025-01-26"
 
     const data = await this.dailyReportModel.findOne({ userId: userId, date: yesterday }).lean()
-    
-    
+
+
     if (!data) {
-      
+
       return
     }
 
     const feedback = data.daily_Quote
-    
+
     return feedback
   }
   async addDailyFeedback(addDailyFeedback: AddDailyFeedbackDto) {
@@ -174,6 +177,18 @@ export class DailyTaskService {
     }
   }
 
+  async addDailyRoutineScore(dailRoutineDto: DailyRoutineDto) {
+    const { bedTime, wakeUpTime } = dailRoutineDto
+    console.log(bedTime, wakeUpTime);
+    const result = await calculateSleepDuration(bedTime, wakeUpTime)
 
+
+    const hours = parseInt(result.split(' ')[0]);
+
+    const score = await calculateSleepScore(hours)
+    console.log(score);
+
+
+  }
 
 }

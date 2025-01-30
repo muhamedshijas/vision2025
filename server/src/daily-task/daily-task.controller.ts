@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/
 import { DailyTaskService } from './daily-task.service';
 import { AddJobsDto } from './dto/addJob.dto';
 import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
+import { DailyRoutineDto } from './dto/dailyRoutine.dto';
 @Controller('daily-task')
 export class DailyTaskController {
   constructor(private readonly dailyTaskService: DailyTaskService) { }
@@ -36,7 +37,7 @@ export class DailyTaskController {
 
   @Get('get-feedback/:userId')
   async getDailyFeedback(@Param('userId') userId: string) {
-    
+
     return this.dailyTaskService.getDaillyFeedback(userId)
   }
 
@@ -46,4 +47,10 @@ export class DailyTaskController {
 
     return
   }
+
+  @Post('add-daily-health-data')
+  async addDailyHealthData(@Body() dailRoutineDto: DailyRoutineDto) {
+    return this.dailyTaskService.addDailyRoutineScore(dailRoutineDto)
+  }
+
 }
