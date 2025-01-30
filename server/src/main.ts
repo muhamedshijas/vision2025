@@ -14,7 +14,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Authorization', // You can add more allowed headers if needed
     credentials: true, // If you want to allow cookies or authentication headers
   });
-
+ 
   const config = new DocumentBuilder()
     .setTitle('Auth API')
     .setDescription('API for user authentication')

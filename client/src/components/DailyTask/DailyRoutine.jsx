@@ -17,21 +17,38 @@ import {
   getTotalColor,
   getTypingColor,
 } from "../../utilities/colorUtils";
+import AddDailyScore from "../../modals/DailyTask/AddDailySkillScore";
+import AddDailyRoutineScore from "../../modals/DailyTask/AddDailyRoutineScore";
 function DailyRoutine() {
+  const [showSkillModal, setShowSkillModal] = useState(false);
+  const [showRoutineModal, setShowRoutineModal] = useState(false);
+
   const [skillScore, setSkillScore] = useState(false);
+  const [routineScore, setRoutineScore] = useState(false);
   const targetWPM = 75; // Set your target WPM
   const targetCommits = 6;
   const targetJobCount = 10;
+
   const targetProblems = 3;
   const targetSleepHour = 7;
 
-  const jobs = 0;
+  const jobs = 4;
   const problems = 3;
   const wpm = 72;
   const commits = 4;
-  const sleepHour = 6;
-  const foodScore = 49;
-  const totalScore = 80;
+
+  const sleepHour = 0;
+  const foodScore = 90;
+
+  const totalScore = 65;
+
+  useEffect(() => {
+    if (foodScore && sleepHour) {
+      setRoutineScore(true);
+    } else {
+      setRoutineScore(false);
+    }
+  }, [foodScore, sleepHour]);
 
   useEffect(() => {
     if (commits && jobs && problems && wpm) {
@@ -40,6 +57,13 @@ function DailyRoutine() {
       setSkillScore(false);
     }
   }, [commits, jobs, problems, wpm]);
+
+  const handleSkillModal = () => {
+    setShowSkillModal(!showSkillModal);
+  };
+  const handleRoutineModal = () => {
+    setShowRoutineModal(!showSkillModal);
+  };
 
   return (
     <div
@@ -63,7 +87,7 @@ function DailyRoutine() {
         alignItems="center"
         boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
       >
-        <Typography variant="h4">Daily Routine Tracker</Typography>
+        <Typography variant="h4">Daily Skills Tracker</Typography>
         <Box
           width="100%"
           display="flex"
@@ -101,7 +125,7 @@ function DailyRoutine() {
               <Typography>Typing</Typography>
               <img src={keyboard} width="60px" height="60px" />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {wpm ? wpm : "no data"}
+                {wpm ? `${wpm} WPM` : "no data"}
               </Typography>
             </Box>
           </Box>
@@ -134,7 +158,7 @@ function DailyRoutine() {
               <Typography>Leetcode</Typography>
               <img src={script} width="60px" height="60px" />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {problems ? problems : "no data"}
+                {problems ? `${problems} solved` : "no data"}
               </Typography>
             </Box>
           </Box>
@@ -166,8 +190,8 @@ function DailyRoutine() {
             >
               <Typography>Git Commits</Typography>
               <img src={gitHub} width="60px" height="60px" />
-              <Typography variant="body2">
-                {commits ? commits : "no data"}
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {commits ? `${commits} commits` : "no data"}
               </Typography>
             </Box>
           </Box>
@@ -200,7 +224,7 @@ function DailyRoutine() {
               <Typography>Jobs</Typography>
               <img src={suitcase} width="60px" height="60px" />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {jobs ? jobs : "no data"}
+                {jobs ? `${jobs} Applcations` : "no data"}
               </Typography>
             </Box>
           </Box>
@@ -208,7 +232,9 @@ function DailyRoutine() {
         {skillScore ? (
           <Box>Score</Box>
         ) : (
-          <Button variant="contained">Update Data</Button>
+          <Button variant="contained" onClick={handleSkillModal}>
+            Update Data
+          </Button>
         )}
       </Box>
 
@@ -270,7 +296,7 @@ function DailyRoutine() {
                 <Typography>Sleep Time</Typography>
                 <img src={sleepTime} width="60px" height="60px" />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {sleepHour ? sleepHour : "no data"}
+                  {sleepHour ? `${sleepHour} hrs` : "no data"}
                 </Typography>
               </Box>
             </Box>
@@ -304,14 +330,22 @@ function DailyRoutine() {
                 <Typography>Fooding</Typography>
                 <img src={meals} width="60px" height="60px" />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {foodScore ? foodScore : "no data"}
+                  {foodScore ? `${foodScore} points` : "no data"}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          <Button variant="contained" sx={{ width: "150px" }}>
-            Update Data
-          </Button>
+          {routineScore ? (
+            <Typography>score :</Typography>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{ width: "150px" }}
+              onClick={handleRoutineModal}
+            >
+              Update Data
+            </Button>
+          )}
         </Box>
         <Box
           height="100%"
@@ -321,53 +355,64 @@ function DailyRoutine() {
           borderRadius="5px"
           display="flex"
           flexDirection="column"
-          justifyContent="space-around"
+          justifyContent="center"
+          gap="10px"
           alignItems="center"
         >
-          <Typography>Total Score</Typography>
-          <Box
-            width="170px"
-            height="170px"
-            borderRadius="5px"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            position="relative"
-          >
-            {/* Progress Bar */}
-            <CircularProgress
-              variant="determinate"
-              value={totalScore ? totalScore : 1} // Calculate percentage
-              size={150}
-              thickness={2}
-              style={{ position: "absolute" }}
-              color={getTotalClr(totalScore)} // Dynamically set color
-            />
-            {/* Content inside progress bar */}
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-              position="relative"
-            >
-              <Typography>Total Scroe</Typography>
-              <img src={cup} width="60px" height="60px" />
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {totalScore ? totalScore : "no data"}
+          <Typography variant="h4">Total Score</Typography>
+          {routineScore && skillScore ? (
+            <>
+              <Box
+                width="170px"
+                height="170px"
+                borderRadius="5px"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                position="relative"
+              >
+                {/* Progress Bar */}
+                <CircularProgress
+                  variant="determinate"
+                  value={totalScore ? totalScore : 1} // Calculate percentage
+                  size={150}
+                  thickness={2}
+                  style={{ position: "absolute" }}
+                  color={getTotalClr(totalScore)} // Dynamically set color
+                />
+                {/* Content inside progress bar */}
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  position="relative"
+                >
+                  <Typography>Total Scroe</Typography>
+                  <img src={cup} width="60px" height="60px" />
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    {totalScore ? totalScore : "no data"}
+                  </Typography>
+                </Box>
+              </Box>
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  fontSize: "24px",
+                  color: getTotalColor(totalScore),
+                }}
+              >
+                {`Total Score: ${totalScore}/100`}
               </Typography>
-            </Box>
-          </Box>
-          <Typography
-            sx={{
-              fontWeight: 600,
-              fontSize: "24px",
-              color: getTotalColor(totalScore),
-            }}
-          >
-            {`Total Score: ${totalScore}/100`}
-          </Typography>
+            </>
+          ) : (
+            <Typography>no data</Typography>
+          )}
         </Box>
+
+        {showSkillModal && <AddDailyScore />}
+
+        {showRoutineModal && <AddDailyRoutineScore />}
       </Box>
     </div>
   );
