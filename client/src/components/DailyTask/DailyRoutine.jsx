@@ -1,15 +1,20 @@
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { GiKeyboard } from "react-icons/gi";
 import gitHub from "../../assets/icons/github.png";
 import suitcase from "../../assets/icons/suitcase.png";
 import keyboard from "../../assets/icons/keyboard.png";
 import script from "../../assets/icons/script.png";
-import { RiGithubFill, RiTerminalBoxFill } from "react-icons/ri";
+import sleepTime from "../../assets/icons/sleepTime.png";
+import meals from "../../assets/icons/meal.png";
+import cup from "../../assets/icons/cup.png";
 import {
+  getFoodClr,
   getGitColor,
   getJobColor,
   getLeetCodeColor,
+  getSleepHr,
+  getTotalClr,
+  getTotalColor,
   getTypingColor,
 } from "../../utilities/colorUtils";
 function DailyRoutine() {
@@ -18,11 +23,15 @@ function DailyRoutine() {
   const targetCommits = 6;
   const targetJobCount = 10;
   const targetProblems = 3;
+  const targetSleepHour = 7;
 
   const jobs = 0;
   const problems = 3;
   const wpm = 72;
   const commits = 4;
+  const sleepHour = 6;
+  const foodScore = 49;
+  const totalScore = 80;
 
   useEffect(() => {
     if (commits && jobs && problems && wpm) {
@@ -38,7 +47,7 @@ function DailyRoutine() {
         width: "100%",
         height: "100%",
         display: "flex",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
         alignItems: "flex-start",
         flexDirection: "column",
       }}
@@ -205,42 +214,160 @@ function DailyRoutine() {
 
       {/* Skill Enhancement Section */}
       <Box
-        width="700px"
-        height="48%"
+        width="100%"
+        height="47%"
         borderRadius="5px"
         display="flex"
-        flexDirection="column"
-        justifyContent="space-around"
         alignItems="center"
+        justifyContent="space-between"
       >
-        <Typography variant="h4">Skill Enhancement</Typography>
-        <Box width="100%" display="flex" gap="20px" paddingLeft="20px">
+        <Box
+          width="65%"
+          display="flex"
+          gap="20px"
+          padding="10px"
+          height="100%"
+          flexDirection="column"
+          borderRadius="5px"
+          justifyContent="center"
+          alignItems="center"
+          boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+        >
+          <Typography variant="h4">Health Score</Typography>
           <Box
-            width="150px"
-            height="150px"
-            boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+            width="100%"
+            height="100%"
             borderRadius="5px"
-          ></Box>
-          <Box
-            width="150px"
-            height="150px"
-            boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
-            borderRadius="5px"
-          ></Box>
-          <Box
-            width="150px"
-            height="150px"
-            boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
-            borderRadius="5px"
-          ></Box>
-          <Box
-            width="150px"
-            height="150px"
-            boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
-            borderRadius="5px"
-          ></Box>
+            display="flex"
+            justifyContent="space-around"
+          >
+            <Box
+              width="170px"
+              height="170px"
+              borderRadius="5px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              position="relative"
+            >
+              {/* Progress Bar */}
+              <CircularProgress
+                variant="determinate"
+                value={sleepHour ? (sleepHour / targetSleepHour) * 100 : 1} // Calculate percentage
+                size={150}
+                thickness={2}
+                style={{ position: "absolute" }}
+                color={getSleepHr(sleepHour)} // Dynamically set color
+              />
+              {/* Content inside progress bar */}
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                position="relative"
+              >
+                <Typography>Sleep Time</Typography>
+                <img src={sleepTime} width="60px" height="60px" />
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  {sleepHour ? sleepHour : "no data"}
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box
+              width="170px"
+              height="170px"
+              borderRadius="5px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              position="relative"
+            >
+              {/* Progress Bar */}
+              <CircularProgress
+                variant="determinate"
+                value={foodScore ? foodScore : 1} // Calculate percentage
+                size={150}
+                thickness={2}
+                style={{ position: "absolute" }}
+                color={getFoodClr(foodScore)} // Dynamically set color
+              />
+              {/* Content inside progress bar */}
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                position="relative"
+              >
+                <Typography>Fooding</Typography>
+                <img src={meals} width="60px" height="60px" />
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  {foodScore ? foodScore : "no data"}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+          <Button variant="contained" sx={{ width: "150px" }}>
+            Update Data
+          </Button>
         </Box>
-        <Button variant="contained">Update Data</Button>
+        <Box
+          height="100%"
+          width="31%"
+          padding="10px"
+          boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+          borderRadius="5px"
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-around"
+          alignItems="center"
+        >
+          <Typography>Total Score</Typography>
+          <Box
+            width="170px"
+            height="170px"
+            borderRadius="5px"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            position="relative"
+          >
+            {/* Progress Bar */}
+            <CircularProgress
+              variant="determinate"
+              value={totalScore ? totalScore : 1} // Calculate percentage
+              size={150}
+              thickness={2}
+              style={{ position: "absolute" }}
+              color={getTotalClr(totalScore)} // Dynamically set color
+            />
+            {/* Content inside progress bar */}
+            <Box
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              position="relative"
+            >
+              <Typography>Total Scroe</Typography>
+              <img src={cup} width="60px" height="60px" />
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {totalScore ? totalScore : "no data"}
+              </Typography>
+            </Box>
+          </Box>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              fontSize: "24px",
+              color: getTotalColor(totalScore),
+            }}
+          >
+            {`Total Score: ${totalScore}/100`}
+          </Typography>
+        </Box>
       </Box>
     </div>
   );

@@ -23,3 +23,25 @@ export const getLeetCodeColor = (problems, targetProblems) => {
   if (problems >= targetProblems / 2) return "info";
   return "error";
 };
+
+export const getSleepHr = (hours) => {
+  if (hours >= 7 && hours <= 9) return "success"; // Optimal sleep
+  if ((hours >= 5 && hours < 7) || (hours > 9 && hours <= 11)) return "info"; // Slightly off
+  return "error"; // Too little or too much sleep
+};
+
+export const getFoodClr=(score)=>{
+  if(score >=80 && score<=100) return "success"
+  if(score >=50 && score<=80) return "info"
+  return "error"
+}
+export const getTotalClr=(score)=>{
+  if(score >=80 && score<=100) return "success"
+  if(score >=50 && score<=80) return "info"
+  return "error"
+}
+export const getTotalColor=(score)=>{
+  if(score >=80 && score<=100) return "green"
+  if(score >=50 && score<=80) return "blue"
+  return "red"
+}
