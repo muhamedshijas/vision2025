@@ -5,6 +5,7 @@ import {
   Typography,
   FormControlLabel,
   Button,
+  Grid,
 } from "@mui/material";
 import axios from "axios";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -13,12 +14,21 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { calculateSleepDuration } from "../../utilities/timeCalculation";
 
-function AddDailyRoutineScore() {
+function AddDailyRoutineScore({
+  showRoutineModal,
+  setShowRoutineModal,
+  userId,
+}) {
   const [bedTime, setBedTime] = useState(null);
   const [wakeUpTime, setWakeUpTime] = useState(null);
 
+  const handleModal = () => {
+    setShowRoutineModal(!showRoutineModal);
+  };
+
   // State for food intake
   const [foodIntake, setFoodIntake] = useState({
+    bedTea: false,
     breakfast: false,
     midMorningSnack: false,
     lunch: false,
@@ -93,29 +103,59 @@ function AddDailyRoutineScore() {
             </Box>
 
             {/* Food Score Section */}
-            <Box mb={2}>
+            <Box mb={2} width="100%">
               <Typography>Food Score</Typography>
-              {Object.keys(foodIntake).map((food) => (
-                <FormControlLabel
-                  key={food}
-                  control={
-                    <Checkbox
-                      name={food}
-                      checked={foodIntake[food]}
-                      onChange={handleFoodChange}
+              <Grid
+                container
+                spacing={1}
+                justifyContent="flex-start"
+                width="100%"
+              >
+                {Object.keys(foodIntake).map((food) => (
+                  <Grid item xs={6} key={food}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name={food}
+                          checked={foodIntake[food]}
+                          onChange={handleFoodChange}
+                        />
+                      }
+                      label={food
+                        .replace(/([A-Z])/g, " $1")
+                        .replace(/^./, (str) => str.toUpperCase())}
                     />
-                  }
-                  label={food
-                    .replace(/([A-Z])/g, " $1")
-                    .replace(/^./, (str) => str.toUpperCase())}
-                />
-              ))}
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
 
             {/* Submit Button */}
-            <Button type="submit" variant="contained" fullWidth>
-              Submit
-            </Button>
+            <Box width="100%" display="flex" justifyContent="space-around">
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  width: "180px",
+                  backgroundColor: "black",
+                  color: "white",
+                }}
+              >
+                Submit
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  width: "180px",
+                  backgroundColor: "white",
+                  color: "black",
+                  border: "1px solid black",
+                }}
+                onClick={handleModal}
+              >
+                Cancel
+              </Button>
+            </Box>
           </form>
         </Box>
       </Box>

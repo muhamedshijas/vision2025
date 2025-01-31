@@ -19,7 +19,10 @@ import {
 } from "../../utilities/colorUtils";
 import AddDailyScore from "../../modals/DailyTask/AddDailySkillScore";
 import AddDailyRoutineScore from "../../modals/DailyTask/AddDailyRoutineScore";
+import { useSelector } from "react-redux";
 function DailyRoutine() {
+  const user = useSelector((state) => state.user.detials);
+  const userId = user._id;
   const [showSkillModal, setShowSkillModal] = useState(false);
   const [showRoutineModal, setShowRoutineModal] = useState(false);
 
@@ -412,7 +415,13 @@ function DailyRoutine() {
 
         {showSkillModal && <AddDailyScore />}
 
-        {showRoutineModal && <AddDailyRoutineScore />}
+        {showRoutineModal && (
+          <AddDailyRoutineScore
+            showRoutineModal={showRoutineModal}
+            setShowRoutineModal={setShowRoutineModal}
+            userId={userId}
+          />
+        )}
       </Box>
     </div>
   );
