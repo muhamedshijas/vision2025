@@ -35,11 +35,42 @@ class DailyQuote {
 
   @Prop({ type: String, required: true })
   overAll: string;
-  
+
   @Prop({ type: String, required: true })
   productivity: string;
+}
 
+@Schema()
+class DailyRoutineHealth {
+  @Prop({ type: String })
+  sleepHour: Number
 
+  @Prop({ type: Number })
+  foodScore: Number
+}
+
+@Schema()
+class DailyRoutineSkills {
+  @Prop({ type: Number })
+  wpm: number
+
+  @Prop({ type: Number })
+  commits: number
+
+  @Prop({ type: Number })
+  applications: number
+
+  @Prop({ type: Number })
+  problems: Number
+}
+
+@Schema()
+class DailyRoutine {
+  @Prop({ type: DailyRoutineSkills })
+  dailyRoutineSkills: DailyRoutineSkills
+
+  @Prop({ type: DailyRoutineHealth })
+  dailyRoutineHealth: DailyRoutineHealth
 }
 
 @Schema()
@@ -55,6 +86,9 @@ export class DailyReports extends Document {
 
   @Prop({ type: DailyQuote, default: null })
   daily_Quote: DailyQuote;
+
+  @Prop({ type: DailyRoutine })
+  daily_Routine: DailyRoutine
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);

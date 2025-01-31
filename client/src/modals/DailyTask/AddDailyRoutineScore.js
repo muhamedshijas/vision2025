@@ -16,6 +16,7 @@ import { calculateSleepDuration } from "../../utilities/timeCalculation";
 function AddDailyRoutineScore() {
   const [bedTime, setBedTime] = useState(null);
   const [wakeUpTime, setWakeUpTime] = useState(null);
+
   // State for food intake
   const [foodIntake, setFoodIntake] = useState({
     breakfast: false,
@@ -32,18 +33,18 @@ function AddDailyRoutineScore() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = await axios.post('daily-task/add-daily-health-data',{bedTime,wakeUpTime});
+
+    // Convert foodIntake object into an array of selected food items
+    const foods = Object.keys(foodIntake).filter((key) => foodIntake[key]);
+    console.log(foods);
+
     // Calculate total sleep duration
     let totalSleepDuration = calculateSleepDuration(bedTime, wakeUpTime);
 
-    console.log("Form submitted!", {
-      bedTime: bedTime ? bedTime.format("hh:mm A") : null,
-      wakeUpTime: wakeUpTime ? wakeUpTime.format("hh:mm A") : null,
-      totalSleepDuration: `${totalSleepDuration} hours`,
-      foodIntake:
-        Object.keys(foodIntake)
-          .filter((key) => foodIntake[key])
-          .join(", ") || "No food intake selected",
+    await axios.post("daily-task/add-daily-health-data", {
+      bedTime,
+      wakeUpTime,
+      foods: foods,
     });
   };
 
@@ -94,66 +95,21 @@ function AddDailyRoutineScore() {
             {/* Food Score Section */}
             <Box mb={2}>
               <Typography>Food Score</Typography>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="breakfast"
-                    checked={foodIntake.breakfast}
-                    onChange={handleFoodChange}
-                  />
-                }
-                label="Breakfast"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="midMorningSnack"
-                    checked={foodIntake.midMorningSnack}
-                    onChange={handleFoodChange}
-                  />
-                }
-                label="Mid Morning Snack"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="lunch"
-                    checked={foodIntake.lunch}
-                    onChange={handleFoodChange}
-                  />
-                }
-                label="Lunch"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="eveningSnack"
-                    checked={foodIntake.eveningSnack}
-                    onChange={handleFoodChange}
-                  />
-                }
-                label="Evening Snack"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="dinner"
-                    checked={foodIntake.dinner}
-                    onChange={handleFoodChange}
-                  />
-                }
-                label="Dinner"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="hotelFood"
-                    checked={foodIntake.hotelFood}
-                    onChange={handleFoodChange}
-                  />
-                }
-                label="Hotel Food"
-              />
+              {Object.keys(foodIntake).map((food) => (
+                <FormControlLabel
+                  key={food}
+                  control={
+                    <Checkbox
+                      name={food}
+                      checked={foodIntake[food]}
+                      onChange={handleFoodChange}
+                    />
+                  }
+                  label={food
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}
+                />
+              ))}
             </Box>
 
             {/* Submit Button */}

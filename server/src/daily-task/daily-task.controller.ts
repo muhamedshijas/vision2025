@@ -50,6 +50,7 @@ export class DailyTaskController {
 
   @Post('add-daily-health-data')
   async addDailyHealthData(@Body() dailRoutineDto: DailyRoutineDto) {
+    console.log("hiii");
     return this.dailyTaskService.addDailyRoutineScore(dailRoutineDto)
   }
 

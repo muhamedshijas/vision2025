@@ -19,9 +19,6 @@ export function calculateSleepDuration(bedTime: string, wakeUpTime: string): str
 }
 
 export async function calculateSleepScore(hours) {
-
-
-
     let score;
 
     if (hours >= 24) {
@@ -46,9 +43,33 @@ export async function calculateSleepScore(hours) {
         // Extremely under-sleeping
         score = 10;
     }
-
-    console.log(score);
-
     return score
 }
+
+ export function calculateFoodScore(foods: string[]): number {
+    const scoringMap: { [key: string]: number } = {
+      breakfast: 20,
+      lunch: 20,
+      dinner: 20,
+      midMorningSnack: 10,
+      eveningSnack: 10,
+      hotelFood: -15,
+    };
+  
+    let foodScore = foods.reduce((total, food) => total + (scoringMap[food] || 0), 0);
+  
+    // If too many meals/snacks are selected (more than 4), reduce score (unhealthy)
+    if (foods.length > 4) {
+      foodScore -= 10; // Reduce score for overconsumption
+    }
+  
+    // If both breakfast and dinner are missing, consider it unhealthy (reduce score)
+    if (!foods.includes("breakfast") && !foods.includes("dinner")) {
+      foodScore -= 15; // Missing key meals
+    }
+  
+    // Ensure score remains within 0-100 range
+    return Math.max(0, Math.min(foodScore, 100));
+  }
+  
 

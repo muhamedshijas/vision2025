@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { catchError } from 'rxjs';
 import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
 import { DailyRoutineDto } from './dto/dailyRoutine.dto';
-import { calculateSleepDuration, calculateSleepScore } from 'src/utils/scoreCaluculater';
+import { calculateFoodScore, calculateSleepDuration, calculateSleepScore } from 'src/utils/scoreCaluculater';
 
 
 @Injectable()
@@ -178,17 +178,15 @@ export class DailyTaskService {
   }
 
   async addDailyRoutineScore(dailRoutineDto: DailyRoutineDto) {
-    const { bedTime, wakeUpTime } = dailRoutineDto
-    console.log(bedTime, wakeUpTime);
+    const { bedTime, wakeUpTime, foods } = dailRoutineDto
     const result = await calculateSleepDuration(bedTime, wakeUpTime)
-
-
     const hours = parseInt(result.split(' ')[0]);
-
     const score = await calculateSleepScore(hours)
-    console.log(score);
-
-
+    if (foods) {
+      const foodScore = await calculateFoodScore(foods)
+      console.log(foodScore);
+    }
+    
   }
 
 }
