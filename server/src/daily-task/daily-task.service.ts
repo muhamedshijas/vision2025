@@ -7,6 +7,7 @@ import { catchError } from 'rxjs';
 import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
 import { DailyRoutineDto } from './dto/dailyRoutine.dto';
 import { calculateFoodScore, calculateSleepDuration, calculateSleepScore } from 'src/utils/scoreCaluculater';
+import { DailySkillDto } from './dto/dailySkill.dto';
 
 
 @Injectable()
@@ -178,15 +179,71 @@ export class DailyTaskService {
   }
 
   async addDailyRoutineScore(dailRoutineDto: DailyRoutineDto) {
-    const { bedTime, wakeUpTime, foods } = dailRoutineDto
+    const { bedTime, wakeUpTime, foods, userId } = dailRoutineDto
+    console.log(bedTime, wakeUpTime);
+
     const result = await calculateSleepDuration(bedTime, wakeUpTime)
     const hours = parseInt(result.split(' ')[0]);
-    const score = await calculateSleepScore(hours)
-    if (foods) {
-      const foodScore = await calculateFoodScore(foods)
-      console.log(foodScore);
+    const dailyHealthRoutine = {
+      sleepHour: hours,
+      foods: foods
     }
-    
-  }
+    const date = new Date()
+    date.setDate(date.getDate() - 1);
 
+    // Format the date in YYYY-MM-DD format
+    const yesterday = date.toISOString().split('T')[0];
+
+    const existingData = await this.dailyReportModel.findOne({ userId: userId, date: yesterday }).lean()
+    if (existingData) {
+
+      await this.dailyReportModel.findOneAndUpdate(
+        { userId: userId, date: yesterday },
+        { $set: { "daily_Routine.dailyRoutineHealth": dailyHealthRoutine } },
+        { new: true } // This option returns the updated document
+      )
+
+    } else {
+      await this.dailyReportModel.create({
+        userId: userId,
+        date: yesterday,
+        "daily_Routine.dailyRoutineHealth": dailyHealthRoutine
+      })
+      console.log("Daily healthRoutine added successfully")
+    }
+
+
+  }
+  async addDailySkillScore(dailySkillDto: DailySkillDto) {
+    const { userId } = dailySkillDto
+    const dailySkill = {
+      typingScore: dailySkillDto.typingScore,
+      commits: dailySkillDto.gitCommits,
+      problems: dailySkillDto.leetCodeProblems
+    }
+    const date = new Date()
+    date.setDate(date.getDate() - 1);
+
+    // Format the date in YYYY-MM-DD format
+    const yesterday = date.toISOString().split('T')[0];
+
+    const existingData = await this.dailyReportModel.findOne({ userId: userId, date: yesterday }).lean()
+    if (existingData) {
+
+      await this.dailyReportModel.findOneAndUpdate(
+        { userId: userId, date: yesterday },
+        { $set: { "daily_Routine.dailyRoutineSkills": dailySkill } },
+        { new: true } // This option returns the updated document
+      )
+
+    } else {
+      await this.dailyReportModel.create({
+        userId: userId,
+        date: yesterday,
+        "daily_Routine.dailyRoutineSkills": dailySkill
+      })
+      console.log("Daily feedback added successfully")
+      return
+    }
+  }
 }

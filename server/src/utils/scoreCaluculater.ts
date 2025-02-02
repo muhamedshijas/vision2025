@@ -3,20 +3,20 @@ export function calculateSleepDuration(bedTime: string, wakeUpTime: string): str
     const bedTimeDate = new Date(bedTime);
     const wakeUpTimeDate = new Date(wakeUpTime);
 
-    // If wake-up time is earlier than bed time, it means the wake-up time is on the next day
+    // If wake-up time is earlier than bed time, adjust to next day
     if (wakeUpTimeDate < bedTimeDate) {
-        wakeUpTimeDate.setDate(wakeUpTimeDate.getDate() + 1); // Add 1 day to the wake-up time
+        wakeUpTimeDate.setDate(wakeUpTimeDate.getDate() + 1);
     }
 
-    // Calculate the difference in milliseconds
+    // Calculate sleep duration in milliseconds
     const sleepDurationMillis = wakeUpTimeDate.getTime() - bedTimeDate.getTime();
 
-    // Convert milliseconds to hours and minutes
-    const sleepDurationHours = Math.floor(sleepDurationMillis / (1000 * 60 * 60));
-    const sleepDurationMinutes = Math.floor((sleepDurationMillis % (1000 * 60 * 60)) / (1000 * 60));
+    // Convert to total hours (as a float)
+    const sleepDurationHours = sleepDurationMillis / (1000 * 60 * 60);
 
-    return `${sleepDurationHours} hours ${sleepDurationMinutes} minutes`;
+    return `${sleepDurationHours} hours`;
 }
+
 
 export async function calculateSleepScore(hours) {
     let score;
@@ -46,30 +46,30 @@ export async function calculateSleepScore(hours) {
     return score
 }
 
- export function calculateFoodScore(foods: string[]): number {
+export function calculateFoodScore(foods: string[]): number {
     const scoringMap: { [key: string]: number } = {
-      breakfast: 20,
-      lunch: 20,
-      dinner: 20,
-      midMorningSnack: 10,
-      eveningSnack: 10,
-      hotelFood: -15,
+        breakfast: 20,
+        lunch: 20,
+        dinner: 20,
+        midMorningSnack: 10,
+        eveningSnack: 10,
+        hotelFood: -15,
     };
-  
+
     let foodScore = foods.reduce((total, food) => total + (scoringMap[food] || 0), 0);
-  
+
     // If too many meals/snacks are selected (more than 4), reduce score (unhealthy)
     if (foods.length > 4) {
-      foodScore -= 10; // Reduce score for overconsumption
+        foodScore -= 10; // Reduce score for overconsumption
     }
-  
+
     // If both breakfast and dinner are missing, consider it unhealthy (reduce score)
     if (!foods.includes("breakfast") && !foods.includes("dinner")) {
-      foodScore -= 15; // Missing key meals
+        foodScore -= 15; // Missing key meals
     }
-  
+
     // Ensure score remains within 0-100 range
     return Math.max(0, Math.min(foodScore, 100));
-  }
-  
+}
+
 

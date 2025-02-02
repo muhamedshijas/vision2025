@@ -8,4 +8,6 @@ export class DailyRoutineDto {
     wakeUpTime: string
 
     foods: []
+
+    userId: string
 }

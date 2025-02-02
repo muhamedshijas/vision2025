@@ -35,7 +35,7 @@ function DailyRoutine() {
   const targetProblems = 3;
   const targetSleepHour = 7;
 
-  const jobs = 4;
+  const jobs = 0;
   const problems = 3;
   const wpm = 72;
   const commits = 4;
@@ -413,7 +413,13 @@ function DailyRoutine() {
           )}
         </Box>
 
-        {showSkillModal && <AddDailyScore />}
+        {showSkillModal && (
+          <AddDailyScore
+            showSkillModal={showSkillModal}
+            setShowSkillModal={setShowSkillModal}
+            userId={userId}
+          />
+        )}
 
         {showRoutineModal && (
           <AddDailyRoutineScore

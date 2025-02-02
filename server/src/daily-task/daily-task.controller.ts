@@ -3,6 +3,7 @@ import { DailyTaskService } from './daily-task.service';
 import { AddJobsDto } from './dto/addJob.dto';
 import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
 import { DailyRoutineDto } from './dto/dailyRoutine.dto';
+import { DailySkillDto } from './dto/dailySkill.dto';
 @Controller('daily-task')
 export class DailyTaskController {
   constructor(private readonly dailyTaskService: DailyTaskService) { }
@@ -50,8 +51,12 @@ export class DailyTaskController {
 
   @Post('add-daily-health-data')
   async addDailyHealthData(@Body() dailRoutineDto: DailyRoutineDto) {
-    console.log("hiii");
     return this.dailyTaskService.addDailyRoutineScore(dailRoutineDto)
+  }
+
+  @Post('add-daily-skill-data')
+  async addDailySkillData(@Body() dailySkillDto: DailySkillDto) {
+    return this.dailyTaskService.addDailySkillScore(dailySkillDto)
   }
 
 }

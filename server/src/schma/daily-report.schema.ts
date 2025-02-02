@@ -45,23 +45,20 @@ class DailyRoutineHealth {
   @Prop({ type: String })
   sleepHour: Number
 
-  @Prop({ type: Number })
-  foodScore: Number
+  @Prop({ type: [String] })
+  foods: []
 }
 
 @Schema()
 class DailyRoutineSkills {
   @Prop({ type: Number })
-  wpm: number
+  commits: number; // Git commits count
 
   @Prop({ type: Number })
-  commits: number
+  problems: number; // LeetCode problems solved
 
-  @Prop({ type: Number })
-  applications: number
-
-  @Prop({ type: Number })
-  problems: Number
+  @Prop({ type: Map, of: Number })
+  typingScore: Record<string, number>; // Stores multiple test scores
 }
 
 @Schema()

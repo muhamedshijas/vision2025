@@ -55,7 +55,9 @@ function AddDailyRoutineScore({
       bedTime,
       wakeUpTime,
       foods: foods,
+      userId,
     });
+    setShowRoutineModal(!showRoutineModal);
   };
 
   return (
