@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { catchError } from 'rxjs';
 import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
 import { DailyRoutineDto } from './dto/dailyRoutine.dto';
-import { calculateFoodScore, calculateSleepDuration, calculateSleepScore } from 'src/utils/scoreCaluculater';
+import { calculateAverageHealthScore, calculateFoodScore, calculateNormalizedCommit, calculateNormalizedProblems, calculateSleepDuration, calculateSleepScore, calculateTypingAverage, caluclalateNormalizedJobs, calulateNormalizedWpm } from 'src/utils/scoreCaluculater';
 import { DailySkillDto } from './dto/dailySkill.dto';
 
 
@@ -244,6 +244,51 @@ export class DailyTaskService {
       })
       console.log("Daily feedback added successfully")
       return
+    }
+  }
+
+  async getDailyRoutineScores(userId) {
+    try {
+      const date = new Date()
+      date.setDate(date.getDate() - 1);
+
+      // Format the date in YYYY-MM-DD format
+      const yesterday = date.toISOString().split('T')[0];
+      const data = await this.dailyReportModel.findOne({ userId: userId, date: yesterday }).lean()
+      if (!data) {
+        return
+      }
+      const jobCount = data.jobsdata.length
+      const routines = data.daily_Routine
+      const skill = routines.dailyRoutineSkills
+      const health = routines.dailyRoutineHealth
+      const typingAverage = calculateTypingAverage(skill.typingScore)
+      const sleepScore = await calculateSleepScore(health.sleepHour)
+      const foodScore = calculateFoodScore(health.foods)
+      const avgHelathScore = calculateAverageHealthScore(foodScore, sleepScore)
+      const normalizedWpm = calulateNormalizedWpm(typingAverage)
+      const normalizedCommits = calculateNormalizedCommit(skill.commits)
+      const normalizedProblems = calculateNormalizedProblems(skill.problems)
+      const normalizedJobs = caluclalateNormalizedJobs(jobCount)
+
+
+      const routineData = {
+        gitCommit: skill.commits,
+        problems: skill.problems,
+        applications: jobCount,
+        avgWpm: typingAverage,
+        sleepHr: health.sleepHour,
+        foodScore: foodScore,
+        sleepScore: sleepScore,
+        avgHelathScore: avgHelathScore.averageScore,
+        normalizedFoodScore: avgHelathScore.normalizedFoodScore,
+        normalizedSleepScore: avgHelathScore.normalizedSleepScore
+      }
+      return routineData
+
+
+    } catch (err) {
+      console.log(err)
     }
   }
 }

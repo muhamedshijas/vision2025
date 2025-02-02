@@ -59,4 +59,10 @@ export class DailyTaskController {
     return this.dailyTaskService.addDailySkillScore(dailySkillDto)
   }
 
+  @Get('get-daily-routine/:userId')
+  async getDailyRoutine(@Param('userId') userId: string) {
+    return this.dailyTaskService.getDailyRoutineScores(userId)
+
+  }
+
 }

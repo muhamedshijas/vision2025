@@ -20,14 +20,36 @@ import {
 import AddDailyScore from "../../modals/DailyTask/AddDailySkillScore";
 import AddDailyRoutineScore from "../../modals/DailyTask/AddDailyRoutineScore";
 import { useSelector } from "react-redux";
+import axios from "axios";
 function DailyRoutine() {
   const user = useSelector((state) => state.user.detials);
+  const refresh = useSelector((state) => state.refresh);
+
   const userId = user._id;
+  const [routines, setRoutines] = useState(null);
   const [showSkillModal, setShowSkillModal] = useState(false);
   const [showRoutineModal, setShowRoutineModal] = useState(false);
 
-  const [skillScore, setSkillScore] = useState(false);
-  const [routineScore, setRoutineScore] = useState(false);
+  const [skillScore, setSkillScore] = useState(1);
+  const [routineScore, setRoutineScore] = useState();
+
+  useEffect(() => {
+    const fetchDailyRouine = async () => {
+      try {
+        const { data } = await axios.get(
+          `daily-task/get-daily-routine/${userId}`
+        );
+        setRoutines(data);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      }
+    };
+
+    if (userId) {
+      fetchDailyRouine();
+    }
+  }, [userId, refresh]);
+
   const targetWPM = 75; // Set your target WPM
   const targetCommits = 6;
   const targetJobCount = 10;
@@ -35,32 +57,39 @@ function DailyRoutine() {
   const targetProblems = 3;
   const targetSleepHour = 7;
 
-  const jobs = 0;
-  const problems = 3;
-  const wpm = 72;
-  const commits = 4;
+  const jobs = routines?.applications ? routines.applications : 0;
+  const problems = routines?.problems ? routines.problems : 0;
+  const wpm = routines?.avgWpm ? routines.avgWpm : 0;
+  const commits = routines?.gitCommit ? routines.gitCommit : 0;
 
-  const sleepHour = 0;
-  const foodScore = 90;
-
-  const totalScore = 65;
+  const sleepHour = routines?.sleepHr ? routines.sleepHr : 0;
+  const foodScore = routines?.foodScore ? routines.foodScore : 0;
+  const sleepScore = routines?.sleepScore ? routines.sleepScore : 0;
+  const avgSleepScore = routines?.normalizedSleepScore
+    ? routines.normalizedSleepScore
+    : 0;
+  const avgFoodScore = routines?.normalizedFoodScore
+    ? routines.normalizedFoodScore
+    : 0;
 
   useEffect(() => {
     if (foodScore && sleepHour) {
-      setRoutineScore(true);
+      setRoutineScore(routines?.avgHelathScore);
+      console.log(routineScore);
     } else {
-      setRoutineScore(false);
+      setRoutineScore(0);
     }
   }, [foodScore, sleepHour]);
 
   useEffect(() => {
     if (commits && jobs && problems && wpm) {
-      setSkillScore(true);
+      setSkillScore(1);
     } else {
-      setSkillScore(false);
+      setSkillScore(1);
     }
   }, [commits, jobs, problems, wpm]);
 
+  const totalScore = routineScore + skillScore;
   const handleSkillModal = () => {
     setShowSkillModal(!showSkillModal);
   };
@@ -128,7 +157,7 @@ function DailyRoutine() {
               <Typography>Typing</Typography>
               <img src={keyboard} width="60px" height="60px" />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {wpm ? `${wpm} WPM` : "no data"}
+                {wpm ? `${wpm} WPM` : 0}
               </Typography>
             </Box>
           </Box>
@@ -161,7 +190,7 @@ function DailyRoutine() {
               <Typography>Leetcode</Typography>
               <img src={script} width="60px" height="60px" />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {problems ? `${problems} solved` : "no data"}
+                {problems ? `${problems} solved` : 0}
               </Typography>
             </Box>
           </Box>
@@ -194,7 +223,7 @@ function DailyRoutine() {
               <Typography>Git Commits</Typography>
               <img src={gitHub} width="60px" height="60px" />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {commits ? `${commits} commits` : "no data"}
+                {commits ? `${commits} commits` : 0}
               </Typography>
             </Box>
           </Box>
@@ -227,7 +256,7 @@ function DailyRoutine() {
               <Typography>Jobs</Typography>
               <img src={suitcase} width="60px" height="60px" />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {jobs ? `${jobs} Applcations` : "no data"}
+                {jobs ? `${jobs} Applcations` : 0}
               </Typography>
             </Box>
           </Box>
@@ -299,7 +328,7 @@ function DailyRoutine() {
                 <Typography>Sleep Time</Typography>
                 <img src={sleepTime} width="60px" height="60px" />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {sleepHour ? `${sleepHour} hrs` : "no data"}
+                  {sleepHour ? `${sleepHour} hrs` : 0}
                 </Typography>
               </Box>
             </Box>
@@ -333,13 +362,16 @@ function DailyRoutine() {
                 <Typography>Fooding</Typography>
                 <img src={meals} width="60px" height="60px" />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {foodScore ? `${foodScore} points` : "no data"}
+                  {foodScore ? `${foodScore} points` : 0}
                 </Typography>
               </Box>
             </Box>
           </Box>
           {routineScore ? (
-            <Typography>score :</Typography>
+            <Typography variant="h6" fontWeight={600}>
+              SCORE :
+              {`AVERAGE FOOD SCORE=${avgFoodScore}+AVERAGE SLEEP SCORE=${avgSleepScore}=TOTAL SCORE=${routineScore}`}
+            </Typography>
           ) : (
             <Button
               variant="contained"
@@ -394,7 +426,7 @@ function DailyRoutine() {
                   <Typography>Total Scroe</Typography>
                   <img src={cup} width="60px" height="60px" />
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {totalScore ? totalScore : "no data"}
+                    {totalScore ? totalScore : "000"}
                   </Typography>
                 </Box>
               </Box>
@@ -409,7 +441,7 @@ function DailyRoutine() {
               </Typography>
             </>
           ) : (
-            <Typography>no data</Typography>
+            <Typography> 0</Typography>
           )}
         </Box>
 

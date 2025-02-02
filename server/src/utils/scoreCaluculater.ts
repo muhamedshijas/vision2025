@@ -73,3 +73,48 @@ export function calculateFoodScore(foods: string[]): number {
 }
 
 
+// utils/calculateAverage.ts
+export function calculateTypingAverage(typingScore: Record<string, number>): number {
+    const scores = Object.values(typingScore); // Extract numeric values
+    if (scores.length === 0) return 0; // Avoid division by zero
+    const total = scores.reduce((sum, score) => sum + score, 0); // Sum up all scores
+    return Math.floor(total / scores.length) // Calc ulate average
+}
+const normalizeScore = (score, maxScore = 100) => {
+    return (score / maxScore) * 50;  // Normalize to out of 50
+};
+
+// Function to calculate the average of foodScore and healthScore
+export function calculateAverageHealthScore(foodScore, sleepScore) {
+    // Normalize both scores
+    const normalizedFoodScore = normalizeScore(foodScore);
+    const normalizedSleepScore = normalizeScore(sleepScore);
+
+    // Calculate the average of the normalized scores
+    const averageScore = (normalizedFoodScore + normalizedSleepScore) / 2;
+
+    // Return the average score
+    return { normalizedFoodScore, normalizedSleepScore, averageScore };
+}
+
+export function calulateNormalizedWpm(wpm) {
+    const targetWpm = 75;
+    return Math.min(Math.floor((wpm / targetWpm) * 25), 25);
+}
+
+export function calculateNormalizedCommit(commits) {
+    const targetCommits = 5;
+    return Math.min(Math.floor((commits / targetCommits) * 25), 25);
+}
+
+export function calculateNormalizedProblems(problems) {
+    const targetProblems = 3;
+    return Math.min(Math.floor((problems / targetProblems) * 25), 25);
+}
+export function caluclalateNormalizedJobs(applications) {
+    const targetApplications = 10;
+    return Math.min(Math.floor((applications / targetApplications) * 25), 25);
+}
+export function calulateNormalizedSkillScore() {
+
+}
