@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
 import { DailyTaskModule } from './daily-task/daily-task.module';
+import { MonthlTaskModule } from './monthl-task/monthl-task.module';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { DailyTaskModule } from './daily-task/daily-task.module';
     ProfileModule,
 
     DailyTaskModule,
+
+    MonthlTaskModule,
 
   ],
   controllers: [],
