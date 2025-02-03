@@ -27,5 +27,4 @@ export const calculateSleepDuration = (bedTime, wakeUpTime) => {
 
 // Example usage:
 const bedTime = "11:05 PM";
-const wakeUpTime = "05:00 AM";
-console.log(calculateSleepDuration(bedTime, wakeUpTime)); // Output: "5 hours 55 minutes"
+const wakeUpTime = "05:00 AM"; // Output: "5 hours 55 minutes"

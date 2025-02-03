@@ -180,7 +180,6 @@ export class DailyTaskService {
 
   async addDailyRoutineScore(dailRoutineDto: DailyRoutineDto) {
     const { bedTime, wakeUpTime, foods, userId } = dailRoutineDto
-    console.log(bedTime, wakeUpTime);
 
     const result = await calculateSleepDuration(bedTime, wakeUpTime)
     const hours = parseInt(result.split(' ')[0]);
