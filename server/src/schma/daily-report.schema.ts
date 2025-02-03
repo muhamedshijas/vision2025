@@ -42,22 +42,22 @@ class DailyQuote {
 
 @Schema()
 class DailyRoutineHealth {
-  @Prop({ type: String })
+  @Prop({ type: String, default:0 })
   sleepHour: Number
 
-  @Prop({ type: [String] })
+  @Prop({ type: [String], default:[] })
   foods: []
 }
-
+ 
 @Schema()
 class DailyRoutineSkills {
-  @Prop({ type: Number })
+  @Prop({ type: Number, default:0 })
   commits: number; // Git commits count
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default:0 })
   problems: number; // LeetCode problems solved
 
-  @Prop({ type: Map, of: Number })
+  @Prop({ type: Map, of: Number, default:{} })
   typingScore: Record<string, number>; // Stores multiple test scores
 }
 

@@ -115,6 +115,19 @@ export function caluclalateNormalizedJobs(applications) {
     const targetApplications = 10;
     return Math.min(Math.floor((applications / targetApplications) * 25), 25);
 }
-export function calulateNormalizedSkillScore() {
+export function calculateAvgSkillScore(wpm, commits, problems, applications) {
+    wpm = wpm ?? 0;
+    commits = commits ?? 0;
+    problems = problems ?? 0;
+    applications = applications ?? 0;
+
+    // Sum of all skill scores (max possible is 100)
+    const totalScore = wpm + commits + problems + applications;
+    
+
+    // Normalize the score to fit within 50
+    const scaledScore = (totalScore / 100) * 50;
+
+    return Math.floor(scaledScore);
 
 }

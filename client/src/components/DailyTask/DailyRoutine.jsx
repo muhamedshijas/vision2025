@@ -7,6 +7,7 @@ import script from "../../assets/icons/script.png";
 import sleepTime from "../../assets/icons/sleepTime.png";
 import meals from "../../assets/icons/meal.png";
 import cup from "../../assets/icons/cup.png";
+import upload from "../../assets/icons/upload.png";
 import {
   getFoodClr,
   getGitColor,
@@ -49,6 +50,7 @@ function DailyRoutine() {
       fetchDailyRouine();
     }
   }, [userId, refresh]);
+  console.log(routines);
 
   const targetWPM = 75; // Set your target WPM
   const targetCommits = 6;
@@ -71,7 +73,10 @@ function DailyRoutine() {
   const avgFoodScore = routines?.normalizedFoodScore
     ? routines.normalizedFoodScore
     : 0;
-
+  const avgWpm = routines?.normalizedWpm;
+  const avgCommits = routines?.normalizedCommits;
+  const avgJobs = routines?.normalizedJobs;
+  const avgProblems = routines?.normalizedProblems;
   useEffect(() => {
     if (foodScore && sleepHour) {
       setRoutineScore(routines?.avgHelathScore);
@@ -82,10 +87,11 @@ function DailyRoutine() {
   }, [foodScore, sleepHour]);
 
   useEffect(() => {
-    if (commits && jobs && problems && wpm) {
-      setSkillScore(1);
+    if (routines?.avgSkillScore) {
+      setSkillScore(routines?.avgSkillScore);
+      console.log(skillScore);
     } else {
-      setSkillScore(1);
+      setSkillScore(0);
     }
   }, [commits, jobs, problems, wpm]);
 
@@ -119,7 +125,26 @@ function DailyRoutine() {
         alignItems="center"
         boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
       >
-        <Typography variant="h4">Daily Skills Tracker</Typography>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Typography variant="h4">Daily Skills Tracker</Typography>
+          <Box
+            onClick={handleSkillModal}
+            sx={{
+              borderRadius: "3px",
+              width: "80px",
+              marginLeft: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              fontSize: "12px",
+              cursor: "pointer",
+            }}
+          >
+            <img src={upload} height="30px" width="30px" />
+            UPLOAD
+          </Box>
+        </Box>
         <Box
           width="100%"
           display="flex"
@@ -262,11 +287,14 @@ function DailyRoutine() {
           </Box>
         </Box>
         {skillScore ? (
-          <Box>Score</Box>
+          <Box>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+            >{`Total Score = ${skillScore}`}</Typography>
+          </Box>
         ) : (
-          <Button variant="contained" onClick={handleSkillModal}>
-            Update Data
-          </Button>
+          ""
         )}
       </Box>
 
@@ -291,7 +319,26 @@ function DailyRoutine() {
           alignItems="center"
           boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
         >
-          <Typography variant="h4">Health Score</Typography>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Typography variant="h4">Daily Skills Tracker</Typography>
+            <Box
+              onClick={handleRoutineModal}
+              sx={{
+                borderRadius: "3px",
+                width: "80px",
+                marginLeft: "10px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                fontSize: "12px",
+                cursor: "pointer",
+              }}
+            >
+              <img src={upload} height="30px" width="30px" />
+              UPLOAD
+            </Box>
+          </Box>
           <Box
             width="100%"
             height="100%"
@@ -369,17 +416,10 @@ function DailyRoutine() {
           </Box>
           {routineScore ? (
             <Typography variant="h6" fontWeight={600}>
-              SCORE :
-              {`AVERAGE FOOD SCORE=${avgFoodScore}+AVERAGE SLEEP SCORE=${avgSleepScore}=TOTAL SCORE=${routineScore}`}
+              {` Total Score = ${routineScore}`}
             </Typography>
           ) : (
-            <Button
-              variant="contained"
-              sx={{ width: "150px" }}
-              onClick={handleRoutineModal}
-            >
-              Update Data
-            </Button>
+            ""
           )}
         </Box>
         <Box

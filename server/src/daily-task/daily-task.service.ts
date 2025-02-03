@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { catchError } from 'rxjs';
 import { AddDailyFeedbackDto } from './dto/addDailyFeedback.dto';
 import { DailyRoutineDto } from './dto/dailyRoutine.dto';
-import { calculateAverageHealthScore, calculateFoodScore, calculateNormalizedCommit, calculateNormalizedProblems, calculateSleepDuration, calculateSleepScore, calculateTypingAverage, caluclalateNormalizedJobs, calulateNormalizedWpm } from 'src/utils/scoreCaluculater';
+import { calculateAverageHealthScore, calculateAvgSkillScore, calculateFoodScore, calculateNormalizedCommit, calculateNormalizedProblems, calculateSleepDuration, calculateSleepScore, calculateTypingAverage, caluclalateNormalizedJobs, calulateNormalizedWpm } from 'src/utils/scoreCaluculater';
 import { DailySkillDto } from './dto/dailySkill.dto';
 
 
@@ -258,31 +258,67 @@ export class DailyTaskService {
       if (!data) {
         return
       }
+      if (!data.daily_Routine) {
+        
+        return
+      }
       const jobCount = data.jobsdata.length
       const routines = data.daily_Routine
       const skill = routines.dailyRoutineSkills
-      const health = routines.dailyRoutineHealth
+      if (!skill.typingScore) {
+        return
+      }
       const typingAverage = calculateTypingAverage(skill.typingScore)
-      const sleepScore = await calculateSleepScore(health.sleepHour)
-      const foodScore = calculateFoodScore(health.foods)
-      const avgHelathScore = calculateAverageHealthScore(foodScore, sleepScore)
       const normalizedWpm = calulateNormalizedWpm(typingAverage)
       const normalizedCommits = calculateNormalizedCommit(skill.commits)
       const normalizedProblems = calculateNormalizedProblems(skill.problems)
       const normalizedJobs = caluclalateNormalizedJobs(jobCount)
-
-
-      const routineData = {
+      const avgSkillScore = calculateAvgSkillScore(normalizedWpm, normalizedCommits, normalizedJobs, normalizedProblems)
+      let routineData = {
         gitCommit: skill.commits,
         problems: skill.problems,
         applications: jobCount,
         avgWpm: typingAverage,
-        sleepHr: health.sleepHour,
+        foodScore: 0,
+        sleepHr: 0,
+        sleepScore: 0,
+        avgHelathScore: 0,
+        normalizedFoodScore: 0,
+        normalizedSleepScore: 0,
+        normalizedCommits: normalizedCommits,
+        normalizedJobs: normalizedJobs,
+        normalizedProblems: normalizedProblems,
+        normalizedWpm: normalizedWpm,
+        avgSkillScore: avgSkillScore
+      }
+
+      const health = routines.dailyRoutineHealth
+      if (!health) {
+ 
+             
+        return routineData
+      }
+      const sleepScore = await calculateSleepScore(health.sleepHour)
+      const foodScore = calculateFoodScore(health.foods)
+      const avgHelathScore = calculateAverageHealthScore(foodScore, sleepScore)
+
+ 
+      routineData = {
+        gitCommit: skill.commits,
+        problems: skill.problems,
+        applications: jobCount,
+        avgWpm: typingAverage,
         foodScore: foodScore,
+        sleepHr: Number(health.sleepHour),
         sleepScore: sleepScore,
         avgHelathScore: avgHelathScore.averageScore,
         normalizedFoodScore: avgHelathScore.normalizedFoodScore,
-        normalizedSleepScore: avgHelathScore.normalizedSleepScore
+        normalizedSleepScore: avgHelathScore.normalizedSleepScore,
+        normalizedCommits: normalizedCommits,
+        normalizedJobs: normalizedJobs,
+        normalizedProblems: normalizedProblems,
+        normalizedWpm: normalizedWpm,
+        avgSkillScore: avgSkillScore
       }
       return routineData
 

@@ -53,7 +53,7 @@ function DailyFeedbackModal({ show, setShow, userId }) {
     if (newPhrase.length <= 70) {
       setPhrase(newPhrase);
       setError(""); // Clear error if within the limit
-    } else {
+    } else { 
       setError("Maximum 50 characters are allowed.");
     }
   };
