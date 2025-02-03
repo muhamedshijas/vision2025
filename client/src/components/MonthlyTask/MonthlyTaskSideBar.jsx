@@ -1,6 +1,6 @@
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 import React from "react";
-import dailyTaskIcon from "../../assets/icons/daily.png";
+import monthlyTaskIcon from "../../assets/icons/monthly.png";
 import { RiArrowDropLeftLine } from "react-icons/ri"; // Import arrow icon
 import { Link } from "react-router-dom";
 import jobApplication from "../../assets/icons/jobs.png";
@@ -9,7 +9,7 @@ import relgious from "../../assets/icons/praying.png";
 import dailyReport from "../../assets/icons/report.png";
 import dailyRotine from "../../assets/icons/routine.png";
 
-function DailyTaskSideBar({ activeSection, setActiveSection }) {
+function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
   // Icon mapping for each section
   const sectionIcons = {
     Relgious: relgious,
@@ -42,15 +42,15 @@ function DailyTaskSideBar({ activeSection, setActiveSection }) {
         flexDirection="column"
       >
         <img
-          src={dailyTaskIcon}
-          width="200px"
-          height="200px"
+          src={monthlyTaskIcon}
+          width="180px"
+          height="170px"
           alt="Daily Task"
         />
         <Typography
           style={{ fontWeight: 700, marginTop: "5px", color: "white" }}
         >
-          Daily Tasks
+          Monthly Tasks
         </Typography>
       </Box>
 
@@ -106,4 +106,4 @@ function DailyTaskSideBar({ activeSection, setActiveSection }) {
   );
 }
 
-export default DailyTaskSideBar;
+export default MonthlyTaskSideBar;

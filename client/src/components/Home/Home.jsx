@@ -69,22 +69,24 @@ function Home() {
             </Box>
           </Link>
           {/* Box 2 */}
-          <Box
-            height="230px"
-            width="230px"
-            borderRadius="22px"
-            bgcolor="#7392B7"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-around"
-            alignItems="center"
-            color="white"
-            fontWeight="bold"
-            fontSize="22px"
-          >
-            <img src={monthlyTask} height="150px" width="150px" />
-            Monthly Task
-          </Box>
+          <Link to="/monthlytask" style={{ textDecoration: "none" }}>
+            <Box
+              height="230px"
+              width="230px"
+              borderRadius="22px"
+              bgcolor="#7392B7"
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-around"
+              alignItems="center"
+              color="white"
+              fontWeight="bold"
+              fontSize="22px"
+            >
+              <img src={monthlyTask} height="150px" width="150px" />
+              Monthly Task
+            </Box>
+          </Link>
           {/* Box 3 */}
           <Box
             height="230px"
