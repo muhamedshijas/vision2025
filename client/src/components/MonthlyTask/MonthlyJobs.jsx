@@ -9,7 +9,7 @@ import {
   RiArrowLeftDoubleFill,
   RiArrowRightDoubleLine,
 } from "react-icons/ri";
-import { Button, MenuItem, Select } from "@mui/material";
+import { Button, MenuItem, Select, TextField } from "@mui/material";
 import AddJobs from "../../modals/DailyTask/AddJobs";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -21,6 +21,7 @@ function MonthlyJobs() {
   const date = new Date();
 
   const [jobs, setJobs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [progress, setProgress] = useState(0);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -36,18 +37,8 @@ function MonthlyJobs() {
         const response = await axios.get(`monthly-task/get-jobs`, {
           params: { userId, month },
         });
-        const sortedJobs = response.data.sort((a, b) => {
-          const priority = {
-            Indeed: 1,
-            Naukri: 2,
-            Email: 3,
-          };
-          return (
-            (priority[a.appliedThrough] || 4) -
-            (priority[b.appliedThrough] || 4)
-          );
-        });
-        setJobs(sortedJobs);
+
+        setJobs(response.data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
@@ -62,30 +53,6 @@ function MonthlyJobs() {
     setSelectedJob(job);
     setShowEditModal(true);
   };
-  const totalPages = Math.ceil(jobs.length / jobsPerPage);
-  const indexOfLastJob = currentPage * jobsPerPage;
-  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const dispatch = useDispatch();
-  const noUpdation = jobs.length == 0;
-  async function handleDelete(jobId) {
-    const result = await axios.delete(`/daily-task/delete-job/${userId}`, {
-      data: { jobId, date },
-    });
-    dispatch({ type: "refresh" });
-  }
   const currentMonthIndex = new Date().getMonth();
   const months = [
     "Jan",
@@ -108,6 +75,35 @@ function MonthlyJobs() {
     const jobMonth = new Date(job.date).getMonth();
     return months[jobMonth] === month;
   });
+  const searchedJobs = filteredJobs.filter(
+    (job) =>
+      job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.designation.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = searchedJobs.slice(indexOfFirstJob, indexOfLastJob);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const dispatch = useDispatch();
+  const noUpdation = jobs.length == 0;
+  async function handleDelete(jobId) {
+    const result = await axios.delete(`/daily-task/delete-job/${userId}`, {
+      data: { jobId, date },
+    });
+    dispatch({ type: "refresh" });
+  }
 
   // Update progress when jobs change
   useEffect(() => {
@@ -115,15 +111,27 @@ function MonthlyJobs() {
   }, [filteredJobs]);
   return (
     <div>
-      <Box>
-        <Typography variant="h4" textAlign="center" mb={4}>
-          Job Application Tracker
-        </Typography>
+      <Typography variant="h4" textAlign="center" mb={4}>
+        Job Application Tracker
+      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <TextField
+          sx={{
+            width: "48%",
+            height: "50px",
+          }}
+          label="Search by Company or Designation"
+          variant="outlined"
+          margin="normal"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <Select
           fullWidth
           value={month}
           onChange={(e) => setMonth(e.target.value)}
           displayEmpty
+          sx={{ width: "20%", height: "50px" }}
         >
           <MenuItem value="" disabled>
             Select a Month
