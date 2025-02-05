@@ -112,7 +112,7 @@ function MonthlyJobs() {
   return (
     <div>
       <Typography variant="h4" textAlign="center" mb={4}>
-        Job Application Tracker
+        {`Job Applications ${month}`}
       </Typography>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <TextField

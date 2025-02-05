@@ -5,6 +5,7 @@ import Personal from "./Personal";
 import Passwords from "./Passwords";
 import Dates from "./Dates";
 import Jobs from "./Jobs";
+import VisionBoard from "./VisionBoard";
 
 function ProfileHome() {
   // State to track the active section
@@ -22,7 +23,7 @@ function ProfileHome() {
       case "Dates":
         return <Dates/>
       case "Vision Board":
-        return <div>Vision Board Section Content</div>;
+        return <VisionBoard/>;
       default:
         return <div>Select a section to view content</div>;
     }
