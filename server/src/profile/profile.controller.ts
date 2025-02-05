@@ -64,4 +64,9 @@ export class ProfileController {
         return this.profileService.removeJobByTimePeriod(userId, timePeriod)
     }
 
+    @Post('addvisions')
+    async addVisons(){
+        
+    }
+
 }

@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import { Box, Tabs, Tab, Typography, Button } from "@mui/material";
+import AddVisionsModal from "../../modals/AddVisionsModal";
 
 function VisionBoard() {
   const [tabIndex, setTabIndex] = useState(0);
-  const abc = process.env.CLOUDINAY_CLOUD_NAME;
-  console.log(abc);
-  
+  const [show, setShow] = useState(false);
   const visions = [
     { title: "Umrah With Fam", isCompleted: false, img: "" },
     { title: "Buy an iPhone", isCompleted: false, img: "" },
     { title: "Place on a company", isCompleted: true, img: "" },
-    { title: "Travel to Japan", isCompleted: true, img: "" },
+    { title: "Travel to Dubai", isCompleted: true, img: "" },
     { title: "Start a Business", isCompleted: false, img: "" },
     { title: "Learn a new language", isCompleted: true, img: "" },
     { title: "Get a fitness goal", isCompleted: true, img: "" },
     { title: "Own a house", isCompleted: false, img: "" },
+    { title: "Get Married", isCompleted: false, img: "" },
+    {
+      title: "Own  a car",
+      isCompleted: true,
+      img: "https://res.cloudinary.com/dv5bvojzi/image/upload/v1738766957/lkcnqk3cyu5k0jb4o2kt.jpg",
+    },
   ];
 
   // Filter visions
@@ -27,6 +32,9 @@ function VisionBoard() {
     ...Array(8 - notCompletedVisions.length).fill(null),
   ];
 
+  const handleModal = () => {
+    setShow(!show);
+  };
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -74,10 +82,15 @@ function VisionBoard() {
                 {vision ? (
                   <Typography>{vision.title}</Typography>
                 ) : (
-                  <Button variant="outlined" color="primary">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleModal}
+                  >
                     Update
                   </Button>
                 )}
+                {show && <AddVisionsModal />}
               </Box>
             ))
           : completedVisions.map((vision, index) => (
@@ -94,6 +107,7 @@ function VisionBoard() {
                 textAlign="center"
                 padding="10px"
               >
+                <img src={vision.img} />
                 <Typography>{vision.title}</Typography>
               </Box>
             ))}
