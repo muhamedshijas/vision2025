@@ -8,7 +8,6 @@ export class MonthlTaskController {
 
   @Get("get-jobs")
   async getJobsByMonth(@Query("userId") userId: string, @Query("month") month: string,@Req() req: Request) {
-    console.log(month);
     return this.monthlTaskService.getJobsbyMonth(month, userId);
   }
 }

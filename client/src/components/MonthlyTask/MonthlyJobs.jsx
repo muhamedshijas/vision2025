@@ -6,14 +6,14 @@ import {
   RiDeleteBin4Fill,
   RiEdit2Fill,
   RiCheckboxCircleFill,
+  RiArrowLeftDoubleFill,
+  RiArrowRightDoubleLine,
 } from "react-icons/ri";
 import { Button, MenuItem, Select } from "@mui/material";
 import AddJobs from "../../modals/DailyTask/AddJobs";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import UpdateStatusModal from "../../modals/DailyTask/UpdateStatusModal";
-
-
 
 function MonthlyJobs() {
   const user = useSelector((state) => state.user.detials);
@@ -27,11 +27,15 @@ function MonthlyJobs() {
   const [selectedJob, setSelectedJob] = useState(null);
   const refresh = useSelector((state) => state.refresh);
   const [month, setMonth] = useState("Jan");
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`monthly-task/get-jobs`,{params: { userId, month }});
+        const response = await axios.get(`monthly-task/get-jobs`, {
+          params: { userId, month },
+        });
         const sortedJobs = response.data.sort((a, b) => {
           const priority = {
             Indeed: 1,
@@ -52,19 +56,28 @@ function MonthlyJobs() {
     if (userId) {
       fetchJobs();
     }
-  }, [userId, refresh,month]);
-
-  const dailyTarget = 10; // The daily target of jobs
+  }, [userId, refresh, month]);
 
   const handleEditModal = (job) => {
     setSelectedJob(job);
     setShowEditModal(true);
   };
+  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
-  // Update progress whenever the number of jobs changes
-  useEffect(() => {
-    setProgress((jobs.length / dailyTarget) * 100);
-  }, [jobs]);
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   const dispatch = useDispatch();
   const noUpdation = jobs.length == 0;
   async function handleDelete(jobId) {
@@ -126,14 +139,14 @@ function MonthlyJobs() {
         <Box display="flex" justifyContent="center" alignItems="center ">
           <table style={{ textAlign: "center", width: "100%" }}>
             <tr>
+              <th>Date</th>
               <th>Company</th>
               <th>Designation</th>
               <th>Place</th>
-              <th>Applied Through</th>
               <th>Status</th>
               <th colSpan={2}>Action</th>
             </tr>
-            {jobs.map((item, index) => (
+            {currentJobs.map((item, index) => (
               <tr
                 key={index}
                 style={{
@@ -155,6 +168,17 @@ function MonthlyJobs() {
                       border: "1px solid black",
                       padding: "8px",
                       borderRadius: "5px 0px 0px 5px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {item.date}
+                  </div>
+                </td>
+                <td>
+                  <div
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
                       fontSize: "14px",
                     }}
                   >
@@ -181,17 +205,6 @@ function MonthlyJobs() {
                     }}
                   >
                     {item.place}
-                  </div>
-                </td>
-                <td>
-                  <div
-                    style={{
-                      border: "1px solid black",
-                      padding: "8px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {item.email ? item.email : item.appliedThrough}
                   </div>
                 </td>
                 <td>
@@ -232,6 +245,20 @@ function MonthlyJobs() {
               </tr>
             ))}
           </table>
+        </Box>
+        <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+          <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+            <RiArrowLeftDoubleFill fontSize="22px" />
+          </Button>
+          <Typography variant="body1" mx={2}>
+            Page {currentPage} of {totalPages}
+          </Typography>
+          <Button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            <RiArrowRightDoubleLine fontSize="22px" />
+          </Button>
         </Box>
         <Box
           marginTop="10px"
