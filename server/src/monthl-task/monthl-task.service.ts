@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, mongo } from 'mongoose';
 import { DailyReports } from 'src/schma/daily-report.schema';
 
 @Injectable()
 export class MonthlTaskService {
   constructor(@InjectModel(DailyReports.name) private dailyReportModel: Model<DailyReports>) { }
-  async getJobsbyMonth(month: string) {
+  async getJobsbyMonth(month: string, userId: string) {
+    
+
     // Convert month string (e.g. 'Jan') to the corresponding numeric month (1 for Jan, 2 for Feb, etc.)
     const monthMap = {
       Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
@@ -15,8 +17,6 @@ export class MonthlTaskService {
 
     const numericMonth = monthMap[month];
     if (!numericMonth) {
-      console.log("hiii");
-
       throw new Error('Invalid month provided');
     }
 
@@ -30,10 +30,11 @@ export class MonthlTaskService {
       },
       {
         // Specify to include only the "jobs" field in the result
-        jobsdata: 1,  // Include only the "jobs" field
+        jobsdata: 1, date: 1 // Include only the "jobs" field
       }
     );
-  
+
+
 
     return reports;
   }

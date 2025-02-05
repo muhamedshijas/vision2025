@@ -7,38 +7,13 @@ import {
   RiEdit2Fill,
   RiCheckboxCircleFill,
 } from "react-icons/ri";
-import { Button } from "@mui/material";
+import { Button, MenuItem, Select } from "@mui/material";
 import AddJobs from "../../modals/DailyTask/AddJobs";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import UpdateStatusModal from "../../modals/DailyTask/UpdateStatusModal";
 
-function LinearProgressWithLabel({ value }) {
-  return (
-    <Box display="flex" alignItems="center">
-      <Box width="100%" mr={1}>
-        <LinearProgress
-          variant="determinate"
-          value={value}
-          sx={{
-            "& .MuiLinearProgress-bar": {
-              backgroundColor: value === 100 ? "green" : "primary.main", // Change bar color
-            },
-          }}
-        />
-      </Box>
-      <Box minWidth={35}>
-        <Typography
-          variant="body2"
-          color={value === 100 ? "green" : "textSecondary"}
-          fontWeight={value == 100 ? 600 : 500}
-        >
-          {value === 100 ? <RiCheckboxCircleFill /> : `${Math.round(value)}%`}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
+
 
 function MonthlyJobs() {
   const user = useSelector((state) => state.user.detials);
@@ -51,11 +26,12 @@ function MonthlyJobs() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const refresh = useSelector((state) => state.refresh);
+  const [month, setMonth] = useState("Jan");
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`daily-task/get-jobs/${userId}`);
+        const response = await axios.get(`monthly-task/get-jobs`,{params: { userId, month }});
         const sortedJobs = response.data.sort((a, b) => {
           const priority = {
             Indeed: 1,
@@ -76,7 +52,7 @@ function MonthlyJobs() {
     if (userId) {
       fetchJobs();
     }
-  }, [userId, refresh]);
+  }, [userId, refresh,month]);
 
   const dailyTarget = 10; // The daily target of jobs
 
@@ -97,14 +73,56 @@ function MonthlyJobs() {
     });
     dispatch({ type: "refresh" });
   }
+  const currentMonthIndex = new Date().getMonth();
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
+  // Limit selection to past & current months
+  const availableMonths = months.slice(0, currentMonthIndex + 1);
+  const filteredJobs = jobs.filter((job) => {
+    const jobMonth = new Date(job.date).getMonth();
+    return months[jobMonth] === month;
+  });
+
+  // Update progress when jobs change
+  useEffect(() => {
+    setProgress((filteredJobs.length / 10) * 100);
+  }, [filteredJobs]);
   return (
     <div>
-      <Typography variant="h4" textAlign="center" mb={4}>
-        Job Application Tracker
-      </Typography>
+      <Box>
+        <Typography variant="h4" textAlign="center" mb={4}>
+          Job Application Tracker
+        </Typography>
+        <Select
+          fullWidth
+          value={month}
+          onChange={(e) => setMonth(e.target.value)}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>
+            Select a Month
+          </MenuItem>
+          {months.map((m, index) => (
+            <MenuItem key={m} value={m} disabled={index > currentMonthIndex}>
+              {m}
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
       <Box width="100%">
-        <LinearProgressWithLabel value={progress} />
         <Box display="flex" justifyContent="center" alignItems="center ">
           <table style={{ textAlign: "center", width: "100%" }}>
             <tr>
