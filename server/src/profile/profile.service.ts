@@ -212,6 +212,22 @@ export class ProfileService {
     return visions
 
   }
+  async updateVision(body) {
+    const { userId, title, isCompleted } = body
+
+    try {
+      const updated = await this.userModel.updateOne(
+        { _id: userId, 'visions.title': title },
+        { $set: { 'visions.$.isCompleted': !isCompleted } }
+      );
+      return { status: true }
+    } catch (err) {
+      console.log(err);
+
+    }
+
+
+  }
   private encryptPassword(password: string): { encrypted: string; iv: string } {
     const iv = crypto.randomBytes(this.ivLength);
     const cipher = crypto.createCipheriv(this.encryptionAlgorithm, this.secretKey, iv);

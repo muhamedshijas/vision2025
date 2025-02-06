@@ -34,7 +34,7 @@ function VisionBoard() {
     if (userId) {
       fetchVisions();
     }
-  }, [userId, refresh]);
+  }, [userId, refresh, visions]);
   // Filter visions
   const completedVisions = visions.filter((v) => v.isCompleted);
   const notCompletedVisions = visions.filter((v) => !v.isCompleted);
@@ -50,6 +50,14 @@ function VisionBoard() {
   };
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
+  };
+  const handleToggle = async (title, isCompleted) => {
+    const response = await axios.put("/profile/updatevision", {
+      title,
+      isCompleted,
+      userId,
+    });
+    console.log(title, isCompleted);
   };
 
   return (
@@ -81,7 +89,7 @@ function VisionBoard() {
           ? displayedNotCompleted.map((vision, index) => (
               <Box
                 key={index}
-                width="200px"
+                width="180px"
                 height="200px"
                 display="flex"
                 justifyContent="center"
@@ -97,8 +105,8 @@ function VisionBoard() {
                     <img
                       src={vision.secure_url ? vision.secure_url : vision.url}
                       style={{
-                        width: "100px",
-                        height: "100px",
+                        width: "150px",
+                        height: "150px",
                         borderRadius: "5px",
                       }}
                     />
@@ -107,7 +115,14 @@ function VisionBoard() {
                     </Typography>
                     <Box display="flex">
                       <FormControlLabel
-                        control={<Switch defaultChecked />}
+                        control={
+                          <Switch
+                            checked={vision.isCompleted}
+                            onChange={() =>
+                              handleToggle(vision.title, vision.isCompleted)
+                            }
+                          />
+                        }
                         label={
                           vision.isCompleted ? "completed" : "not completed"
                         }
@@ -146,8 +161,26 @@ function VisionBoard() {
                 textAlign="center"
                 padding="10px"
               >
-                <img src={vision.img} />
+                <img
+                  src={vision.secure_url ? vision.secure_url : vision.url}
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "5px",
+                  }}
+                />
                 <Typography>{vision.title}</Typography>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={vision.isCompleted}
+                      onChange={() =>
+                        handleToggle(vision.title, vision.isCompleted)
+                      }
+                    />
+                  }
+                  label={vision.isCompleted ? "completed" : "not completed"}
+                />
               </Box>
             ))}
       </Box>
