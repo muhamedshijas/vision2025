@@ -9,7 +9,7 @@ import {
   RiArrowLeftDoubleFill,
   RiArrowRightDoubleLine,
 } from "react-icons/ri";
-import { Button, MenuItem, Select, TextField } from "@mui/material";
+import { Button, MenuItem, Pagination, Select, TextField } from "@mui/material";
 import AddJobs from "../../modals/DailyTask/AddJobs";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -25,9 +25,9 @@ function Jobs() {
   const [progress, setProgress] = useState(0);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
   const refresh = useSelector((state) => state.refresh);
-
-
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -47,24 +47,30 @@ function Jobs() {
   const handleEditModal = (job) => {
     setSelectedJob(job);
     setShowEditModal(true);
-  }
-
-
+  };
 
   const dispatch = useDispatch();
-  const noUpdation = jobs.length == 0;
   async function handleDelete(jobId) {
     const result = await axios.delete(`/daily-task/delete-job/${userId}`, {
       data: { jobId, date },
     });
     dispatch({ type: "refresh" });
   }
-
+  const filteredJobs = jobs.filter(
+    (job) =>
+      job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.designation.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  const displayedJobs = filteredJobs.slice(
+    (currentPage - 1) * jobsPerPage,
+    currentPage * jobsPerPage
+  );
 
   return (
     <div>
       <Typography variant="h4" textAlign="center" mb={4}>
-       Job Applications
+        Job Applications
       </Typography>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <TextField
@@ -90,7 +96,7 @@ function Jobs() {
               <th>Status</th>
               <th colSpan={2}>Action</th>
             </tr>
-            {jobs.map((item, index) => (
+            {displayedJobs.map((item, index) => (
               <tr
                 key={index}
                 style={{
@@ -190,14 +196,14 @@ function Jobs() {
             ))}
           </table>
         </Box>
-  
-        <Box
-          marginTop="10px"
-          width="100%"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        ></Box>
+
+        <Box display="flex" justifyContent="center" mt={3}>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={(event, value) => setCurrentPage(value)}
+        />
+      </Box>
         {showEditModal && (
           <UpdateStatusModal
             job={selectedJob}
