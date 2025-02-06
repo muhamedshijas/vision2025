@@ -1,7 +1,17 @@
 import { Box, Button, Typography } from "@mui/material";
 import React from "react";
+import coverLetterTemplates from "../assets/letters";
 
 function TemplateModals({ setTemplateShow, templateShow }) {
+  // Function to copy text to clipboard
+  const handleCopy = (category) => {
+    const text = coverLetterTemplates[category] || "No template found!";
+    navigator.clipboard
+      .writeText(text)
+      .then(() => alert(`Copied ${category} Cover Letter!`))
+      .catch((err) => console.error("Failed to copy:", err));
+  };
+
   return (
     <Box
       width="100vw"
@@ -24,26 +34,26 @@ function TemplateModals({ setTemplateShow, templateShow }) {
         flexDirection="column"
         gap="20px"
       >
-        {/* Modal Header */}
         <Typography variant="h6" fontWeight="bold">
           Download Templates
         </Typography>
-
-        {/* Resume Section */}
-        <Button
-          variant="outlined"
-          style={{
-            width: "160px",
-            borderColor: "black",
-            color: "black",
-            fontWeight: "bold",
-            textTransform: "uppercase",
-          }}
-        >
-          Resume
-        </Button>
-
-        {/* Cover Letters Section */}
+        <Box>
+          <Typography variant="body1" fontWeight="bold">
+            Resume
+          </Typography>
+          <Button
+          variant="contained"
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              fontWeight: "bold",
+              textTransform: "uppercase",
+              width:"250px"
+            }}
+          >
+            Resume
+          </Button>
+        </Box>
         <Typography
           variant="body1"
           fontWeight="bold"
@@ -52,71 +62,24 @@ function TemplateModals({ setTemplateShow, templateShow }) {
           Cover Letters
         </Typography>
 
-        {/* Buttons Section */}
         <Box display="flex" flexWrap="wrap" gap="10px" width="100%">
-          <Button
-            variant="outlined"
-            style={{
-              width: "160px",
-              borderColor: "black",
-              color: "black",
-              fontWeight: "bold",
-              textTransform: "uppercase",
-            }}
-          >
-            MERN
-          </Button>
-          <Button
-            variant="outlined"
-            style={{
-              width: "160px",
-              borderColor: "black",
-              color: "black",
-              fontWeight: "bold",
-              textTransform: "uppercase",
-            }}
-          >
-            Full Stack
-          </Button>
-          <Button
-            variant="outlined"
-            style={{
-              width: "160px",
-              borderColor: "black",
-              color: "black",
-              fontWeight: "bold",
-              textTransform: "uppercase",
-            }}
-          >
-            React JS
-          </Button>
-          <Button
-            variant="outlined"
-            style={{
-              width: "160px",
-              borderColor: "black",
-              color: "black",
-              fontWeight: "bold",
-              textTransform: "uppercase",
-            }}
-          >
-            Web Developer
-          </Button>
-          <Button
-            variant="outlined"
-            style={{
-              width: "160px",
-              borderColor: "black",
-              color: "black",
-              fontWeight: "bold",
-              textTransform: "uppercase",
-            }}
-          >
-            Node JS
-          </Button>
+          {Object.keys(coverLetterTemplates).map((category) => (
+            <Button
+              key={category}
+              variant="outlined"
+              style={{
+                borderColor: "black",
+                color: "black",
+                fontWeight: "bold",
+                textTransform: "uppercase",
+              }}
+              onClick={() => handleCopy(category)}
+            >
+              {category}
+            </Button>
+          ))}
         </Box>
 
-        {/* Close Button */}
         <Button
           variant="contained"
           onClick={() => setTemplateShow(false)}
