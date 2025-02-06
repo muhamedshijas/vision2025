@@ -17,13 +17,15 @@ export class User extends Document {
 
     @Prop({ type: Object, default: null }) // Default is null
     personal: Record<string, any>;
+    @Prop({ type: Array, default: [] }) // Default is null
+    visions: { title: string; url: string, secure_url: string, isCompleted: boolean, }[];
 
     @Prop({ type: Array, default: [] }) // Change to array of objects for job
     jobs: { jobTitle: string; company: string, place: string, package: string, timePeriod: string, projects: string[] }[];
 
     @Prop({ type: Array, default: [] }) // Array of account-password objects
     passwords: { account: string; encrypted: string; iv: string }[];
-
+ 
     @Prop({ type: Array, default: [] }) // Change to array of objects for dates
     dates: { dates: string; description: string }[];
 }

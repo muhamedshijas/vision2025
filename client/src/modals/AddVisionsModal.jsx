@@ -1,10 +1,14 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import axios from "axios";
 import React, { useState } from "react";
+import { data } from "react-router-dom";
 
-function AddVisionsModal() {
+function AddVisionsModal({ userId, show, setShow }) {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");
-
+  const handleClose = () => {
+    setShow(!show);
+  };
   const handleUpload = async () => {
     if (!file) {
       alert("Please select an image first.");
@@ -32,7 +36,14 @@ function AddVisionsModal() {
     console.log(data.secure_url);
     console.log(data.url);
     if (data?.secure_url) {
+      const res = await axios.post("/profile/addvision", {
+        secure_url: data.secure_url,
+        url: data.url,
+        title: title,
+        userId,
+      });
     }
+    setShow(!show);
   };
 
   const handleFileChange = (e) => {

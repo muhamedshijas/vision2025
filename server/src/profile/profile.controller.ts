@@ -4,6 +4,7 @@ import { ProfileService } from './profile.service';
 import { PasswordDto } from './dto/passwords.dto';
 import { DatesDto } from './dto/dates.dto';
 import { AddJobsDto } from './dto/jobs.dto';
+import { VisionDto } from './dto/visions.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -64,9 +65,12 @@ export class ProfileController {
         return this.profileService.removeJobByTimePeriod(userId, timePeriod)
     }
 
-    @Post('addvisions')
-    async addVisons(){
-        
+    @Post('addvision')
+    async addVisons(@Body() visionDto: VisionDto) {
+        return this.profileService.addVision(visionDto)
     }
-
-}
+    @Get('getvisions/:userId')
+    async getVision(@Param('userId') userId: string) {
+        return this.profileService.getVisions(userId)
+    }
+} 

@@ -1,27 +1,40 @@
-import React, { useState } from "react";
-import { Box, Tabs, Tab, Typography, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Tabs,
+  Tab,
+  Typography,
+  Button,
+  FormControlLabel,
+  Switch,
+} from "@mui/material";
 import AddVisionsModal from "../../modals/AddVisionsModal";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 function VisionBoard() {
+  const user = useSelector((state) => {
+    return state.user.detials;
+  });
+  const userId = user._id;
   const [tabIndex, setTabIndex] = useState(0);
   const [show, setShow] = useState(false);
-  const visions = [
-    { title: "Umrah With Fam", isCompleted: false, img: "" },
-    { title: "Buy an iPhone", isCompleted: false, img: "" },
-    { title: "Place on a company", isCompleted: true, img: "" },
-    { title: "Travel to Dubai", isCompleted: true, img: "" },
-    { title: "Start a Business", isCompleted: false, img: "" },
-    { title: "Learn a new language", isCompleted: true, img: "" },
-    { title: "Get a fitness goal", isCompleted: true, img: "" },
-    { title: "Own a house", isCompleted: false, img: "" },
-    { title: "Get Married", isCompleted: false, img: "" },
-    {
-      title: "Own  a car",
-      isCompleted: true,
-      img: "https://res.cloudinary.com/dv5bvojzi/image/upload/v1738766957/lkcnqk3cyu5k0jb4o2kt.jpg",
-    },
-  ];
+  const refresh = useSelector((state) => state.refresh);
+  const [visions, setVisions] = useState([]);
+  useEffect(() => {
+    const fetchVisions = async () => {
+      try {
+        const response = await axios.get(`/profile/getvisions/${userId}`);
+        setVisions(response.data);
+      } catch (error) {
+        console.error("Error fetching passwords:", error);
+      }
+    };
 
+    if (userId) {
+      fetchVisions();
+    }
+  }, [userId, refresh]);
   // Filter visions
   const completedVisions = visions.filter((v) => v.isCompleted);
   const notCompletedVisions = visions.filter((v) => !v.isCompleted);
@@ -80,7 +93,27 @@ function VisionBoard() {
                 padding="10px"
               >
                 {vision ? (
-                  <Typography>{vision.title}</Typography>
+                  <Box>
+                    <img
+                      src={vision.secure_url ? vision.secure_url : vision.url}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "5px",
+                      }}
+                    />
+                    <Typography sx={{ fontWeight: 600 }}>
+                      {vision.title}
+                    </Typography>
+                    <Box display="flex">
+                      <FormControlLabel
+                        control={<Switch defaultChecked />}
+                        label={
+                          vision.isCompleted ? "completed" : "not completed"
+                        }
+                      />
+                    </Box>
+                  </Box>
                 ) : (
                   <Button
                     variant="outlined"
@@ -90,7 +123,13 @@ function VisionBoard() {
                     Update
                   </Button>
                 )}
-                {show && <AddVisionsModal />}
+                {show && (
+                  <AddVisionsModal
+                    show={show}
+                    userId={userId}
+                    setShow={setShow}
+                  />
+                )}
               </Box>
             ))
           : completedVisions.map((vision, index) => (
@@ -117,3 +156,7 @@ function VisionBoard() {
 }
 
 export default VisionBoard;
+
+
+
+//62

@@ -7,6 +7,7 @@ import { PasswordDto } from './dto/passwords.dto';
 import * as crypto from 'crypto';
 import { DatesDto } from './dto/dates.dto';
 import { AddJobsDto } from './dto/jobs.dto';
+import { VisionDto } from './dto/visions.dto';
 
 @Injectable()
 export class ProfileService {
@@ -190,6 +191,27 @@ export class ProfileService {
     }
   }
 
+  async addVision(addVisonDto: VisionDto) {
+    const { secure_url, url, title, userId } = addVisonDto
+    const user = await this.userModel.findById(userId).lean()
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          visions: { title, url, secure_url, isCompleted: false, } // Push the encrypted password into the array
+        },
+      },
+      { new: true } // Return the updated document
+    );
+    return updatedUser
+
+  }
+  async getVisions(userId) {
+    const user = await this.userModel.findById(userId).lean()
+    const visions = user.visions
+    return visions
+
+  }
   private encryptPassword(password: string): { encrypted: string; iv: string } {
     const iv = crypto.randomBytes(this.ivLength);
     const cipher = crypto.createCipheriv(this.encryptionAlgorithm, this.secretKey, iv);

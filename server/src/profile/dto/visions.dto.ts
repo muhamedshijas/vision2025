@@ -1,10 +1,11 @@
 import { IsString } from "class-validator";
 
-export class VisionDto{
+export class VisionDto {
     @IsString()
-    secure_url:string
+    secure_url: string
     @IsString()
-    url:string
+    url: string
     @IsString()
-    title:string
+    title: string
+    userId: string
 }
