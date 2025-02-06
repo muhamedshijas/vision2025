@@ -156,7 +156,3 @@ function VisionBoard() {
 }
 
 export default VisionBoard;
-
-
-
-//62

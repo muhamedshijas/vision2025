@@ -88,22 +88,24 @@ function Home() {
             </Box>
           </Link>
           {/* Box 3 */}
-          <Box
-            height="230px"
-            width="230px"
-            borderRadius="22px"
-            bgcolor="#B3C5D7"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-around"
-            alignItems="center"
-            color="white"
-            fontWeight="bold"
-            fontSize="22px"
-          >
-            <img src={annualTask} height="180px" width="180px" />
-            Annual Task
-          </Box>
+          <Link to="/annualtask" style={{ textDecoration: "none" }}>
+            <Box
+              height="230px"
+              width="230px"
+              borderRadius="22px"
+              bgcolor="#B3C5D7"
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-around"
+              alignItems="center"
+              color="white"
+              fontWeight="bold"
+              fontSize="22px"
+            >
+              <img src={annualTask} height="180px" width="180px" />
+              Annual Task
+            </Box>
+          </Link>
           {/* Box 4 */}
           <Link to="/profile" style={{ textDecoration: "none" }}>
             <Box

@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
 import { DailyTaskModule } from './daily-task/daily-task.module';
 import { MonthlTaskModule } from './monthl-task/monthl-task.module';
+import { AnnualTaskModule } from './annual-task/annual-task.module';
 
 @Module({
   imports: [
@@ -23,6 +24,8 @@ import { MonthlTaskModule } from './monthl-task/monthl-task.module';
     DailyTaskModule,
 
     MonthlTaskModule,
+
+    AnnualTaskModule,
 
   ],
   controllers: [],
