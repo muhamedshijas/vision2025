@@ -9,6 +9,7 @@ import {
   Switch,
 } from "@mui/material";
 import AddVisionsModal from "../../modals/AddVisionsModal";
+import { RiDeleteBinFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -59,6 +60,11 @@ function VisionBoard() {
     });
     console.log(title, isCompleted);
   };
+  const handleDelete = async (title) => {
+    const response = await axios.delete("/profile/deletevision", {
+      params: { title, userId },
+    });
+  };
 
   return (
     <Box>
@@ -105,18 +111,21 @@ function VisionBoard() {
                     <img
                       src={vision.secure_url ? vision.secure_url : vision.url}
                       style={{
-                        width: "150px",
-                        height: "150px",
+                        width: "100px",
+                        height: "100px",
                         borderRadius: "5px",
                       }}
                     />
-                    <Typography sx={{ fontWeight: 600 }}>
-                      {vision.title}
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {vision.title.toUpperCase()}
                     </Typography>
-                    <Box display="flex">
+                    <Box display="flex" alignItems="center">
                       <FormControlLabel
                         control={
                           <Switch
+                            sx={{
+                              transform: "scale(0.7)", // Reduces the size of the switch
+                            }}
                             checked={vision.isCompleted}
                             onChange={() =>
                               handleToggle(vision.title, vision.isCompleted)
@@ -124,10 +133,21 @@ function VisionBoard() {
                           />
                         }
                         label={
-                          vision.isCompleted ? "completed" : "not completed"
+                          <Typography
+                            sx={{ fontSize: "12px", fontWeight: 600 }}
+                          >
+                            {" "}
+                            {/* Reduce label font size */}
+                            {vision.isCompleted ? "COMPLETED" : "NOT COMPLETED"}
+                          </Typography>
                         }
                       />
                     </Box>
+                    <RiDeleteBinFill
+                      color="RED"
+                      fontSize="14px"
+                      onClick={() => handleDelete(vision.title)}
+                    />
                   </Box>
                 ) : (
                   <Button

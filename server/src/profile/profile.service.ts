@@ -228,6 +228,13 @@ export class ProfileService {
 
 
   }
+  async deleteVsion(userId, title) {
+    await this.userModel.updateOne(
+      { _id: userId },
+      { $pull: { visions: { title } } }
+    );
+    return { message: 'jobs removed successfully' };
+  }
   private encryptPassword(password: string): { encrypted: string; iv: string } {
     const iv = crypto.randomBytes(this.ivLength);
     const cipher = crypto.createCipheriv(this.encryptionAlgorithm, this.secretKey, iv);

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { PersonalDto } from './dto/personal.dto';
 import { ProfileService } from './profile.service';
 import { PasswordDto } from './dto/passwords.dto';
@@ -76,6 +76,12 @@ export class ProfileController {
     @Put('updatevision')
     async updateVision(@Body() body: { userId: string, isCompleted: boolean, title: string }) {
         return this.profileService.updateVision(body)
+    }
+
+    @Delete('deletevision')
+    async deleteVision(@Query('userId') userId: string,
+        @Query('title') title: string) {
+        return this.profileService.deleteVsion(userId,title)
 
     }
 } 
