@@ -102,7 +102,7 @@ function DailyQuotes() {
               PHRASE THAT MAKE THIS DAY MEMORABLE
             </Typography>
             <Typography sx={{ fontSize: "20px" }}>
-              {dailyFeedback.phrase == "" ? "no data" : dailyFeedback.phrase}
+              {dailyFeedback.phrase == "" ? "no data" : dailyFeedback.phrase.toUpperCase()}
             </Typography>
           </Box>
 

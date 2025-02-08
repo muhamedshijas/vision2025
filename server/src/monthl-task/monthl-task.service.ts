@@ -29,7 +29,7 @@ export class MonthlTaskService {
       {
         jobsdata: 1, date: 1 // Include only jobsdata and date fields
       }
-    )
+    ) 
 
     // Flatten jobsdata and attach the corresponding date from report
     const allJobs = reports.flatMap(report =>

@@ -12,13 +12,13 @@ function MonthlyTaskHome() {
       case "Relgious":
         return <div>Relgious Section</div>;
       case "Daily Routine":
-        return <div>Relgious Section</div>;
+        return <div>Routines</div>;
       case "Jobs":
         return <MonthlyJobs />;
       case "Feedback":
-        return <div>Relgious Section</div>;
-      case "Daily Report":
-        return <div>Daily Report</div>;
+        return <div>Feedbacks</div>;
+      case "Monthy Achivements":
+        return <div>Monthly Achivements</div>;
       default:
         return <div>Select a section to view content</div>;
     }

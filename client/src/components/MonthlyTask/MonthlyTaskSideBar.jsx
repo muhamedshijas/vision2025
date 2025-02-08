@@ -8,6 +8,7 @@ import dailyFeedback from "../../assets/icons/feedback.png";
 import relgious from "../../assets/icons/praying.png";
 import dailyReport from "../../assets/icons/report.png";
 import dailyRotine from "../../assets/icons/routine.png";
+import achivmenst from "../../assets/icons/achivements.png";
 
 function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
   // Icon mapping for each section
@@ -17,6 +18,7 @@ function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
     Jobs: jobApplication,
     Feedback: dailyFeedback,
     "Daily Report": dailyReport,
+    "Monthy Achivements":achivmenst
   };
 
   return (
@@ -64,7 +66,7 @@ function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
           justifyContent: "flex-end",
         }}
       >
-        {["Relgious", "Jobs", "Daily Routine", "Feedback"].map(
+        {["Relgious", "Jobs", "Daily Routine", "Feedback","Monthy Achivements"].map(
           (section, index) => (
             <ListItem
               key={index}

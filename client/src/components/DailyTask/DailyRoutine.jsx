@@ -77,6 +77,8 @@ function DailyRoutine() {
   const avgCommits = routines?.normalizedCommits;
   const avgJobs = routines?.normalizedJobs;
   const avgProblems = routines?.normalizedProblems;
+
+ 
   useEffect(() => {
     if (foodScore && sleepHour) {
       setRoutineScore(routines?.avgHelathScore);
