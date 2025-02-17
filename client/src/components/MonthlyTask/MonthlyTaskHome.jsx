@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import React, { useState } from "react";
 import MonthlyTaskSideBar from "./MonthlyTaskSideBar";
 import MonthlyJobs from "./MonthlyJobs";
+import MontlhlyGoals from "./MontlhlyGoals";
 function MonthlyTaskHome() {
   // State to track the active section
   const [activeSection, setActiveSection] = useState("Feedback");
@@ -17,8 +18,8 @@ function MonthlyTaskHome() {
         return <MonthlyJobs />;
       case "Feedback":
         return <div>Feedbacks</div>;
-      case "Monthy Achivements":
-        return <div>Monthly Achivements</div>;
+      case "Monthy Goals":
+        return <MontlhlyGoals />;
       default:
         return <div>Select a section to view content</div>;
     }

@@ -18,7 +18,7 @@ function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
     Jobs: jobApplication,
     Feedback: dailyFeedback,
     "Daily Report": dailyReport,
-    "Monthy Achivements":achivmenst
+    "Monthy Goals":achivmenst
   };
 
   return (
@@ -66,7 +66,7 @@ function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
           justifyContent: "flex-end",
         }}
       >
-        {["Relgious", "Jobs", "Daily Routine", "Feedback","Monthy Achivements"].map(
+        {["Relgious", "Jobs", "Daily Routine", "Feedback","Monthy Goals"].map(
           (section, index) => (
             <ListItem
               key={index}
