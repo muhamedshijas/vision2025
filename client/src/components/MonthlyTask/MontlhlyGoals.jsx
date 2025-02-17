@@ -14,13 +14,14 @@ import axios from "axios";
 import AddMonthlyGoalsModals from "../../modals/MonthlyTask/AddMonthlyGoalModals";
 
 function MonthlyGoals() {
-  const user = useSelector((state) => state.user.details);
-  const userId = user?._id;
+   const user = useSelector((state) => state.user.detials);
+   const userId = user?._id;
 
   const [tabIndex, setTabIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [show, setShow] = useState(false);
   const itemsPerPage = 8;
+
 
   const [visions, setVisions] = useState([
     { title: "Pray Thasbeeh", isCompleted: false },

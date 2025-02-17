@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, mongo } from 'mongoose';
 import { DailyReports } from 'src/schma/daily-report.schema';
 import { MonthlyReports } from 'src/schma/monthly-report-schema';
+import { AddGoalDto } from './dto/addGoal.dto';
 
 @Injectable()
 export class MonthlTaskService {
@@ -46,7 +47,8 @@ export class MonthlTaskService {
     return allJobs;
   }
 
-  async addMonthlyGoals(){
-  
+  async addMonthlyGoals(addGoalDto: AddGoalDto) {
+    console.log(addGoalDto);
+    
   }
 }
