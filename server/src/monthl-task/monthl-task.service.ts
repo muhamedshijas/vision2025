@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, mongo } from 'mongoose';
 import { DailyReports } from 'src/schma/daily-report.schema';
+import { MonthlyReports } from 'src/schma/monthly-report-schema';
 
 @Injectable()
 export class MonthlTaskService {
-  constructor(@InjectModel(DailyReports.name) private dailyReportModel: Model<DailyReports>) { }
+  constructor(
+    @InjectModel(DailyReports.name) private dailyReportModel: Model<DailyReports>,
+    @InjectModel(MonthlyReports.name) private monthlyReportModel: Model<MonthlyReports>
+  ) { }
   async getJobsbyMonth(month: string, userId: string) {
     // Convert month string (e.g. 'Jan') to numeric month
     const monthMap = {
@@ -29,7 +33,7 @@ export class MonthlTaskService {
       {
         jobsdata: 1, date: 1 // Include only jobsdata and date fields
       }
-    ) 
+    )
 
     // Flatten jobsdata and attach the corresponding date from report
     const allJobs = reports.flatMap(report =>
@@ -40,5 +44,9 @@ export class MonthlTaskService {
     );
 
     return allJobs;
+  }
+
+  async addMonthlyGoals(){
+  
   }
 }
