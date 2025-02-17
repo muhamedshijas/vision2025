@@ -9,6 +9,7 @@ import {
   Pagination,
 } from "@mui/material";
 import { useSelector } from "react-redux";
+import { RiAddLargeFill } from "react-icons/ri";
 import axios from "axios";
 
 function MonthlyGoals() {
@@ -28,14 +29,6 @@ function MonthlyGoals() {
     { title: "Save ₹5000", isCompleted: false },
     { title: "Complete React Course", isCompleted: false },
     { title: "Apply for 10 Jobs", isCompleted: true },
-    { title: "Improve Coding Skills", isCompleted: false },
-    { title: "Improve Coding Skills", isCompleted: false },
-    { title: "Improve Coding Skills", isCompleted: false },
-    { title: "Improve Coding Skills", isCompleted: false },
-    { title: "Improve Coding Skills", isCompleted: false },
-    { title: "Improve Coding Skills", isCompleted: false },
-    { title: "Improve Coding Skills", isCompleted: false },
-    { title: "Learn Redux", isCompleted: false },
   ]);
 
   const completedVisions = visions.filter((v) => v.isCompleted);
@@ -44,17 +37,30 @@ function MonthlyGoals() {
   const filteredVisions =
     tabIndex === 0 ? notCompletedVisions : completedVisions;
 
-  // Adjusting the displayed visions to ensure "ADD NEW GOAL" always appears as the last item
   const startIdx = (currentPage - 1) * itemsPerPage;
-  const endIdx = startIdx + itemsPerPage - 1; // Reserve space for button
+  const endIdx = startIdx + itemsPerPage;
   const paginatedVisions = filteredVisions.slice(startIdx, endIdx);
 
-  const totalPages = Math.ceil((filteredVisions.length + 1) / itemsPerPage);
+  const totalPages = Math.ceil(filteredVisions.length / itemsPerPage);
+  const isLastPage = currentPage === totalPages;
 
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
     setCurrentPage(1);
   };
+
+  let completed = 0;
+  let notCompleted = 0;
+
+  for (let i = 0; i < visions.length; i++) {
+    // Fix: Change `i <= visions.length` to `i < visions.length`
+    if (visions[i].isCompleted) {
+      // Fix: Check `visions[i].isCompleted`
+      completed++;
+    } else {
+      notCompleted++;
+    }
+  }
 
   const handleToggle = async (title, isCompleted) => {
     await axios.put("/profile/updatevision", { title, isCompleted, userId });
@@ -62,9 +68,6 @@ function MonthlyGoals() {
 
   return (
     <Box>
-      <Typography variant="h4" fontWeight={600} textAlign="center">
-        MONTHLY GOALS
-      </Typography>
 
       <Tabs
         value={tabIndex}
@@ -75,7 +78,10 @@ function MonthlyGoals() {
         <Tab label="Not Completed" />
         <Tab label="Completed" />
       </Tabs>
-
+      <Typography textAlign="center"marginTop="20px">
+        {" "}
+        {`${completed} out ${visions.length}`} completed
+      </Typography>
       <Box mt={2} display="flex" flexWrap="wrap" justifyContent="space-between">
         {paginatedVisions.map((vision, index) => (
           <Box
@@ -106,14 +112,17 @@ function MonthlyGoals() {
             />
           </Box>
         ))}
-        {tabIndex === 0 &&  (
+
+        {/* Show the ADD NEW GOAL button only on the last page of Not Completed Goals */}
+        {tabIndex === 0 && isLastPage && (
           <Box
             width="45%"
             height="80px"
             display="flex"
             alignItems="center"
             justifyContent="center"
-            flexDirection="column"
+            gap="20px"
+            color="#0000EE"
             boxShadow="rgba(149, 157, 165, 0.2) 0px 8px 24px"
             borderRadius="10px"
             textAlign="center"
@@ -122,14 +131,13 @@ function MonthlyGoals() {
             sx={{
               cursor: "pointer",
               fontWeight: 600,
-              backgroundColor: "#f5f5f5",
+              backgroundColor: "white",
             }}
           >
+          <RiAddLargeFill fontSize="22px" />
             ADD NEW GOAL
           </Box>
         )}
-
-        {/* ADD NEW GOAL Button - Last Card */}
       </Box>
 
       <Box display="flex" justifyContent="center" mt={2}>
