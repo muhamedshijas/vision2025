@@ -11,6 +11,7 @@ import {
 import { useSelector } from "react-redux";
 import { RiAddLargeFill } from "react-icons/ri";
 import axios from "axios";
+import AddMonthlyGoalsModals from "../../modals/MonthlyTask/AddMonthlyGoalModals";
 
 function MonthlyGoals() {
   const user = useSelector((state) => state.user.details);
@@ -18,6 +19,7 @@ function MonthlyGoals() {
 
   const [tabIndex, setTabIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [show, setShow] = useState(false);
   const itemsPerPage = 8;
 
   const [visions, setVisions] = useState([
@@ -43,7 +45,9 @@ function MonthlyGoals() {
 
   const totalPages = Math.ceil(filteredVisions.length / itemsPerPage);
   const isLastPage = currentPage === totalPages;
-
+  const handleModal = () => {
+    setShow(!show);
+  };
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
     setCurrentPage(1);
@@ -68,7 +72,6 @@ function MonthlyGoals() {
 
   return (
     <Box>
-
       <Tabs
         value={tabIndex}
         onChange={handleChange}
@@ -78,7 +81,7 @@ function MonthlyGoals() {
         <Tab label="Not Completed" />
         <Tab label="Completed" />
       </Tabs>
-      <Typography textAlign="center"marginTop="20px">
+      <Typography textAlign="center" marginTop="20px">
         {" "}
         {`${completed} out ${visions.length}`} completed
       </Typography>
@@ -133,13 +136,16 @@ function MonthlyGoals() {
               fontWeight: 600,
               backgroundColor: "white",
             }}
+            onClick={handleModal}
           >
-          <RiAddLargeFill fontSize="22px" />
+            <RiAddLargeFill fontSize="22px" />
             ADD NEW GOAL
           </Box>
         )}
       </Box>
-
+      {show && (
+        <AddMonthlyGoalsModals show={show} setShow={setShow} userId={userId} />
+      )}
       <Box display="flex" justifyContent="center" mt={2}>
         <Pagination
           count={totalPages}
