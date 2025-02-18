@@ -48,7 +48,49 @@ export class MonthlTaskService {
   }
 
   async addMonthlyGoals(addGoalDto: AddGoalDto) {
+    const date = new Date();
     console.log(addGoalDto);
-    
+
+    const monthAbbreviations = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const currentMonth = monthAbbreviations[date.getMonth()]; // Get month as "Jan", "Feb", etc.
+
+    // Format date as dd-mm-yyyy
+    const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+
+    const existingReport = await this.monthlyReportModel.findOne({
+      userId: addGoalDto.userId,
+      month: currentMonth,
+    });
+
+    if (existingReport) {
+      // Push new goal to the existing monthly report
+      existingReport.monthlyGoals.push({
+        startedDate: formattedDate, // Store date as dd-mm-yyyy
+        title: addGoalDto.goal,
+        isCompleted: false,
+        completedDate: null
+      });
+
+      await existingReport.save(); // Save the updated document
+      return existingReport;
+    } else {
+      // Create a new monthly report if it does not exist
+      const newReport = new this.monthlyReportModel({
+        userId: addGoalDto.userId,
+        month: currentMonth,
+        monthlyGoals: [
+          {
+            startedDate: formattedDate, // Store date as dd-mm-yyyy
+            title: addGoalDto.goal,
+            isCompleted: false,
+            completedDate: null
+          }
+        ]
+      });
+
+      await newReport.save(); // Save the new document
+      return newReport;
+    }
   }
+
 }

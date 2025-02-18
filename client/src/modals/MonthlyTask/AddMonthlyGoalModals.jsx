@@ -16,11 +16,14 @@ function AddMonthlyGoalsModals({ show, setShow, userId }) {
 
     try {
       console.log(userId);
-      
+
       const result = await axios.post("/monthly-task/add-goal", {
         goal,
         userId,
       });
+      if (!result.err) {
+        setShow(!show);
+      }
     } catch (error) {
       console.error("Error during submission:", error);
     }

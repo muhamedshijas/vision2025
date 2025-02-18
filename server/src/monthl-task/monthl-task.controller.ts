@@ -16,4 +16,9 @@ export class MonthlTaskController {
   async addGoal(@Body() addGoalDto: AddGoalDto) {
     return this.monthlTaskService.addMonthlyGoals(addGoalDto)
   }
+
+  @Post("get-goals")
+  async getGoals(){
+    
+  }
 }

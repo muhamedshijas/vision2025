@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { data } from "react-router-dom";
 
-function AddVisionsModal({ userId, show, setShow }) {
+function AddVisionsModal({ userId, show, setShow,refresh }) {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");
   const handleClose = () => {
@@ -44,6 +44,7 @@ function AddVisionsModal({ userId, show, setShow }) {
       });
     }
     setShow(!show);
+    refresh=!refresh
   };
 
   const handleFileChange = (e) => {

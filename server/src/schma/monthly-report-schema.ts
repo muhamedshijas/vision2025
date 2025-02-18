@@ -4,7 +4,7 @@ import { Document, Types } from "mongoose";
 @Schema()
 export class MonthlyGoal {
   @Prop({ required: true })
-  startedDate: Date;
+  startedDate: string;
 
   @Prop({ required: true })
   title: string;
@@ -12,8 +12,9 @@ export class MonthlyGoal {
   @Prop({ default: false })
   isCompleted: boolean;
 
-  @Prop()
+  @Prop({ default: null })
   completedDate?: Date;
+
 }
 
 const MonthlyGoalSchema = SchemaFactory.createForClass(MonthlyGoal);
@@ -25,6 +26,10 @@ export class MonthlyReports extends Document {
 
   @Prop({ type: [MonthlyGoalSchema], default: [] })
   monthlyGoals: MonthlyGoal[];
+
+  @Prop({ type: String })
+  month: String
 }
+
 
 export const MonthlyReportsSchema = SchemaFactory.createForClass(MonthlyReports);

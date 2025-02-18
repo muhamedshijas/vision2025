@@ -18,9 +18,10 @@ function VisionBoard() {
     return state.user.detials;
   });
   const userId = user._id;
+
   const [tabIndex, setTabIndex] = useState(0);
   const [show, setShow] = useState(false);
-  const refresh = useSelector((state) => state.refresh);
+  const { refresh, setRefresh } = useSelector((state) => state.refresh);
   const [visions, setVisions] = useState([]);
   useEffect(() => {
     const fetchVisions = async () => {
@@ -35,7 +36,7 @@ function VisionBoard() {
     if (userId) {
       fetchVisions();
     }
-  }, [userId, refresh, visions]);
+  }, [userId, refresh]);
   // Filter visions
   const completedVisions = visions.filter((v) => v.isCompleted);
   const notCompletedVisions = visions.filter((v) => !v.isCompleted);
@@ -58,12 +59,13 @@ function VisionBoard() {
       isCompleted,
       userId,
     });
-    console.log(title, isCompleted);
+    setRefresh(!refresh);
   };
   const handleDelete = async (title) => {
     const response = await axios.delete("/profile/deletevision", {
       params: { title, userId },
     });
+    setRefresh(!refresh);
   };
 
   return (
@@ -163,6 +165,7 @@ function VisionBoard() {
                     show={show}
                     userId={userId}
                     setShow={setShow}
+                    refresh={refresh}
                   />
                 )}
               </Box>
