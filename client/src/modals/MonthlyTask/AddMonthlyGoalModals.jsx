@@ -15,7 +15,7 @@ function AddMonthlyGoalsModals({ show, setShow, userId }) {
     e.preventDefault();
 
     try {
-      console.log(userId);
+
 
       const result = await axios.post("/monthly-task/add-goal", {
         goal,

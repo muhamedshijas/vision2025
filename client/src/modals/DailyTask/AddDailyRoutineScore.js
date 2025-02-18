@@ -45,8 +45,7 @@ function AddDailyRoutineScore({
     event.preventDefault();
 
     // Convert foodIntake object into an array of selected food items
-    const foods = Object.keys(foodIntake).filter((key) => foodIntake[key]);
-    console.log(foods);
+    const foods = Object.keys(foodIntake).filter((key) => foodIntake[key])
 
     // Calculate total sleep duration
     let totalSleepDuration = calculateSleepDuration(bedTime, wakeUpTime);

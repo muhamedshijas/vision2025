@@ -50,7 +50,6 @@ function DailyRoutine() {
       fetchDailyRouine();
     }
   }, [userId, refresh]);
-  console.log(routines);
 
   const targetWPM = 75; // Set your target WPM
   const targetCommits = 6;
@@ -82,7 +81,6 @@ function DailyRoutine() {
   useEffect(() => {
     if (foodScore && sleepHour) {
       setRoutineScore(routines?.avgHelathScore);
-      console.log(routineScore);
     } else {
       setRoutineScore(0);
     }
@@ -91,10 +89,8 @@ function DailyRoutine() {
   useEffect(() => {
     if (routines?.avgSkillScore) {
       setSkillScore(routines?.avgSkillScore);
-      console.log(skillScore);
-    } else {
-      setSkillScore(0);
-    }
+
+    } 
   }, [commits, jobs, problems, wpm]);
 
   const totalScore = routineScore + skillScore;

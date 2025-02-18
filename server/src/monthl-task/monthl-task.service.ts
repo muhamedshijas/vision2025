@@ -49,7 +49,6 @@ export class MonthlTaskService {
 
   async addMonthlyGoals(addGoalDto: AddGoalDto) {
     const date = new Date();
-    console.log(addGoalDto);
 
     const monthAbbreviations = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const currentMonth = monthAbbreviations[date.getMonth()]; // Get month as "Jan", "Feb", etc.
@@ -94,7 +93,7 @@ export class MonthlTaskService {
   }
 
   async getGoals(userId, month) {
-    console.log(userId, month);
+
 
     const data = await this.monthlyReportModel.findOne({ month: month, userId: userId }).lean()
     if (!data || data == null) {

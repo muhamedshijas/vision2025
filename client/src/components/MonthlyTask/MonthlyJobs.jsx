@@ -37,7 +37,7 @@ function MonthlyJobs() {
         const response = await axios.get(`monthly-task/get-jobs`, {
           params: { userId, month },
         });
-console.log(userId);
+
 
         setJobs(response.data);
       } catch (error) {

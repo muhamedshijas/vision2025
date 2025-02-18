@@ -17,7 +17,7 @@ function AddVisionsModal({ userId, show, setShow,refresh }) {
 
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.REACT_APP_CLOUDINARY_PRESET_NAME;
-    console.log(uploadPreset);
+
 
     const formData = new FormData();
     formData.append("file", file);
@@ -32,9 +32,6 @@ function AddVisionsModal({ userId, show, setShow,refresh }) {
     );
 
     const data = await response.json();
-    console.log(data);
-    console.log(data.secure_url);
-    console.log(data.url);
     if (data?.secure_url) {
       const res = await axios.post("/profile/addvision", {
         secure_url: data.secure_url,
