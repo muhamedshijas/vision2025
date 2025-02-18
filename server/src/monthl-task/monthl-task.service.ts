@@ -93,4 +93,15 @@ export class MonthlTaskService {
     }
   }
 
+  async getGoals(userId, month) {
+    console.log(userId, month);
+
+    const data = await this.monthlyReportModel.findOne({ month: month, userId: userId }).lean()
+    if (!data || data == null) {
+      return
+    }
+    const goals = data.monthlyGoals
+    return goals
+  }
+
 }

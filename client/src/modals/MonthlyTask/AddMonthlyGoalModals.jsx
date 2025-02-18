@@ -41,6 +41,7 @@ function AddMonthlyGoalsModals({ show, setShow, userId }) {
         display="flex"
         justifyContent="center"
         alignItems="center"
+        zIndex={1300}
       >
         <Box
           bgcolor="white"

@@ -17,8 +17,8 @@ export class MonthlTaskController {
     return this.monthlTaskService.addMonthlyGoals(addGoalDto)
   }
 
-  @Post("get-goals")
-  async getGoals(){
-    
+  @Get("get-goals")
+  async getGoals(@Query("userId") userId: string, @Query("month") month: string) {
+    return this.monthlTaskService.getGoals(userId, month)
   }
 }
