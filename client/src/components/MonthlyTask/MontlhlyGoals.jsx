@@ -11,7 +11,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
 } from "@mui/material";
+import { RiDeleteBinFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RiAddLargeFill } from "react-icons/ri";
 import axios from "axios";
@@ -47,7 +49,7 @@ function MonthlyGoals() {
     if (userId) {
       fetchJobs();
     }
-  }, [userId, refresh, month]);
+  }, [userId, refresh, visions]);
 
   const completedVisions = visions.filter((v) => v.isCompleted);
   const notCompletedVisions = visions.filter((v) => !v.isCompleted);
@@ -70,7 +72,14 @@ function MonthlyGoals() {
     setTabIndex(newValue);
     setCurrentPage(1);
   };
-
+  const handleDelete = async ( goal) => {
+    console.log(goal,userId);
+    
+    const response = await axios.delete("/monthly-task/deletegoal", {
+      params: { goal, userId },
+    });
+    
+  };
   let completed = completedVisions.length;
   let notCompleted = notCompletedVisions.length;
 
@@ -116,7 +125,12 @@ function MonthlyGoals() {
 
       {/* Month Selection Dropdown */}
       <FormControl
-        sx={{ minWidth: 120, marginTop: "10px", display: "block", marginLeft:"25px" }}
+        sx={{
+          minWidth: 120,
+          marginTop: "10px",
+          display: "block",
+          marginLeft: "25px",
+        }}
       >
         <InputLabel>Month</InputLabel>
         <Select
@@ -172,6 +186,11 @@ function MonthlyGoals() {
                   />
                 }
                 label={vision.isCompleted ? "Completed" : "Mark as Completed"}
+              />
+              <RiDeleteBinFill
+                color="red"
+                fontSize="22px"
+                onClick={() => handleDelete(vision.title)}
               />
             </Box>
           ))

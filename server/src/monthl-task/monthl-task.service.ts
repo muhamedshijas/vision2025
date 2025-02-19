@@ -102,5 +102,15 @@ export class MonthlTaskService {
     const goals = data.monthlyGoals
     return goals
   }
+  async deleteGoal(userId, goal) {
+    const response = await this.monthlyReportModel.updateOne(
+      { userId: userId },
+      { $pull: { "monthlyGoals": { title: goal } } } // Correct syntax
+    );
+    console.log(goal, userId);
 
+    
+
+    return { message: 'goal removed successfully' };
+  }
 }
