@@ -52,6 +52,7 @@ function AddJobs({ setShowAddModal, showAddModal, userId }) {
     } catch (error) {
       console.error("Error adding job:", error);
     }
+    
   };
 
   return (

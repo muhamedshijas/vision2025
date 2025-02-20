@@ -14,6 +14,7 @@ import AddJobs from "../../modals/DailyTask/AddJobs";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import UpdateStatusModal from "../../modals/DailyTask/UpdateStatusModal";
+import { getApplicationStats } from "../../utilities/JobCount";
 
 function Jobs() {
   const user = useSelector((state) => state.user.detials);
@@ -26,7 +27,7 @@ function Jobs() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 10;
+  const jobsPerPage = 9;
   const refresh = useSelector((state) => state.refresh);
 
   useEffect(() => {
@@ -48,6 +49,8 @@ function Jobs() {
     setSelectedJob(job);
     setShowEditModal(true);
   };
+  const jobCount = getApplicationStats(jobs);
+  console.log(jobCount);
 
   const dispatch = useDispatch();
   async function handleDelete(jobId) {
@@ -66,6 +69,13 @@ function Jobs() {
     (currentPage - 1) * jobsPerPage,
     currentPage * jobsPerPage
   );
+  const statusColors = {
+    "Call Backed": "yellow",
+    "Pending": "gray",
+    "Rejected": "red",
+    "Tech Interview Done": "#81E4DA",
+    "Total": "black" // Default color
+  };
 
   return (
     <div>
@@ -86,6 +96,21 @@ function Jobs() {
         />
       </Box>
       <Box width="100%">
+      <Typography display="flex" flexWrap="wrap" gap="10px" mt={1}>
+      {Object.entries(jobCount).map(([key, value]) => (
+        <div
+          key={key}
+          style={{
+            backgroundColor: statusColors[key] || "black", // Default to black if not in list
+            color: key === "Call Backed" ? "black" : "white", // Adjust text color for visibility
+            padding: "4px 8px",
+            borderRadius: "4px"
+          }}
+        >
+          <strong>{key}:</strong> {value}
+        </div>
+      ))}
+    </Typography>
         <Box display="flex" justifyContent="center" alignItems="center ">
           <table style={{ textAlign: "center", width: "100%" }}>
             <tr>
@@ -108,6 +133,8 @@ function Jobs() {
                       ? "red"
                       : item.status === "Call Backed"
                       ? "yellow"
+                      : item.status == "Tech Interview Done"
+                      ? "#81E4DA"
                       : "white", // Fallback color
                   color: item.status === "Rejected" ? "white" : "",
                 }}
@@ -198,12 +225,12 @@ function Jobs() {
         </Box>
 
         <Box display="flex" justifyContent="center" mt={3}>
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={(event, value) => setCurrentPage(value)}
-        />
-      </Box>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, value) => setCurrentPage(value)}
+          />
+        </Box>
         {showEditModal && (
           <UpdateStatusModal
             job={selectedJob}

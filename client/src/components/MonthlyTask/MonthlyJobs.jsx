@@ -38,7 +38,6 @@ function MonthlyJobs() {
           params: { userId, month },
         });
 
-
         setJobs(response.data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
@@ -167,6 +166,8 @@ function MonthlyJobs() {
                       ? "red"
                       : item.status === "Call Backed"
                       ? "yellow"
+                      : item.status == "Tech Interview Done"
+                      ? "#81E4DA"
                       : "white", // Fallback color
                   color: item.status === "Rejected" ? "white" : "",
                 }}

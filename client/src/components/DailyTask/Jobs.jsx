@@ -134,6 +134,8 @@ function Jobs() {
                         ? "red"
                         : item.status === "Call Backed"
                         ? "yellow"
+                        : item.status == "Tech Interview Done"
+                        ? "#81E4DA"
                         : "white", // Fallback color
                     color: item.status === "Rejected" ? "white" : "",
                   }}
