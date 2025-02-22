@@ -14,6 +14,7 @@ import AddJobs from "../../modals/DailyTask/AddJobs";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import UpdateStatusModal from "../../modals/DailyTask/UpdateStatusModal";
+import { getApplicationStats } from "../../utilities/JobCount";
 
 function MonthlyJobs() {
   const user = useSelector((state) => state.user.detials);
@@ -29,7 +30,7 @@ function MonthlyJobs() {
   const refresh = useSelector((state) => state.refresh);
   const [month, setMonth] = useState("Jan");
   const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 10;
+  const jobsPerPage = 9;
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -104,6 +105,15 @@ function MonthlyJobs() {
     });
     dispatch({ type: "refresh" });
   }
+  const jobCount = getApplicationStats(jobs);
+  const statusColors = {
+    "Call Backed": "yellow",
+    "Pending": "gray",
+    "Rejected": "red",
+    "Tech Interview Done": "#81E4DA",
+    "Total": "black" // Default color
+  };
+
 
   // Update progress when jobs change
   useEffect(() => {
@@ -143,6 +153,21 @@ function MonthlyJobs() {
           ))}
         </Select>
       </Box>
+      <Typography display="flex" flexWrap="wrap" gap="10px" mt={1}>
+        {Object.entries(jobCount).map(([key, value]) => (
+          <div
+            key={key}
+            style={{
+              backgroundColor: statusColors[key] || "black", // Default to black if not in list
+              color: key === "Call Backed" ? "black" : "white", // Adjust text color for visibility
+              padding: "4px 8px",
+              borderRadius: "4px",
+            }}
+          >
+            <strong>{key}:</strong> {value}
+          </div>
+        ))}
+      </Typography>
       <Box width="100%">
         <Box display="flex" justifyContent="center" alignItems="center ">
           <table style={{ textAlign: "center", width: "100%" }}>

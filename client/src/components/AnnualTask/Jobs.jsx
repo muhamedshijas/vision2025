@@ -50,7 +50,6 @@ function Jobs() {
     setShowEditModal(true);
   };
   const jobCount = getApplicationStats(jobs);
-  console.log(jobCount);
 
   const dispatch = useDispatch();
   async function handleDelete(jobId) {
