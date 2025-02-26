@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Req, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Req, Delete, Param, Put } from '@nestjs/common';
 import { MonthlTaskService } from './monthl-task.service';
 import { AddGoalDto } from './dto/addGoal.dto';
 
@@ -24,8 +24,11 @@ export class MonthlTaskController {
   @Delete('deletegoal')
   async deleteVision(@Query('userId') userId: string,
     @Query('goal') goal: string) {
-
     return this.monthlTaskService.deleteGoal(userId, goal)
+  }
 
+  @Put('updategoal')
+  async updateGoal(@Body() body: { userId: string, isCompleted: boolean, goal: string }) {
+    return this.monthlTaskService.updateGoal(body)
   }
 }

@@ -29,7 +29,7 @@ function MonthlyGoals() {
   const refresh = useSelector((state) => state.refresh);
   const itemsPerPage = 6;
 
-  const [visions, setVisions] = useState([]);
+  const [goals, setGoals] = useState([]);
   const [month, setMonth] = useState("Feb");
   const [noData, setNoData] = useState(false);
 
@@ -39,7 +39,7 @@ function MonthlyGoals() {
         const response = await axios.get(`monthly-task/get-goals`, {
           params: { userId, month },
         });
-        setVisions(response.data);
+        setGoals(response.data);
         setNoData(response.data.length === 0);
       } catch (error) {
         console.error("Error fetching jobs:", error);
@@ -49,19 +49,19 @@ function MonthlyGoals() {
     if (userId) {
       fetchJobs();
     }
-  }, [userId, refresh, visions]);
+  }, [userId, refresh, goals]);
 
-  const completedVisions = visions.filter((v) => v.isCompleted);
-  const notCompletedVisions = visions.filter((v) => !v.isCompleted);
+  const completedGoals = goals.filter((v) => v.isCompleted);
+  const notCompletedGoals = goals.filter((v) => !v.isCompleted);
 
-  const filteredVisions =
-    tabIndex === 0 ? notCompletedVisions : completedVisions;
+  const filteredGoals =
+    tabIndex === 0 ? notCompletedGoals : completedGoals;
 
   const startIdx = (currentPage - 1) * itemsPerPage;
   const endIdx = startIdx + itemsPerPage;
-  const paginatedVisions = filteredVisions.slice(startIdx, endIdx);
+  const paginatedGoals = filteredGoals.slice(startIdx, endIdx);
 
-  const totalPages = Math.ceil(filteredVisions.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredGoals.length / itemsPerPage);
   const isLastPage = currentPage === totalPages || totalPages === 0;
 
   const handleModal = () => {
@@ -80,11 +80,12 @@ function MonthlyGoals() {
     });
     
   };
-  let completed = completedVisions.length;
-  let notCompleted = notCompletedVisions.length;
+  
+  let completed = completedGoals.length;
+  let notCompleted = notCompletedGoals.length;
 
-  const handleToggle = async (title, isCompleted) => {
-    await axios.put("/profile/updatevision", { title, isCompleted, userId });
+  const handleToggle = async (goal, isCompleted) => {
+    await axios.put("/monthly-task/updategoal", { goal, isCompleted, userId });
   };
 
   // Get the current month (0-11, where 0 is January, 1 is February, etc.)
@@ -120,7 +121,7 @@ function MonthlyGoals() {
         <Tab label="Completed" />
       </Tabs>
       <Typography textAlign="center" marginTop="20px">
-        {`${completed} out of ${visions.length} completed`}
+        {`${completed} out of ${goals.length} completed`}
       </Typography>
 
       {/* Month Selection Dropdown */}
@@ -148,7 +149,7 @@ function MonthlyGoals() {
       </FormControl>
 
       <Box mt={2} display="flex" flexWrap="wrap" justifyContent="center">
-        {paginatedVisions.length === 0 ? (
+        {paginatedGoals.length === 0 ? (
           <Box
             width="100%"
             textAlign="center"
@@ -160,7 +161,7 @@ function MonthlyGoals() {
             No Data Available
           </Box>
         ) : (
-          paginatedVisions.map((vision, index) => (
+          paginatedGoals.map((goals, index) => (
             <Box
               key={index}
               width="45%"
@@ -175,22 +176,22 @@ function MonthlyGoals() {
               padding="10px"
               marginBottom="10px"
             >
-              <Typography>{vision.title}</Typography>
+              <Typography>{goals.title}</Typography>
               <FormControlLabel
                 control={
                   <Switch
-                    checked={vision.isCompleted}
+                    checked={goals.isCompleted}
                     onChange={() =>
-                      handleToggle(vision.title, vision.isCompleted)
+                      handleToggle(goals.title, goals.isCompleted)
                     }
                   />
                 }
-                label={vision.isCompleted ? "Completed" : "Mark as Completed"}
+                label={goals.isCompleted ? "Completed" : "Mark as Completed"}
               />
               <RiDeleteBinFill
                 color="red"
                 fontSize="22px"
-                onClick={() => handleDelete(vision.title)}
+                onClick={() => handleDelete(goals.title)}
               />
             </Box>
           ))
@@ -198,7 +199,7 @@ function MonthlyGoals() {
 
         {/* Show ADD NEW GOAL button when there is no data or it's the last page */}
         {tabIndex === 0 &&
-          (paginatedVisions.length === 0 || (tabIndex === 0 && isLastPage)) && (
+          (paginatedGoals.length === 0 || (tabIndex === 0 && isLastPage)) && (
             <Box
               width="45%"
               height="80px"

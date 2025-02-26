@@ -107,10 +107,27 @@ export class MonthlTaskService {
       { userId: userId },
       { $pull: { "monthlyGoals": { title: goal } } } // Correct syntax
     );
-    console.log(goal, userId);
-
-    
-
+    console.log(goal, userId)
     return { message: 'goal removed successfully' };
+  }
+  async updateGoal(body) {
+    const { userId, goal, isCompleted } = body
+   
+    
+    console.log(goal);
+    console.log(isCompleted);
+
+
+    try {
+      const updated = await this.monthlyReportModel.updateOne(
+        { userId: userId, 'monthlyGoals.title': goal },
+        { $set: { 'monthlyGoals.$.isCompleted': !isCompleted } }
+      );
+      return { status: true }
+
+    } catch (err) {
+      console.log(err);
+
+    }
   }
 }
