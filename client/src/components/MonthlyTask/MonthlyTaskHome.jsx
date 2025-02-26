@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import MonthlyTaskSideBar from "./MonthlyTaskSideBar";
 import MonthlyJobs from "./MonthlyJobs";
 import MontlhlyGoals from "./MontlhlyGoals";
+import MonthlyFeedbacks from "./MonthlyFeedbacks";
 function MonthlyTaskHome() {
   // State to track the active section
   const [activeSection, setActiveSection] = useState("Feedback");
@@ -17,7 +18,7 @@ function MonthlyTaskHome() {
       case "Jobs":
         return <MonthlyJobs />;
       case "Feedback":
-        return <div>Feedbacks</div>;
+        return <MonthlyFeedbacks />;
       case "Monthy Goals":
         return <MontlhlyGoals />;
       default:

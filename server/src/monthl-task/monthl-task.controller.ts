@@ -31,4 +31,9 @@ export class MonthlTaskController {
   async updateGoal(@Body() body: { userId: string, isCompleted: boolean, goal: string }) {
     return this.monthlTaskService.updateGoal(body)
   }
+
+  @Get('get-feedbacks')
+  async getFeedbacks(@Query("userId") userId: string, @Query("month") month: string){
+    return this.monthlTaskService.getFeedbacks(userId,month)
+  }
 }
