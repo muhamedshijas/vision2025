@@ -1,17 +1,26 @@
-import { Box, Typography, Pagination, Rating } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Pagination,
+  Rating,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 function MonthlyFeedbacks() {
   const user = useSelector((state) => state.user.detials);
-  const userId = user._id;
+  const userId = user?._id;
   const refresh = useSelector((state) => state.refresh);
   const [month, setMonth] = useState(
     new Date().toLocaleString("en-US", { month: "short" })
   );
 
   const [feedbacks, setFeedbacks] = useState([]);
+  const [page, setPage] = useState(1);
+  const cardsPerPage = 8;
 
   useEffect(() => {
     const fetchFeedback = async () => {
@@ -21,19 +30,17 @@ function MonthlyFeedbacks() {
         });
         setFeedbacks(response.data);
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        console.error("Error fetching feedbacks:", error);
       }
     };
 
     fetchFeedback();
-  }, []);
-  console.log(feedbacks);
-  const cardsPerPage = 8;
-  const [page, setPage] = useState(1);
-  const totalPages = Math.ceil(feedbacks.length / cardsPerPage);
+  }, [userId, month, refresh]);
 
-  // Slice feedbacks based on pagination
-  const displayedFeedbacks = feedbacks.slice(
+  // Filter out feedbacks without daily_Quote
+  const filteredFeedbacks = feedbacks.filter((item) => item.daily_Quote);
+  const totalPages = Math.ceil(filteredFeedbacks.length / cardsPerPage);
+  const displayedFeedbacks = filteredFeedbacks.slice(
     (page - 1) * cardsPerPage,
     page * cardsPerPage
   );
@@ -41,12 +48,52 @@ function MonthlyFeedbacks() {
   const handleChange = (_, value) => {
     setPage(value);
   };
+  const currentMonthIndex = new Date().getMonth();
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  // Limit selection to past & current months
+  const availableMonths = months.slice(0, currentMonthIndex + 1);
+  const filteredMonthFeedbacks = filteredFeedbacks.filter((job) => {
+    const jobMonth = new Date(job.date).getMonth();
+    return months[jobMonth] === month;
+  });
 
   return (
-    <Box width="100%" textAlign="center">
-      <Typography variant="h3" mt={2} mb={3}>
-        Feedbacks
-      </Typography>
+    <Box width="100%">
+      <Box width="100%" display="flex"  justifyContent="space-around" >
+        <Typography fontSize="32px" color="blue" sx={{ fontWeight: 600 }} mt={2} mb={3}>
+         Daily Feedbacks
+        </Typography>
+        <Select
+          fullWidth
+          value={month}
+          onChange={(e) => setMonth(e.target.value)}
+          displayEmpty
+          sx={{ width: "30%", height: "50px" }}
+        >
+          <MenuItem value="" disabled>
+            Select a Month
+          </MenuItem>
+          {months.map((m, index) => (
+            <MenuItem key={m} value={m} disabled={index > currentMonthIndex}>
+              {m}
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
       <Box
         display="flex"
         flexWrap="wrap"
@@ -83,9 +130,11 @@ function MonthlyFeedbacks() {
       </Box>
 
       {/* Pagination Component */}
-      <Box mt={3} display="flex" justifyContent="center">
-        <Pagination count={totalPages} page={page} onChange={handleChange} />
-      </Box>
+      {totalPages > 1 && (
+        <Box mt={3} display="flex" justifyContent="center">
+          <Pagination count={totalPages} page={page} onChange={handleChange} />
+        </Box>
+      )}
     </Box>
   );
 }
