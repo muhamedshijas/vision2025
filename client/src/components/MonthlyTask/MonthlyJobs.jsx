@@ -28,7 +28,7 @@ function MonthlyJobs() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const refresh = useSelector((state) => state.refresh);
-  const [month, setMonth] = useState("Jan");
+  const [month, setMonth] = useState(new Date().toLocaleString('en-US', { month: 'short' }));
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 9;
 
@@ -41,7 +41,7 @@ function MonthlyJobs() {
 
         setJobs(response.data);
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        console.error("Error fetching jobs:", error); 
       }
     };
 
