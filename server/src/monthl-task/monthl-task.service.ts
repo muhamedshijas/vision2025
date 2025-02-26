@@ -152,8 +152,9 @@ export class MonthlTaskService {
       {
         daily_Quote: 1, date: 1 // Include only jobsdata and date fields
       }
-    )
-    return reports
-    
+    ).lean()
+  return reports
   }
+    
+ 
 }

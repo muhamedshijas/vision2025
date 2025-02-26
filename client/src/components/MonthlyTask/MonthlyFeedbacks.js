@@ -19,8 +19,6 @@ function MonthlyFeedbacks() {
         const response = await axios.get(`monthly-task/get-feedbacks`, {
           params: { userId, month },
         });
-        console.log(response);
-
         setFeedbacks(response.data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
@@ -68,10 +66,14 @@ function MonthlyFeedbacks() {
             borderRadius="5px"
             p={2}
           >
-            <Typography variant="h6">{item.feedback}</Typography>
+            <Typography
+              sx={{ fontWeight: "600", fontSize: "18px", textAlign: "center" }}
+            >
+              {item.daily_Quote?.phrase}
+            </Typography>
             <Rating
               name="read-only-rating"
-              value={item.rating} // The value of the rating
+              value={item.daily_Quote?.rating} // The value of the rating
               readOnly
               precision={0.5} // Allows half-star ratings (optional)
             />
