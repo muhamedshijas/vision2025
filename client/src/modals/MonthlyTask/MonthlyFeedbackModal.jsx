@@ -17,6 +17,7 @@ function MonthlyFeedbackModal({ feedback, show, setShow }) {
       display="flex"
       justifyContent="center"
       alignItems="center"
+      zIndex={1300}
     >
       <Box
         bgcolor="white"
@@ -29,6 +30,7 @@ function MonthlyFeedbackModal({ feedback, show, setShow }) {
         flexDirection="column"
         overflow="auto"
         gap="15px"
+      
       >
         <Typography variant="h6" fontWeight="bold" mb={2} textAlign="center">
           {`Details of ${feedback.date}`}
