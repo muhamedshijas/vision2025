@@ -2,6 +2,7 @@ import { Box, Typography, Pagination } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import MonthlyScoreModal from "../../modals/MonthlyTask/MonthlyScoreModal";
 
 function MonthlyScores() {
   const refresh = useSelector((state) => state.refresh);
@@ -13,6 +14,8 @@ function MonthlyScores() {
   );
   const [dates, setDates] = useState([]);
   const [page, setPage] = useState(1);
+  const [show, setShow] = useState(false);
+  const [selectedId, setSelectedId] = useState();
   const itemsPerPage = 15; // ✅ Show 15 cards per page
 
   useEffect(() => {
@@ -48,6 +51,10 @@ function MonthlyScores() {
     page * itemsPerPage
   );
 
+  const handleModal = (id) => {
+    setSelectedId(id);
+    setShow(!show);
+  };
   return (
     <Box p={3}>
       <Typography variant="h5" textAlign="center" mb={2}>
@@ -71,6 +78,7 @@ function MonthlyScores() {
               justifyContent="center"
               flexDirection="column"
               sx={{ cursor: "pointer" }}
+              onClick={() => handleModal(item._id)}
             >
               <Typography variant="h2" fontWeight="bold">
                 {day}
@@ -80,7 +88,13 @@ function MonthlyScores() {
           );
         })}
       </Box>
-
+      {show && (
+        <MonthlyScoreModal
+          show={show}
+          setShow={setShow}
+          selectedId={selectedId}
+        />
+      )}
       {/* ✅ Pagination Controls */}
       {totalPages > 1 && (
         <Box mt={3} display="flex" justifyContent="center">

@@ -41,4 +41,10 @@ export class MonthlTaskController {
   async getScores(@Query("userId") userId: string, @Query("month") month: string) {
     return this.monthlTaskService.getScores(userId, month)
   }
+
+  @Get('get-scoresbyid/:id')
+  async getScoresById(@Param('id') id: string) {
+    console.log(id);
+
+  }
 }
