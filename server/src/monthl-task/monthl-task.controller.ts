@@ -44,7 +44,7 @@ export class MonthlTaskController {
 
   @Get('get-scoresbyid/:id')
   async getScoresById(@Param('id') id: string) {
-    console.log(id);
+    return this.monthlTaskService.getScoreById(id)
 
   }
 }

@@ -4,6 +4,7 @@ import { Model, mongo } from 'mongoose';
 import { DailyReports } from 'src/schma/daily-report.schema';
 import { MonthlyReports } from 'src/schma/monthly-report-schema';
 import { AddGoalDto } from './dto/addGoal.dto';
+import { calculateAverageHealthScore, calculateAvgSkillScore, calculateFoodScore, calculateNormalizedCommit, calculateNormalizedProblems, calculateSleepScore, calculateTypingAverage, caluclalateNormalizedJobs, calulateNormalizedWpm } from 'src/utils/scoreCaluculater';
 
 @Injectable()
 export class MonthlTaskService {
@@ -150,6 +151,7 @@ export class MonthlTaskService {
     return reports
   }
   async getScores(userId, month) {
+
     const monthMap = {
       Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
       Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12
@@ -170,10 +172,84 @@ export class MonthlTaskService {
         _id: 1, date: 1 // Include only jobsdata and date fields
       }
     ).lean()
-
     return reports
 
 
   }
+  async getScoreById(id) {
+    try {
+      const report = await this.dailyReportModel
+        .findById(id, { _id: 1, daily_Routine: 1, jobsdata: 1 }) // Ensure jobsdata is included
+        .lean();
+
+      if (!report || !report.daily_Routine) {
+        return;
+      }
+
+      const jobCount = report?.jobsdata?.length || 0; // ✅ Prevents TypeError
+
+      const routines = report.daily_Routine;
+      const skill = routines.dailyRoutineSkills;
+
+      if (!skill?.typingScore) {
+        return;
+      }
+
+      const typingAverage = calculateTypingAverage(skill.typingScore);
+      const normalizedWpm = calulateNormalizedWpm(typingAverage);
+      const normalizedCommits = calculateNormalizedCommit(skill.commits);
+      const normalizedProblems = calculateNormalizedProblems(skill.problems);
+      const normalizedJobs = caluclalateNormalizedJobs(jobCount);
+      const avgSkillScore = calculateAvgSkillScore(
+        normalizedWpm,
+        normalizedCommits,
+        normalizedJobs,
+        normalizedProblems
+      );
+
+      let routineData = {
+        gitCommit: skill.commits,
+        problems: skill.problems,
+        applications: jobCount,
+        avgWpm: typingAverage,
+        foodScore: 0,
+        sleepHr: 0,
+        sleepScore: 0,
+        avgHelathScore: 0,
+        normalizedFoodScore: 0,
+        normalizedSleepScore: 0,
+        normalizedCommits: normalizedCommits,
+        normalizedJobs: normalizedJobs,
+        normalizedProblems: normalizedProblems,
+        normalizedWpm: normalizedWpm,
+        avgSkillScore: avgSkillScore,
+      };
+
+      const health = routines.dailyRoutineHealth;
+      if (!health) {
+        return routineData;
+      }
+
+      const sleepScore = await calculateSleepScore(health.sleepHour);
+      const foodScore = calculateFoodScore(health.foods);
+      const avgHelathScore = calculateAverageHealthScore(foodScore, sleepScore);
+
+      routineData = {
+        ...routineData,
+        foodScore: foodScore,
+        sleepHr: Number(health.sleepHour),
+        sleepScore: sleepScore,
+        avgHelathScore: avgHelathScore.averageScore,
+        normalizedFoodScore: avgHelathScore.normalizedFoodScore,
+        normalizedSleepScore: avgHelathScore.normalizedSleepScore,
+      };
+
+      return { routineData, report };
+    } catch (error) {
+      console.error("Error fetching report:", error);
+      throw error;
+    }
+  }
+
 
 }
