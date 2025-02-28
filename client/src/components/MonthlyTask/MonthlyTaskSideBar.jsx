@@ -14,11 +14,11 @@ function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
   // Icon mapping for each section
   const sectionIcons = {
     Relgious: relgious,
-    "Daily Routine": dailyRotine,
+    "Daily Scores": dailyRotine,
     Jobs: jobApplication,
     Feedback: dailyFeedback,
     "Daily Report": dailyReport,
-    "Monthy Goals":achivmenst
+    "Monthy Goals": achivmenst,
   };
 
   return (
@@ -66,7 +66,7 @@ function MonthlyTaskSideBar({ activeSection, setActiveSection }) {
           justifyContent: "flex-end",
         }}
       >
-        {["Relgious", "Jobs", "Daily Routine", "Feedback","Monthy Goals"].map(
+        {["Relgious", "Jobs", "Daily Scores", "Feedback", "Monthy Goals"].map(
           (section, index) => (
             <ListItem
               key={index}

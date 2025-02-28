@@ -33,7 +33,12 @@ export class MonthlTaskController {
   }
 
   @Get('get-feedbacks')
-  async getFeedbacks(@Query("userId") userId: string, @Query("month") month: string){
-    return this.monthlTaskService.getFeedbacks(userId,month)
+  async getFeedbacks(@Query("userId") userId: string, @Query("month") month: string) {
+    return this.monthlTaskService.getFeedbacks(userId, month)
+  }
+
+  @Get('get-scores')
+  async getScores(@Query("userId") userId: string, @Query("month") month: string) {
+    return this.monthlTaskService.getScores(userId, month)
   }
 }

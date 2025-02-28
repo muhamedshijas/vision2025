@@ -4,6 +4,7 @@ import MonthlyTaskSideBar from "./MonthlyTaskSideBar";
 import MonthlyJobs from "./MonthlyJobs";
 import MontlhlyGoals from "./MontlhlyGoals";
 import MonthlyFeedbacks from "./MonthlyFeedbacks";
+import MonthlyScores from "./MonthlyScores";
 function MonthlyTaskHome() {
   // State to track the active section
   const [activeSection, setActiveSection] = useState("Feedback");
@@ -13,8 +14,8 @@ function MonthlyTaskHome() {
     switch (activeSection) {
       case "Relgious":
         return <div>Relgious Section</div>;
-      case "Daily Routine":
-        return <div>Routines</div>;
+      case "Daily Scores":
+        return <MonthlyScores />;
       case "Jobs":
         return <MonthlyJobs />;
       case "Feedback":
