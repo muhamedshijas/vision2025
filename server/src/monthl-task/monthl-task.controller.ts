@@ -28,7 +28,7 @@ export class MonthlTaskController {
   }
 
   @Put('updategoal')
-  async updateGoal(@Body() body: { userId: string, isCompleted: boolean, goal: string }) {
+  async updateGoal(@Body() body: { userId: string, isCompleted: boolean, goal: string, month: string }) {
     return this.monthlTaskService.updateGoal(body)
   }
 

@@ -112,12 +112,13 @@ export class MonthlTaskService {
     return { message: 'goal removed successfully' };
   }
   async updateGoal(body) {
-    const { userId, goal, isCompleted } = body
+    const { userId, goal, isCompleted, month } = body
     try {
       const updated = await this.monthlyReportModel.updateOne(
-        { userId: userId, 'monthlyGoals.title': goal },
+        { userId: userId, 'monthlyGoals.title': goal, month: month },
         { $set: { 'monthlyGoals.$.isCompleted': !isCompleted } }
       );
+
       return { status: true }
 
     } catch (err) {
@@ -243,8 +244,12 @@ export class MonthlTaskService {
         normalizedFoodScore: avgHelathScore.normalizedFoodScore,
         normalizedSleepScore: avgHelathScore.normalizedSleepScore,
       };
+      const reports = {
+        dailyRoutineSkills: report.daily_Routine.dailyRoutineSkills,
+        daily_RoutineHealth: report.daily_Routine.dailyRoutineHealth
+      }
 
-      return { routineData, report };
+      return { routineData, reports };
     } catch (error) {
       console.error("Error fetching report:", error);
       throw error;
