@@ -144,7 +144,7 @@ function MonthlyGoals() {
           ))
         )}
 
-        {tabIndex === 0 && (paginatedGoals.length === 0 || isLastPage) && (
+        {tabIndex === 0 && (paginatedGoals.length === 0 || isLastPage) && currentMonth === months.indexOf(month) && (
           <Box
             width="45%"
             height="80px"
@@ -165,6 +165,7 @@ function MonthlyGoals() {
             ADD NEW GOAL
           </Box>
         )}
+        
       </Box>
 
       {show && <AddMonthlyGoalsModals show={show} setShow={setShow} userId={userId} />}

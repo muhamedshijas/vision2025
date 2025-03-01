@@ -22,9 +22,12 @@ export class MonthlTaskController {
     return this.monthlTaskService.getGoals(userId, month)
   }
   @Delete('deletegoal')
-  async deleteVision(@Query('userId') userId: string,
-    @Query('goal') goal: string) {
-    return this.monthlTaskService.deleteGoal(userId, goal)
+  async deleteVision(
+    @Query('userId') userId: string,
+    @Query('goal') goal: string,
+    @Query('month') month: string // <-- Removed misplaced parenthesis
+  ) {
+    return this.monthlTaskService.deleteGoal(userId, goal,month);
   }
 
   @Put('updategoal')

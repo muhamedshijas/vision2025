@@ -103,9 +103,9 @@ export class MonthlTaskService {
     const goals = data.monthlyGoals
     return goals
   }
-  async deleteGoal(userId, goal) {
+  async deleteGoal(userId, goal, month) {
     const response = await this.monthlyReportModel.updateOne(
-      { userId: userId },
+      { userId: userId, month: month },
       { $pull: { "monthlyGoals": { title: goal } } } // Correct syntax
     );
     console.log(goal, userId)
