@@ -108,7 +108,6 @@ export class MonthlTaskService {
       { userId: userId, month: month },
       { $pull: { "monthlyGoals": { title: goal } } } // Correct syntax
     );
-    console.log(goal, userId)
     return { message: 'goal removed successfully' };
   }
   async updateGoal(body) {

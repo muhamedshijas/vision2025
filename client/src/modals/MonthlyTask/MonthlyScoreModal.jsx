@@ -152,8 +152,8 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>Total Score</TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px", color:"red" }}>Total Score</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color:"red" }}>
                       {`${scores?.avgHelathScore + scores?.avgSkillScore||0} / 100`}
                     </TableCell>
                   </TableRow>
