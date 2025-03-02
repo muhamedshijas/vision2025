@@ -245,7 +245,8 @@ export class MonthlTaskService {
       };
       const reports = {
         dailyRoutineSkills: report.daily_Routine.dailyRoutineSkills,
-        daily_RoutineHealth: report.daily_Routine.dailyRoutineHealth
+        daily_RoutineHealth: report.daily_Routine.dailyRoutineHealth,
+        job_Count: jobCount
       }
 
       return { routineData, reports };

@@ -18,6 +18,7 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
   const [scores, setScores] = useState({});
   const [tabIndex, setTabIndex] = useState(0);
   const [report, setReport] = useState({});
+  const [jobs, setJobs] = useState(0);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const contentRef = useRef(null);
 
@@ -27,8 +28,11 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
         const { data } = await axios.get(
           `/monthly-task/get-scoresbyid/${selectedId}`
         );
+        console.log(data);
+        
         setScores(data.routineData || {});
         setReport(data.reports || {});
+        setJobs(data.reports.job_Count || 0);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -215,6 +219,12 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
                     <TableCell sx={{ fontWeight: "bold" }}>Commits</TableCell>
                     <TableCell>
                       {report?.dailyRoutineSkills?.commits || 0}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>Job Application</TableCell>
+                    <TableCell>
+                      {jobs|| 0}
                     </TableCell>
                   </TableRow>
                   <TableRow>
