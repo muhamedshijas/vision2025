@@ -17,6 +17,7 @@ import React, { useEffect, useState, useRef } from "react";
 function MonthlyScoreModal({ show, setShow, selectedId }) {
   const [scores, setScores] = useState({});
   const [tabIndex, setTabIndex] = useState(0);
+  const [report, setReport] = useState({});
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const contentRef = useRef(null);
 
@@ -26,7 +27,8 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
         const { data } = await axios.get(
           `/monthly-task/get-scoresbyid/${selectedId}`
         );
-        setScores(data.routineData);
+        setScores(data.routineData || {});
+        setReport(data.reports || {});
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -42,7 +44,9 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
     const checkScroll = () => {
       if (contentRef.current) {
         const { scrollHeight, clientHeight, scrollTop } = contentRef.current;
-        setShowScrollIndicator(scrollHeight > clientHeight && scrollTop + clientHeight < scrollHeight);
+        setShowScrollIndicator(
+          scrollHeight > clientHeight && scrollTop + clientHeight < scrollHeight
+        );
       }
     };
 
@@ -89,7 +93,7 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
           {`Details of ${selectedId}`}
         </Typography>
 
-        {/* Tabs - Fixed at top */}
+        {/* Tabs */}
         <Tabs
           value={tabIndex}
           onChange={(e, newValue) => setTabIndex(newValue)}
@@ -116,45 +120,71 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
               <Table>
                 <TableBody>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold" }}>Typing Score</TableCell>
-                    <TableCell>{`${scores?.normalizedWpm||0} / 25`}</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Typing Score
+                    </TableCell>
+                    <TableCell>{`${
+                      scores?.normalizedWpm || 0
+                    } / 25`}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell sx={{ fontWeight: "bold" }}>Git Score</TableCell>
-                    <TableCell>{`${scores?.normalizedCommits||0} / 25`}</TableCell>
+                    <TableCell>{`${
+                      scores?.normalizedCommits || 0
+                    } / 25`}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold" }}>Job Application Score</TableCell>
-                    <TableCell>{`${scores?.normalizedJobs||0} / 25`}</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Job Application Score
+                    </TableCell>
+                    <TableCell>{`${
+                      scores?.normalizedJobs || 0
+                    } / 25`}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold" }}>Leet Code Problem Score</TableCell>
-                    <TableCell>{`${scores?.normalizedProblems||0} / 25`}</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Leet Code Problem Score
+                    </TableCell>
+                    <TableCell>{`${
+                      scores?.normalizedProblems || 0
+                    } / 25`}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold" }}>Sleep Score</TableCell>
-                    <TableCell>{`${scores?.normalizedSleepScore||0} / 50`}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: "bold" }}>Food Score</TableCell>
-                    <TableCell>{`${scores?.normalizedFoodScore||0} / 50`}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>Total Skills Score</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                      Total Skills Score
+                    </TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
-                      {`${scores?.avgSkillScore||0} / 50`}
+                      {scores?.avgSkillScore || 0} / 50
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>Total Health Score</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                      Total Health Score
+                    </TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
-                      {`${scores?.avgHelathScore||0} / 50`}
+                      {scores?.avgHelathScore || 0} / 50
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px", color:"red" }}>Total Score</TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color:"red" }}>
-                      {`${scores?.avgHelathScore + scores?.avgSkillScore||0} / 100`}
+                    <TableCell
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: "18px",
+                        color: "red",
+                      }}
+                    >
+                      Total Score
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                        color: "red",
+                      }}
+                    >
+                      {(scores?.avgHelathScore || 0) +
+                        (scores?.avgSkillScore || 0)}{" "}
+                      / 100
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -162,12 +192,64 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
             </Box>
           ) : (
             <Box p={2}>
-              <Typography>No report available</Typography>
+              <Table>
+                <TableBody>
+                  {/* Daily Routine Skills */}
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Typing Score
+                    </TableCell>
+                    <TableCell>
+                      {`Test1: ${
+                        report?.dailyRoutineSkills?.typingScore?.test1 || 0
+                      }, `}
+                      {`Test2: ${
+                        report?.dailyRoutineSkills?.typingScore?.test2 || 0
+                      }, `}
+                      {`Test3: ${
+                        report?.dailyRoutineSkills?.typingScore?.test3 || 0
+                      }`}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>Commits</TableCell>
+                    <TableCell>
+                      {report?.dailyRoutineSkills?.commits || 0}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Problems Solved
+                    </TableCell>
+                    <TableCell>
+                      {report?.dailyRoutineSkills?.problems || 0}
+                    </TableCell>
+                  </TableRow>
+
+                  {/* Daily Routine Health */}
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Sleep Hours
+                    </TableCell>
+                    <TableCell>
+                      {report?.daily_RoutineHealth?.sleepHour || "N/A"}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Foods Eaten
+                    </TableCell>
+                    <TableCell>
+                      {(report?.daily_RoutineHealth?.foods || []).join(", ")}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </Box>
           )}
         </Box>
 
-        {/* Scroll Arrow (Hidden if at bottom) */}
+        {/* Scroll Arrow */}
         {showScrollIndicator && (
           <IconButton
             sx={{
@@ -178,13 +260,15 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
               boxShadow: "0px 2px 5px rgba(0,0,0,0.2)",
               "&:hover": { bgcolor: "white" },
             }}
-            onClick={() => contentRef.current?.scrollBy({ top: 100, behavior: "smooth" })}
+            onClick={() =>
+              contentRef.current?.scrollBy({ top: 100, behavior: "smooth" })
+            }
           >
             <KeyboardArrowDown />
           </IconButton>
         )}
 
-        {/* Close Button - Fixed at bottom */}
+        {/* Close Button */}
         <Button
           variant="contained"
           fullWidth
