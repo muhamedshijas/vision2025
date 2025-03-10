@@ -154,6 +154,22 @@ function MonthlyScoreModal({ show, setShow, selectedId }) {
                     } / 25`}</TableCell>
                   </TableRow>
                   <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Food Score
+                    </TableCell>
+                    <TableCell>{`${
+                      scores?.normalizedFoodScore || 0
+                    } / 25`}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Sleep Score
+                    </TableCell>
+                    <TableCell>{`${
+                      scores?.normalizedSleepScore || 0
+                    } / 25`}</TableCell>
+                  </TableRow>
+                  <TableRow>
                     <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
                       Total Skills Score
                     </TableCell>
