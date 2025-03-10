@@ -157,7 +157,7 @@ function MonthlyFeedbacks() {
             <Typography
               sx={{ fontWeight: "600", fontSize: "16px", textAlign: "center" }}
             >
-              {item.daily_Quote?.phrase}
+              {item.daily_Quote?.phrase.toUpperCase()}
             </Typography>
             <Rating
               name="read-only-rating"
