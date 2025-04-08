@@ -80,8 +80,8 @@ export function calculateTypingAverage(typingScore: Record<string, number>): num
     const total = scores.reduce((sum, score) => sum + score, 0); // Sum up all scores
     return Math.floor(total / scores.length) // Calc ulate average
 }
-const normalizeScore = (score, maxScore = 100) => {
-    return (score / maxScore) * 50;  // Normalize to out of 50
+const normalizeScore = (score, maxScore =  100) => {
+    return (score / maxScore) * 25;  // Normalize to out of 50
 };
 
 // Function to calculate the average of foodScore and healthScore
@@ -91,7 +91,7 @@ export function calculateAverageHealthScore(foodScore, sleepScore) {
     const normalizedSleepScore = normalizeScore(sleepScore);
 
     // Calculate the average of the normalized scores
-    const averageScore = (normalizedFoodScore + normalizedSleepScore) / 2;
+    const averageScore = normalizedFoodScore + normalizedSleepScore ;
 
     // Return the average score
     return { normalizedFoodScore, normalizedSleepScore, averageScore };

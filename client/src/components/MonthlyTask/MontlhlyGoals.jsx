@@ -53,6 +53,7 @@ function MonthlyGoals() {
       fetchGoals();
     }
   }, [userId, refresh, month]);
+  console.log(goals);
 
   const completedGoals = goals.filter((v) => v.isCompleted);
   const notCompletedGoals = goals.filter((v) => !v.isCompleted);
@@ -73,21 +74,44 @@ function MonthlyGoals() {
 
   const handleDelete = async (goal) => {
     await axios.delete("/monthly-task/deletegoal", {
-      params: { goal, userId ,month},
+      params: { goal, userId, month },
     });
   };
 
   const handleToggle = async (goal, isCompleted) => {
-    await axios.put("/monthly-task/updategoal", { goal, isCompleted, userId ,month});
+    await axios.put("/monthly-task/updategoal", {
+      goal,
+      isCompleted,
+      userId,
+      month,
+    });
   };
 
   const currentMonth = new Date().getMonth();
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const availableMonths = months.slice(0, currentMonth + 1);
 
   return (
     <Box>
-      <Tabs value={tabIndex} onChange={handleChange} centered sx={{ marginTop: "10px" }}>
+      <Tabs
+        value={tabIndex}
+        onChange={handleChange}
+        centered
+        sx={{ marginTop: "10px" }}
+      >
         <Tab label="Not Completed" />
         <Tab label="Completed" />
       </Tabs>
@@ -95,9 +119,21 @@ function MonthlyGoals() {
         {`${completedGoals.length} out of ${goals.length} completed`}
       </Typography>
 
-      <FormControl sx={{ minWidth: 120, marginTop: "10px", display: "block", marginLeft: "25px" }}>
+      <FormControl
+        sx={{
+          minWidth: 120,
+          marginTop: "10px",
+          display: "block",
+          marginLeft: "25px",
+        }}
+      >
         <InputLabel>Month</InputLabel>
-        <Select value={month} onChange={(e) => setMonth(e.target.value)} label="Month" sx={{ width: "200px" }}>
+        <Select
+          value={month}
+          onChange={(e) => setMonth(e.target.value)}
+          label="Month"
+          sx={{ width: "200px" }}
+        >
           {months.map((m) => (
             <MenuItem key={m} value={m} disabled={!availableMonths.includes(m)}>
               {m}
@@ -108,7 +144,14 @@ function MonthlyGoals() {
 
       <Box mt={2} display="flex" flexWrap="wrap" justifyContent="center">
         {paginatedGoals.length === 0 ? (
-          <Box width="100%" textAlign="center" padding="20px" color="gray" fontSize="18px" fontWeight="bold">
+          <Box
+            width="100%"
+            textAlign="center"
+            padding="20px"
+            color="gray"
+            fontSize="18px"
+            fontWeight="bold"
+          >
             No Data Available
           </Box>
         ) : (
@@ -133,45 +176,63 @@ function MonthlyGoals() {
                   control={
                     <Switch
                       checked={goal.isCompleted}
-                      onChange={() => handleToggle(goal.title, goal.isCompleted)}
+                      onChange={() =>
+                        handleToggle(goal.title, goal.isCompleted)
+                      }
                     />
                   }
                   label={goal.isCompleted ? "Completed" : "Mark as Completed"}
                 />
               )}
-              <RiDeleteBinFill color="red" fontSize="22px" onClick={() => handleDelete(goal.title)} />
+              {goal?.isCompleted&&<Typography color="success" fontWeight={600}> COMPLETED ON {goal?.completedDate}</Typography>}
+              <RiDeleteBinFill
+                color="red"
+                fontSize="22px"
+                onClick={() => handleDelete(goal.title)}
+              />
             </Box>
-          ))
+          )) 
         )}
 
-        {tabIndex === 0 && (paginatedGoals.length === 0 || isLastPage) && currentMonth === months.indexOf(month) && (
-          <Box
-            width="45%"
-            height="80px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            gap="20px"
-            color="#0000EE"
-            boxShadow="rgba(149, 157, 165, 0.2) 0px 8px 24px"
-            borderRadius="10px"
-            textAlign="center"
-            padding="10px"
-            marginBottom="10px"
-            sx={{ cursor: "pointer", fontWeight: 600, backgroundColor: "white" }}
-            onClick={handleModal}
-          >
-            <RiAddLargeFill fontSize="22px" />
-            ADD NEW GOAL
-          </Box>
-        )}
-        
+        {tabIndex === 0 &&
+          (paginatedGoals.length === 0 || isLastPage) &&
+          currentMonth === months.indexOf(month) && (
+            <Box
+              width="45%"
+              height="80px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              gap="20px"
+              color="#0000EE"
+              boxShadow="rgba(149, 157, 165, 0.2) 0px 8px 24px"
+              borderRadius="10px"
+              textAlign="center"
+              padding="10px"
+              marginBottom="10px"
+              sx={{
+                cursor: "pointer",
+                fontWeight: 600,
+                backgroundColor: "white",
+              }}
+              onClick={handleModal}
+            >
+              <RiAddLargeFill fontSize="22px" />
+              ADD NEW GOAL
+            </Box>
+          )}
       </Box>
 
-      {show && <AddMonthlyGoalsModals show={show} setShow={setShow} userId={userId} />}
+      {show && (
+        <AddMonthlyGoalsModals show={show} setShow={setShow} userId={userId} />
+      )}
 
       <Box display="flex" justifyContent="center" mt={2}>
-        <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} />
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={(e, page) => setCurrentPage(page)}
+        />
       </Box>
     </Box>
   );

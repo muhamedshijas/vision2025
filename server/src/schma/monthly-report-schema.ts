@@ -13,7 +13,7 @@ export class MonthlyGoal {
   isCompleted: boolean;
 
   @Prop({ default: null })
-  completedDate?: Date;
+  completedDate?: string; 
 
 }
 

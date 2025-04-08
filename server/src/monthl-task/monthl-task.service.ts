@@ -111,20 +111,27 @@ export class MonthlTaskService {
     return { message: 'goal removed successfully' };
   }
   async updateGoal(body) {
-    const { userId, goal, isCompleted, month } = body
+    const { userId, goal, isCompleted, month } = body;
     try {
-      const updated = await this.monthlyReportModel.updateOne(
-        { userId: userId, 'monthlyGoals.title': goal, month: month },
-        { $set: { 'monthlyGoals.$.isCompleted': !isCompleted } }
-      );
+        const today = new Date().toLocaleDateString('en-GB'); // "dd/mm/yyyy" format
+        const formattedDate = today.replace(/\//g, '-'); // Convert to "dd-mm-yyyy"
+        
+        const updated = await this.monthlyReportModel.updateOne(
+            { userId: userId, 'monthlyGoals.title': goal, month: month },
+            { 
+                $set: { 
+                    'monthlyGoals.$.isCompleted': !isCompleted,
+                    'monthlyGoals.$.completedDate': formattedDate 
+                } 
+            }
+        );
 
-      return { status: true }
+        return { status: true };
 
     } catch (err) {
-      console.log(err);
-
+        console.log(err);
     }
-  }
+}
   async getFeedbacks(userId, month) {
     const monthMap = {
       Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
